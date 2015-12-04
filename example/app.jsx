@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import Grid from "react-bootstrap/lib/Grid";
 import Row from "react-bootstrap/lib/Row";
 import Col from "react-bootstrap/lib/Col";
+import NavBar from "react-bootstrap/lib/NavBar";
+import Nav from "react-bootstrap/lib/Nav";
+import NavItem from "react-bootstrap/lib/NavItem";
 import DatePicker from "../src/index.jsx";
 import LinkedStateMixin from 'react-addons-linked-state-mixin';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
@@ -29,6 +32,17 @@ const App = React.createClass({
       <Row>
         <Col xs={12}>
           <h1>React-Bootstrap Date Picker</h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <NavBar>
+            <Nav bsStyle="pills">
+              <NavItem href="https://github.com/pushtell/react-bootstrap-date-picker/blob/master/example/app.jsx">Example Source</NavItem>
+              <NavItem href="https://github.com/pushtell/react-bootstrap-date-picker">Documentation on Github</NavItem>
+              <NavItem href="https://www.npmjs.com/package/react-bootstrap-date-picker">NPM Package</NavItem>
+            </Nav>
+          </NavBar>
         </Col>
       </Row>
       <Row>
@@ -95,7 +109,7 @@ const App = React.createClass({
         </Col>
         <Col sm={3}>
           <form>
-            <DatePicker label="Calendar Padding" placeholder="Placeholder" cellPadding="10px" />
+            <DatePicker label="Padding" placeholder="Placeholder" cellPadding="10px" />
           </form>
         </Col>
         <Col sm={3}>
@@ -106,7 +120,7 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col xs={12}>
-          <h2>Calendar Placement</h2>
+          <h2>Placement</h2>
         </Col>
       </Row>
       <Row>
