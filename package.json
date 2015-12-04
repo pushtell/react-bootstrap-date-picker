@@ -1,0 +1,66 @@
+{
+  "name": "react-bootstrap-date-picker",
+  "keywords": ["react", "react-component", "react-bootstrap", "bootstrap", "date picker", "calendar", "date", "picker"],
+  "main": "lib/index.js",
+  "version": "0.0.1",
+  "description": "React-Bootstrap based date picker.",
+  "directories": {
+    "test": "test"
+  },
+  "peerDependencies": {
+    "react": ">=0.14.0"
+  },
+  "dependencies": {
+    "react": ">=0.14.0",
+    "react-bootstrap": "^0.28.1"
+  },
+  "devDependencies": {
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "assert": "*",
+    "co": "*",
+    "regenerator": "*",
+    "regenerator-loader": "*",
+    "babel":"^6.1.18",
+    "babel-cli":"6.2.0",
+    "babel-preset-es2015": "*",
+    "babel-preset-stage-1": "*",
+    "babel-preset-react": "*",
+    "babel-loader": "^6.2.0",
+    "isparta-loader": "*",
+    "expose-loader": "*",
+    "transform-loader": "*",
+    "envify": "*",
+    "karma": "*",
+    "karma-chrome-launcher": "*",
+    "karma-firefox-launcher": "*",
+    "karma-mocha": "*",
+    "karma-sourcemap-loader": "*",
+    "karma-webpack": "*",
+    "karma-browserstack-launcher": "*",
+    "es6-promise": "*",
+    "node-uuid": "*",
+    "karma-coveralls": "*",
+    "karma-coverage": "*",
+    "mocha-babel": "*",
+    "webpack": "*",
+    "mocha": "*",
+    "webpack-dev-server": "*",
+    "react-addons-linked-state-mixin": "*"
+  },
+  "scripts": {
+    "example": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base example/ --config ./example/webpack.example.config.js",
+    "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
+    "build": "doctoc . --github --title '<h1>Table of Contents</h1>'; ./node_modules/babel-cli/bin/babel.js ./src --out-dir ./lib;"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pushtell/react-bootstrap-date-picker.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pushtell/react-bootstrap-date-picker/issues"
+  },
+  "homepage": "https://github.com/pushtell/react-bootstrap-date-picker#readme"
+}
