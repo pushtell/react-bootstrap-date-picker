@@ -287,7 +287,7 @@ export default React.createClass({
       <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} />
     </Popover>;
     const buttonStyle = this.props.bsStyle === "error" ? "danger" : this.props.bsStyle;
-    const clearButton = <Button onClick={this.clear} bsStyle={buttonStyle} disabled={!this.state.inputValue}>{this.props.clearButtonElement}</Button>;
+    const clearButton = <Button onClick={this.clear} bsStyle={buttonStyle || "default"} disabled={!this.state.inputValue}>{this.props.clearButtonElement}</Button>;
     return <div>
       <OverlayTrigger ref="overlay" trigger="click" rootClose placement={this.props.calendarPlacement} overlay={popOver} delayHide={100}>
         <Input
@@ -296,7 +296,6 @@ export default React.createClass({
           ref="input"
           type="text"
           valueLink={null}
-          bsStyle={this.props.bsStyle || "default"}
           placeholder={this.state.focused ? "MM/DD/YYYY" : this.props.placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
