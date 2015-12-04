@@ -95,6 +95,10 @@ DatePicker component. Renders as a [react-bootstrap input element](https://react
     * **Optional**
     * **Type:** `array`
     * **Example:** `['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']`
+  * `calendarPlacement` - Overlay placement for the popover calendar.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"top"`
 
 ## Tests
 

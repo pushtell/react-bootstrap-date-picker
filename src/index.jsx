@@ -41,7 +41,7 @@ const CalendarHeader = React.createClass({
   render() {
     return <div className="text-center">
       <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: "pointer"}}>{this.props.previousButtonElement}</div>
-        <span style={{cursor: "pointer"}} onClick={this.props.onDateClick}>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+        <span onClick={this.props.onDateClick}>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
       <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: "pointer"}}>{this.props.nextButtonElement}</div>
     </div>;
   }
