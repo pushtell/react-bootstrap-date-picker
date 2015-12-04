@@ -8,7 +8,7 @@
 
 See the demo at [pushtell.github.io/react-bootstrap-date-picker](http://pushtell.github.io/react-bootstrap-date-picker/).
 
-<img src="https://cdn.rawgit.com/pushtell/react-bootstrap-date-picker/master/documentation-images/date-picker-screencast.gif" width="320" height="352" />
+[![Demo](https://cdn.rawgit.com/pushtell/react-bootstrap-date-picker/master/documentation-images/date-picker-screencast.gif)](http://pushtell.github.io/react-bootstrap-date-picker/)
 
 Please [★ on GitHub](https://github.com/pushtell/react-bootstrap-date-picker)!
 

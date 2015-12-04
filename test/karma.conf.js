@@ -73,14 +73,14 @@ module.exports = function (karma) {
         browser: 'safari',
         browser_version : 'latest'
       },
-      bs_android_4_default: {
-        base: 'BrowserStack',
-        os_version: "4.1",
-        device: "Google Nexus 7",
-        browser_version: null,
-        os: "android",
-        browser: "android"
-      },
+      //bs_android_4_default: {
+      //  base: 'BrowserStack',
+      //  os_version: "4.1",
+      //  device: "Google Nexus 7",
+      //  browser_version: null,
+      //  os: "android",
+      //  browser: "android"
+      //},
       bs_ios_8_default: {
         base: 'BrowserStack',
         os_version: "8.3",
