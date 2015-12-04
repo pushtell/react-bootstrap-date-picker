@@ -6,6 +6,8 @@
 [![Dependency Status](https://david-dm.org/pushtell/react-bootstrap-date-picker.svg)](https://david-dm.org/pushtell/react-bootstrap-date-picker)
 [![NPM Downloads](https://img.shields.io/npm/dm/react-bootstrap-date-picker.svg?style=flat)](https://www.npmjs.com/package/react-bootstrap-date-picker)
 
+See the demo at [pushtell.github.io/react-bootstrap-date-picker](http://pushtell.github.io/react-bootstrap-date-picker/).
+
 <img src="https://cdn.rawgit.com/pushtell/react-bootstrap-date-picker/master/documentation-images/date-picker-screencast.gif" width="320" height="352" />
 
 Please [★ on GitHub](https://github.com/pushtell/react-bootstrap-date-picker)!
