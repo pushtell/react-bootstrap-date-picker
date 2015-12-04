@@ -64,7 +64,9 @@ var App = React.createClass({
 
 ### `<DatePicker />`
 
-DatePicker component. Renders as an [react-bootstrap input element](https://react-bootstrap.github.io/components.html#forms).
+DatePicker component. Renders as a [react-bootstrap input element](https://react-bootstrap.github.io/components.html#forms).
+
+[Input element](https://react-bootstrap.github.io/components.html#forms) properties are passed through to the input element.
 
 * **Properties:**
   * `clearButtonElement` - Character or component to use for the clear button.

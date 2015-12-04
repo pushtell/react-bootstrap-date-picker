@@ -151,7 +151,6 @@ describe("DatePicker", function() {
     const inputElement = document.querySelector("input.form-control");
     inputElement.value = "05/31/1980";
     TestUtils.Simulate.change(inputElement);
-    console.log(value);
     const date = new Date(value);
     assert.equal(date.getMonth(), 4);
     assert.equal(date.getDate(), 31);
