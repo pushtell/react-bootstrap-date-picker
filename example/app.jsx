@@ -172,13 +172,6 @@ const App = React.createClass({
           </form>
         </Col>
       </Row>
-      <Row>
-        <Col sm={3}>
-          <form>
-            <DatePicker label="Label" placeholder="Placeholder" />
-          </form>
-        </Col>
-      </Row>
     </Grid>;
   }
 });
