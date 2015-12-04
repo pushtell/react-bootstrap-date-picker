@@ -296,6 +296,7 @@ export default React.createClass({
           ref="input"
           type="text"
           valueLink={null}
+          bsStyle={this.props.bsStyle || "default"}
           placeholder={this.state.focused ? "MM/DD/YYYY" : this.props.placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
