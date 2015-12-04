@@ -8,14 +8,14 @@
     "test": "test"
   },
   "peerDependencies": {
-    "react": ">=0.14.0"
+    "react": ">=0.14.0",
+    "react-bootstrap": "^0.28.1",
   },
   "dependencies": {
-    "react": ">=0.14.0",
-    "react-bootstrap": "^0.28.1"
   },
   "devDependencies": {
-    "react": "^0.14.0",
+    "react": ">=0.14.0",
+    "react-bootstrap": "^0.28.1",
     "react-dom": "^0.14.0",
     "assert": "*",
     "co": "*",
