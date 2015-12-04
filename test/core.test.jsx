@@ -333,17 +333,28 @@ describe("Date Picker", function() {
   }));
   it("should call focus and blur handlers.", co.wrap(function *(){
     const id = UUID.v4();
-    let blurred = false;
-    let focused = false;
+    var results = {};
     const App = React.createClass({
+      getInitialState: function() {
+        return {
+          blurred: false,
+          focused: false
+        }
+      },
       focusHandler: function() {
-        focused = true;
+        this.setState({
+          focused: true
+        });
       },
       blurHandler: function() {
-        blurred = true;
+        this.setState({
+          blurred: true
+        });
       },
       render: function(){
         return <div>
+          {this.state.focused ? <div id="focused" /> : null}
+          {this.state.blurred ? <div id="blurred" /> : null}
           <DatePicker id={id} onBlur={this.blurHandler} onFocus={this.focusHandler} />
         </div>;
       }
@@ -353,9 +364,15 @@ describe("Date Picker", function() {
     });
     const inputElement = document.querySelector("input.form-control");
     inputElement.focus();
+    yield new Promise(function(resolve, reject){
+      setTimeout(resolve, 1000);
+    });
     inputElement.blur();
-    assert(focused);
-    assert(blurred);
+    yield new Promise(function(resolve, reject){
+      setTimeout(resolve, 2000);
+    });
+    assert.notEqual(document.getElementById("focused"), null);
+    assert.notEqual(document.getElementById("blurred"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should automatically insert slashes.", co.wrap(function *(){

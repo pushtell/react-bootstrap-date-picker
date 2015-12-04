@@ -73,14 +73,6 @@ module.exports = function (karma) {
         browser: 'safari',
         browser_version : 'latest'
       },
-      bs_android_4_default: {
-        base: 'BrowserStack',
-        os_version: "4.1",
-        device: "Google Nexus 7",
-        browser_version: null,
-        os: "android",
-        browser: "android"
-      },
       bs_ios_8_default: {
         base: 'BrowserStack',
         os_version: "8.3",
@@ -119,6 +111,8 @@ module.exports = function (karma) {
         ]
       }
     },
+    browserNoActivityTimeout: 30000,
+    browserDisconnectTolerance: 2,
     webpackMiddleware: {
       noInfo: true,
     }
@@ -127,7 +121,7 @@ module.exports = function (karma) {
     options.browserStack = {
       username: process.env.BROWSERSTACK_USERNAME,
       accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-      pollingTimeout: 10000
+      pollingTimeout: 30000
     };
     options.browsers = Object.keys(options.customLaunchers).filter(function(key){
       return key.indexOf("bs_") !== -1;

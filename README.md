@@ -113,10 +113,7 @@ DatePicker component. Renders as a [react-bootstrap input element](https://react
 * Firefox (latest version), Windows 7
 * Chrome (latest version), Windows 7
 * Safari (latest version), OSX Yosemite
-* Android Browser (latest version), Google Nexus 7, Android 4.1
 * Mobile Safari (latest version), iPhone 6, iOS 8.3
-
-[Mocha](https://mochajs.org/) tests are performed on the latest version of [Node](https://nodejs.org/en/).
 
 Please [let us know](https://github.com/pushtell/react-bootstrap-date-picker/issues/new) if a different configuration should be included here.
 
