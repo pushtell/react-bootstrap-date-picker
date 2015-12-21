@@ -71,6 +71,18 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col xs={12}>
+          <h2>Blur and Focus Events</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <form>
+            <DatePicker placeholder="Placeholder" help="Open console to see focus/blur logging." value={this.state.date} onFocus={() => {console.log("Focus")}} onBlur={() => {console.log("Blur")}}/>
+          </form>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
           <h2>Styles</h2>
         </Col>
       </Row>

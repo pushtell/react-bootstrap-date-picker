@@ -2,7 +2,7 @@
   "name": "react-bootstrap-date-picker",
   "keywords": ["react", "react-component", "react-bootstrap", "bootstrap", "date picker", "calendar", "date", "picker"],
   "main": "lib/index.js",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "React-Bootstrap based date picker.",
   "directories": {
     "test": "test"

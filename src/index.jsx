@@ -56,7 +56,11 @@ const Calendar = React.createClass({
     displayDate: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
-    cellPadding: React.PropTypes.string.isRequired
+    cellPadding: React.PropTypes.string.isRequired,
+    onUnmount: React.PropTypes.func.isRequired
+  },
+  componentWillUnmount(){
+    this.props.onUnmount();
   },
   handleClick(day) {
     const newSelectedDate = new Date(this.props.displayDate);
@@ -187,7 +191,21 @@ export default React.createClass({
       this.props.valueLink.requestChange(null);
     }
   },
+  handleHide(e){
+    if(document.activeElement === this.refs.input.getInputDOMNode()) {
+      return;
+    }
+    this.setState({
+      focused: false
+    });
+    if(this.props.onBlur) {
+      this.props.onBlur(e);
+    }
+  },
   handleFocus(e){
+    if(this.refs.overlay.state.isOverlayShown === true) {
+      return;
+    }
     this.setState({
       focused: true
     });
@@ -196,6 +214,9 @@ export default React.createClass({
     }
   },
   handleBlur(e){
+    if(this.refs.overlay.state.isOverlayShown === true) {
+      return;
+    }
     this.setState({
       focused: false
     });
@@ -284,7 +305,7 @@ export default React.createClass({
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels} />;
     const popOver = <Popover id="calendar" title={calendarHeader}>
-      <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} />
+      <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} onUnmount={this.handleHide} />
     </Popover>;
     const buttonStyle = this.props.bsStyle === "error" ? "danger" : this.props.bsStyle;
     const clearButton = <Button onClick={this.clear} bsStyle={buttonStyle || "default"} disabled={!this.state.inputValue}>{this.props.clearButtonElement}</Button>;
