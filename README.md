@@ -28,7 +28,7 @@ Please [★ on GitHub](https://github.com/pushtell/react-bootstrap-date-picker)!
 
 ## Installation
 
-`react-bootstrap-date-picker` is compatible with React 0.14.x.
+`react-bootstrap-date-picker` is compatible with React 0.14.x and 0.15.x.
 
 ```bash
 npm install react-bootstrap-date-picker
@@ -71,6 +71,10 @@ DatePicker component. Renders as a [react-bootstrap input element](https://react
 [Input element](https://react-bootstrap.github.io/components.html#forms) properties are passed through to the input element.
 
 * **Properties:**
+  * `dateFormat` - Date format. `"MM/DD/YYYY"` or `"DD/MM/YYYY"` or `"YYYY/MM/DD"`
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"MM/DD/YYYY"`
   * `clearButtonElement` - Character or component to use for the clear button.
     * **Optional**
     * **Type:** `string` or `ReactClass`

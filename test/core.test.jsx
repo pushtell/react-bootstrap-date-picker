@@ -6,7 +6,6 @@ import co from "co";
 import ES6Promise from 'es6-promise';
 import UUID from "node-uuid";
 import TestUtils from 'react/lib/ReactTestUtils';
-import LinkedStateMixin from 'react-addons-linked-state-mixin';
 
 ES6Promise.polyfill();
 
@@ -102,35 +101,24 @@ describe("Date Picker", function() {
     assert(typeof value === "string");
     ReactDOM.unmountComponentAtNode(container);
   }));
-  it("should open the calendar, select a date, and update a linked value.", co.wrap(function *(){
+  it("should open the calendar and render 29 days on a leap year.", co.wrap(function *(){
     const id = UUID.v4();
+    let value = "2016-02-15T00:00:00.000Z";
     const App = React.createClass({
-      mixins: [LinkedStateMixin],
-      getValue: function(){
-        return this.state.value
-      },
-      getInitialState: function(){
-        return {
-          value: null
-        }
-      },
       render: function(){
         return <div>
-          <div id="linkedValue">{this.state.value}</div>
-          <DatePicker id={id} valueLink={this.linkState('value')} />
+          <DatePicker id={id} value={value} />
         </div>;
       }
     });
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
-    const linkedValue = document.getElementById("linkedValue");
     const inputElement = document.querySelector("input.form-control");
     TestUtils.Simulate.click(inputElement);
-    const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
-    assert.equal(linkedValue.innerHTML, '');
+    const dayElement = document.querySelector("table tbody tr:nth-child(5) td:nth-of-type(2)");
+    assert.equal(dayElement.innerHTML, '29');
     TestUtils.Simulate.click(dayElement);
-    assert.notEqual(linkedValue.innerHTML, '');
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should update via a change handler when the input is changed.", co.wrap(function *(){
@@ -153,38 +141,7 @@ describe("Date Picker", function() {
     inputElement.value = "05/31/1980";
     TestUtils.Simulate.change(inputElement);
     const date = new Date(value);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
-    ReactDOM.unmountComponentAtNode(container);
-  }));
-  it("should update a linked value when the input is changed.", co.wrap(function *(){
-    const id = UUID.v4();
-    const App = React.createClass({
-      mixins: [LinkedStateMixin],
-      getValue: function(){
-        return this.state.value
-      },
-      getInitialState: function(){
-        return {
-          value: null
-        }
-      },
-      render: function(){
-        return <div>
-          <div id="linkedValue">{this.state.value}</div>
-          <DatePicker id={id} valueLink={this.linkState('value')} />
-        </div>;
-      }
-    });
-    yield new Promise(function(resolve, reject){
-      ReactDOM.render(<App />, container, resolve);
-    });
-    const linkedValue = document.getElementById("linkedValue");
-    const inputElement = document.querySelector("input.form-control");
-    inputElement.value = "05/31/1980";
-    TestUtils.Simulate.change(inputElement);
-    const date = new Date(linkedValue.innerHTML);
+    console.log(window.navigator.userLanguage);
     assert.equal(date.getMonth(), 4);
     assert.equal(date.getDate(), 31);
     assert.equal(date.getFullYear(), 1980);
@@ -272,39 +229,6 @@ describe("Date Picker", function() {
     }
     ReactDOM.unmountComponentAtNode(container);
   }));
-  it("should updated a linked value when cleared.", co.wrap(function *(){
-    const id = UUID.v4();
-    const App = React.createClass({
-      mixins: [LinkedStateMixin],
-      getValue: function(){
-        return this.state.value
-      },
-      getInitialState: function(){
-        return {
-          value: null
-        }
-      },
-      render: function(){
-        return <div>
-          <div id="linkedValue">{this.state.value}</div>
-          <DatePicker id={id} valueLink={this.linkState('value')} />
-        </div>;
-      }
-    });
-    yield new Promise(function(resolve, reject){
-      ReactDOM.render(<App />, container, resolve);
-    });
-    const linkedValue = document.getElementById("linkedValue");
-    const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
-    const clearButtonElement = document.querySelector(".form-group button");
-    const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
-    TestUtils.Simulate.click(dayElement);
-    assert.notEqual(linkedValue.innerHTML, "");
-    TestUtils.Simulate.click(clearButtonElement);
-    assert.equal(linkedValue.innerHTML, "");
-    ReactDOM.unmountComponentAtNode(container);
-  }));
   it("should updated a change handler when cleared.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
@@ -389,13 +313,80 @@ describe("Date Picker", function() {
     });
     const inputElement = document.querySelector("input.form-control");
     inputElement.value = "0";
-    TestUtils.Simulate.change(inputElement)
+    TestUtils.Simulate.change(inputElement);
     inputElement.value = "05";
-    TestUtils.Simulate.change(inputElement)
+    TestUtils.Simulate.change(inputElement);
     assert.equal(inputElement.value, "05/");
     inputElement.value = "05/31";
     TestUtils.Simulate.change(inputElement)
     assert.equal(inputElement.value, "05/31/");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should automatically insert in YYYY/MM/DD format.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} dateFormat="YYYY/MM/DD" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    inputElement.value = "0";
+    TestUtils.Simulate.change(inputElement);
+    inputElement.value = "1980";
+    TestUtils.Simulate.change(inputElement);
+    assert.equal(inputElement.value, "1980/");
+    inputElement.value = "1980/05";
+    TestUtils.Simulate.change(inputElement)
+    assert.equal(inputElement.value, "1980/05/");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should render dates in different formats.", co.wrap(function *(){
+    const mm_dd_yyyy_id = "_" + UUID.v4();
+    const dd_mm_yyyy_id = "_" + UUID.v4();
+    const yyyy_mm_dd_id = "_" + UUID.v4();
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: null
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={mm_dd_yyyy_id} dateFormat="MM/DD/YYYY" onChange={this.handleChange} value={this.state.value} />
+          <DatePicker id={dd_mm_yyyy_id} dateFormat="DD/MM/YYYY" onChange={this.handleChange} value={this.state.value} />
+          <DatePicker id={yyyy_mm_dd_id} dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_container input.form-control");
+    const dd_mm_yyyy_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_container input.form-control");
+    const yyyy_mm_dd_inputElement = document.querySelector("#" + yyyy_mm_dd_id + "_container input.form-control");
+    mm_dd_yyyy_inputElement.value = "05/31/1980";
+    TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
+    assert.equal(mm_dd_yyyy_inputElement.value, "05/31/1980");
+    assert.equal(dd_mm_yyyy_inputElement.value, "31/05/1980");
+    assert.equal(yyyy_mm_dd_inputElement.value, "1980/05/31");
+    dd_mm_yyyy_inputElement.value = "15/04/2015";
+    TestUtils.Simulate.change(dd_mm_yyyy_inputElement);
+    assert.equal(mm_dd_yyyy_inputElement.value, "04/15/2015");
+    assert.equal(dd_mm_yyyy_inputElement.value, "15/04/2015");
+    assert.equal(yyyy_mm_dd_inputElement.value, "2015/04/15");
+    yyyy_mm_dd_inputElement.value = "1999/12/31";
+    TestUtils.Simulate.change(yyyy_mm_dd_inputElement);
+    assert.equal(mm_dd_yyyy_inputElement.value, "12/31/1999");
+    assert.equal(dd_mm_yyyy_inputElement.value, "31/12/1999");
+    assert.equal(yyyy_mm_dd_inputElement.value, "1999/12/31");
     ReactDOM.unmountComponentAtNode(container);
   }));
 });

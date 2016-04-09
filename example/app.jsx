@@ -7,14 +7,12 @@ import NavBar from "react-bootstrap/lib/NavBar";
 import Nav from "react-bootstrap/lib/Nav";
 import NavItem from "react-bootstrap/lib/NavItem";
 import DatePicker from "../src/index.jsx";
-import LinkedStateMixin from 'react-addons-linked-state-mixin';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 
 const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
 const App = React.createClass({
-  mixins: [LinkedStateMixin],
   getInitialState() {
     return {
       date: new Date().toISOString(),
@@ -59,18 +57,6 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col xs={12}>
-          <h2>LinkState</h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm={6}>
-          <form>
-            <DatePicker placeholder="Placeholder" valueLink={this.linkState('date')} />
-          </form>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={12}>
           <h2>Blur and Focus Events</h2>
         </Col>
       </Row>
@@ -100,6 +86,28 @@ const App = React.createClass({
         <Col sm={4}>
           <form>
             <DatePicker bsStyle="error" label="Error" placeholder="Placeholder" value={this.state.date} help="Help" />
+          </form>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <h2>Date Format</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={4}>
+          <form>
+            <DatePicker label="MM/DD/YYYY" dateFormat="MM/DD/YYYY" onChange={this.handleChange} value={this.state.date} help="Help" />
+          </form>
+        </Col>
+        <Col sm={4}>
+          <form>
+            <DatePicker label="DD/MM/YYYY" dateFormat="DD/MM/YYYY" onChange={this.handleChange} value={this.state.date} help="Help" />
+          </form>
+        </Col>
+        <Col sm={4}>
+          <form>
+            <DatePicker label="YYYY/MM/DD" dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.date} help="Help" />
           </form>
         </Col>
       </Row>

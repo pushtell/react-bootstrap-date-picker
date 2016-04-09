@@ -6,19 +6,12 @@ import Popover from 'react-bootstrap/lib/Popover';
 import Button from 'react-bootstrap/lib/Button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
 
-const makeInputValueString = function(date) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  return (month > 9 ? month : "0" + month) + "/" + (day > 9 ? day : "0" + day) + "/" + date.getFullYear()
-};
-
 const CalendarHeader = React.createClass({
   displayName: "DatePickerHeader",
   propTypes: {
     displayDate: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
     monthLabels: React.PropTypes.array.isRequired,
-    onDateClick: React.PropTypes.func.isRequired,
     previousButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
@@ -26,7 +19,7 @@ const CalendarHeader = React.createClass({
     nextButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
-    ]).isRequired,
+    ]).isRequired
   },
   handleClickPrevious(){
     const newDisplayDate = new Date(this.props.displayDate);
@@ -41,7 +34,7 @@ const CalendarHeader = React.createClass({
   render() {
     return <div className="text-center">
       <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: "pointer"}}>{this.props.previousButtonElement}</div>
-        <span onClick={this.props.onDateClick}>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+        <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
       <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: "pointer"}}>{this.props.nextButtonElement}</div>
     </div>;
   }
@@ -126,6 +119,7 @@ export default React.createClass({
   propTypes: {
     value: React.PropTypes.string,
     cellPadding: React.PropTypes.string,
+    placeholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
@@ -141,31 +135,35 @@ export default React.createClass({
       React.PropTypes.string,
       React.PropTypes.object
     ]),
-    calendarPlacement: React.PropTypes.string
+    calendarPlacement: React.PropTypes.string,
+    dateFormat: React.PropTypes.oneOf(['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD'])
   },
   getDefaultProps() {
+    const language = (window.navigator.userLanguage || window.navigator.language || '').toLowerCase();
+    const dateFormat = !language || language === "en-us" ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
     return {
       cellPadding: "5px",
       dayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       monthLabels: ['January', 'February', 'March', 'April',
                     'May', 'June', 'July', 'August', 'September',
                     'October', 'November', 'December'],
-      placeholder: "MM/DD/YYYY",
       clearButtonElement: "×",
       previousButtonElement: "<",
       nextButtonElement: ">",
-      calendarPlacement: "bottom"
+      calendarPlacement: "bottom",
+      dateFormat: dateFormat
     }
   },
   getInitialState() {
-    var state = this.makeDateValues(this.props.value ? this.props.value : this.props.valueLink ? this.props.valueLink.value : null);
+    var state = this.makeDateValues(this.props.value);
     state.focused = false;
+    state.placeholder = this.props.placeholder || this.props.dateFormat;
     return state;
   },
   makeDateValues(isoString) {
     let displayDate;
     const selectedDate = isoString ? new Date(isoString) : null;
-    const inputValue = isoString ? makeInputValueString(selectedDate) : null;
+    const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if(selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
@@ -186,9 +184,6 @@ export default React.createClass({
     this.setState(this.makeDateValues(null));
     if(this.props.onChange) {
       this.props.onChange(null);
-    }
-    if(this.props.valueLink && this.props.valueLink.requestChange) {
-      this.props.valueLink.requestChange(null);
     }
   },
   handleHide(e){
@@ -224,26 +219,50 @@ export default React.createClass({
       this.props.onBlur(e);
     }
   },
-  handleHeaderDateClick(e) {
-
-  },
   getValue(){
     return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
+  },
+  makeInputValueString(date) {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    if(this.props.dateFormat === "MM/DD/YYYY") {
+      return (month > 9 ? month : "0" + month) + "/" + (day > 9 ? day : "0" + day) + "/" + date.getFullYear();
+    } else if(this.props.dateFormat === "DD/MM/YYYY") {
+      return (day > 9 ? day : "0" + day) + "/" + (month > 9 ? month : "0" + month) + "/" + date.getFullYear();
+    } else {
+      return date.getFullYear() + "/" + (month > 9 ? month : "0" + month) + "/" + (day > 9 ? day : "0" + day);
+    }
   },
   handleInputChange(e){
     let inputValue = this.refs.input.getValue();
     inputValue = inputValue.replace(/(-|\/\/)/g, '/');
-    const month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
-    const day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
-    const year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+    let month, day, year;
+    if(this.props.dateFormat === "MM/DD/YYYY") {
+      month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
+      day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
+      year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+    } else if(this.props.dateFormat === "DD/MM/YYYY") {
+      day = inputValue.slice(0,2).replace(/[^0-9]/g, '');
+      month = inputValue.slice(3,5).replace(/[^0-9]/g, '');
+      year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+    } else {
+      year = inputValue.slice(0,4).replace(/[^0-9]/g, '');
+      month = inputValue.slice(5,7).replace(/[^0-9]/g, '');
+      day = inputValue.slice(8,10).replace(/[^0-9]/g, '');
+    }
+
     const monthInteger = parseInt(month, 10);
     const dayInteger = parseInt(day, 10);
     const yearInteger = parseInt(year, 10);
     if(!isNaN(monthInteger) && !isNaN(dayInteger) && !isNaN(yearInteger) && monthInteger <= 12 && dayInteger <= 31 && yearInteger > 999) {
       const selectedDate = new Date();
-      selectedDate.setDate(dayInteger);
-      selectedDate.setMonth(monthInteger - 1);
+      selectedDate.setHours(12);
+      selectedDate.setMinutes(0);
+      selectedDate.setSeconds(0);
+      selectedDate.setMilliseconds(0);
       selectedDate.setYear(yearInteger);
+      selectedDate.setMonth(monthInteger - 1);
+      selectedDate.setDate(dayInteger);
       this.setState({
         selectedDate: selectedDate,
         displayDate: selectedDate,
@@ -252,19 +271,34 @@ export default React.createClass({
       if(this.props.onChange) {
         this.props.onChange(selectedDate.toISOString());
       }
-      if(this.props.valueLink && this.props.valueLink.requestChange) {
-        this.props.valueLink.requestChange(selectedDate.toISOString());
-      }
     }
-    inputValue = month + inputValue.slice(2,3).replace(/[^\/]/g, '') + day + inputValue.slice(5,6).replace(/[^\/]/g, '') + year;
-    if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
-      if(inputValue.length == 2) {
-        inputValue += "/";
+    if(this.props.dateFormat === "MM/DD/YYYY") {
+      inputValue = month + inputValue.slice(2,3).replace(/[^\/]/g, '') + day + inputValue.slice(5,6).replace(/[^\/]/g, '') + year;
+    } else if(this.props.dateFormat === "DD/MM/YYYY") {
+      inputValue = day + inputValue.slice(2,3).replace(/[^\/]/g, '') + month + inputValue.slice(5,6).replace(/[^\/]/g, '') + year;
+    } else {
+      inputValue = year + inputValue.slice(4,5).replace(/[^\/]/g, '') + month + inputValue.slice(7,8).replace(/[^\/]/g, '');
+    }
+    if(this.props.dateFormat === "YYYY/MM/DD") {
+      if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
+        if(inputValue.length == 4) {
+          inputValue += "/";
+        }
+        if(inputValue.length == 7) {
+          inputValue += "/";
+        }
+        inputValue = inputValue.slice(0, 10);
       }
-      if(inputValue.length == 5) {
-        inputValue += "/";
+    } else {
+      if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
+        if(inputValue.length == 2) {
+          inputValue += "/";
+        }
+        if(inputValue.length == 5) {
+          inputValue += "/";
+        }
+        inputValue = inputValue.slice(0, 10);
       }
-      inputValue = inputValue.slice(0, 10);
     }
     this.setState({
       inputValue: inputValue
@@ -277,7 +311,7 @@ export default React.createClass({
   },
   onChangeDate(newSelectedDate) {
     this.setState({
-      inputValue: makeInputValueString(newSelectedDate),
+      inputValue: this.makeInputValueString(newSelectedDate),
       selectedDate: newSelectedDate,
       displayDate: newSelectedDate,
       value: newSelectedDate.toISOString()
@@ -286,12 +320,9 @@ export default React.createClass({
     if(this.props.onChange) {
       this.props.onChange(newSelectedDate.toISOString());
     }
-    if(this.props.valueLink && this.props.valueLink.requestChange) {
-      this.props.valueLink.requestChange(newSelectedDate.toISOString());
-    }
   },
   componentWillReceiveProps(newProps) {
-    const value = newProps.value ? newProps.value : newProps.valueLink ? newProps.valueLink.value : null;
+    const value = newProps.value;
     if(this.getValue() !== value) {
       this.setState(this.makeDateValues(value));
     }
@@ -301,23 +332,22 @@ export default React.createClass({
       previousButtonElement={this.props.previousButtonElement}
       nextButtonElement={this.props.nextButtonElement}
       displayDate={this.state.displayDate}
-      onDateClick={this.handleHeaderDateClick}
       onChange={this.onChangeMonth}
-      monthLabels={this.props.monthLabels} />;
+      monthLabels={this.props.monthLabels}
+      dateFormat={this.props.dateFormat} />;
     const popOver = <Popover id="calendar" title={calendarHeader}>
       <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} onUnmount={this.handleHide} />
     </Popover>;
     const buttonStyle = this.props.bsStyle === "error" ? "danger" : this.props.bsStyle;
     const clearButton = <Button onClick={this.clear} bsStyle={buttonStyle || "default"} disabled={!this.state.inputValue}>{this.props.clearButtonElement}</Button>;
-    return <div>
+    return <div id={this.props.id ? this.props.id + "_container" : null}>
       <OverlayTrigger ref="overlay" trigger="click" rootClose placement={this.props.calendarPlacement} overlay={popOver} delayHide={100}>
         <Input
           {...this.props}
-          value={this.state.inputValue}
+          value={this.state.inputValue || ''}
           ref="input"
           type="text"
-          valueLink={null}
-          placeholder={this.state.focused ? "MM/DD/YYYY" : this.props.placeholder}
+          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
@@ -326,8 +356,7 @@ export default React.createClass({
           id={null}
         />
       </OverlayTrigger>
-      <input type="hidden" id={this.props.id} name={this.props.name} value={this.state.value} />
+      <input type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
     </div>;
   }
 });
-
