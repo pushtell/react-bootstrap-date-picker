@@ -141,7 +141,6 @@ describe("Date Picker", function() {
     inputElement.value = "05/31/1980";
     TestUtils.Simulate.change(inputElement);
     const date = new Date(value);
-    console.log(window.navigator.userLanguage);
     assert.equal(date.getMonth(), 4);
     assert.equal(date.getDate(), 31);
     assert.equal(date.getFullYear(), 1980);
