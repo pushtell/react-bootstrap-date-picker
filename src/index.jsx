@@ -136,7 +136,7 @@ export default React.createClass({
       React.PropTypes.object
     ]),
     calendarPlacement: React.PropTypes.string,
-    dateFormat: React.PropTypes.oneOf(['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD'])
+    dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
   },
   getDefaultProps() {
     const language = (window.navigator.userLanguage || window.navigator.language || '').toLowerCase();
@@ -158,6 +158,7 @@ export default React.createClass({
     var state = this.makeDateValues(this.props.value);
     state.focused = false;
     state.placeholder = this.props.placeholder || this.props.dateFormat;
+    state.separator = this.props.dateFormat.match(/[^A-Z]/)[0];
     return state;
   },
   makeDateValues(isoString) {
@@ -225,23 +226,26 @@ export default React.createClass({
   makeInputValueString(date) {
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    if(this.props.dateFormat === "MM/DD/YYYY") {
-      return (month > 9 ? month : "0" + month) + "/" + (day > 9 ? day : "0" + day) + "/" + date.getFullYear();
-    } else if(this.props.dateFormat === "DD/MM/YYYY") {
-      return (day > 9 ? day : "0" + day) + "/" + (month > 9 ? month : "0" + month) + "/" + date.getFullYear();
+    
+    //this method is executed during intialState setup... handle a missing state properly
+    var separator = (this.state ? this.state.separator : this.props.dateFormat.match(/[^A-Z]/)[0]);
+    if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
+      return (month > 9 ? month : "0" + month) + separator + (day > 9 ? day : "0" + day) + separator + date.getFullYear();
+    } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
+      return (day > 9 ? day : "0" + day) + separator + (month > 9 ? month : "0" + month) + separator + date.getFullYear();
     } else {
-      return date.getFullYear() + "/" + (month > 9 ? month : "0" + month) + "/" + (day > 9 ? day : "0" + day);
+      return date.getFullYear() + separator + (month > 9 ? month : "0" + month) + separator + (day > 9 ? day : "0" + day);
     }
   },
   handleInputChange(e){
     let inputValue = this.refs.input.getValue();
-    inputValue = inputValue.replace(/(-|\/\/)/g, '/');
+    inputValue = inputValue.replace(/(-|\/\/)/g, this.state.separator);
     let month, day, year;
-    if(this.props.dateFormat === "MM/DD/YYYY") {
+    if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
       month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
       year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
-    } else if(this.props.dateFormat === "DD/MM/YYYY") {
+    } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
       day = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       month = inputValue.slice(3,5).replace(/[^0-9]/g, '');
       year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
@@ -272,30 +276,30 @@ export default React.createClass({
         this.props.onChange(selectedDate.toISOString());
       }
     }
-    if(this.props.dateFormat === "MM/DD/YYYY") {
-      inputValue = month + inputValue.slice(2,3).replace(/[^\/]/g, '') + day + inputValue.slice(5,6).replace(/[^\/]/g, '') + year;
-    } else if(this.props.dateFormat === "DD/MM/YYYY") {
-      inputValue = day + inputValue.slice(2,3).replace(/[^\/]/g, '') + month + inputValue.slice(5,6).replace(/[^\/]/g, '') + year;
+    if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
+      inputValue = month + inputValue.slice(2,3).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + day + inputValue.slice(5,6).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + year;
+    } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
+      inputValue = day + inputValue.slice(2,3).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + month + inputValue.slice(5,6).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + year;
     } else {
-      inputValue = year + inputValue.slice(4,5).replace(/[^\/]/g, '') + month + inputValue.slice(7,8).replace(/[^\/]/g, '');
+      inputValue = year + inputValue.slice(4,5).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + month + inputValue.slice(7,8).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '');
     }
-    if(this.props.dateFormat === "YYYY/MM/DD") {
+    if(this.props.dateFormat.match(/YYYY.MM.DD/)) {
       if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
         if(inputValue.length == 4) {
-          inputValue += "/";
+          inputValue += this.state.separator;
         }
         if(inputValue.length == 7) {
-          inputValue += "/";
+          inputValue += this.state.separator;
         }
         inputValue = inputValue.slice(0, 10);
       }
     } else {
       if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
         if(inputValue.length == 2) {
-          inputValue += "/";
+          inputValue += this.state.separator;
         }
         if(inputValue.length == 5) {
-          inputValue += "/";
+          inputValue += this.state.separator;
         }
         inputValue = inputValue.slice(0, 10);
       }
