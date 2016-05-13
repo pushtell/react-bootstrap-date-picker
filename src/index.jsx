@@ -1,7 +1,10 @@
 // See http://jszen.blogspot.com/2007/03/how-to-build-simple-calendar-with.html for calendar logic.
 
 import React from 'react';
-import Input from 'react-bootstrap/lib/Input';
+import ReactDOM from 'react-dom';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import InputGroup from 'react-bootstrap/lib/InputGroup';
 import Popover from 'react-bootstrap/lib/Popover';
 import Button from 'react-bootstrap/lib/Button';
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
@@ -188,7 +191,7 @@ export default React.createClass({
     }
   },
   handleHide(e){
-    if(document.activeElement === this.refs.input.getInputDOMNode()) {
+    if(document.activeElement === ReactDOM.findDOMNode(this.refs.input)) {
       return;
     }
     this.setState({
@@ -238,7 +241,7 @@ export default React.createClass({
     }
   },
   handleInputChange(e){
-    let inputValue = this.refs.input.getValue();
+    let inputValue = ReactDOM.findDOMNode(this.refs.input).value;
     inputValue = inputValue.replace(/(-|\/\/)/g, this.state.separator);
     let month, day, year;
     if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
@@ -343,22 +346,32 @@ export default React.createClass({
       <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} onUnmount={this.handleHide} />
     </Popover>;
     const buttonStyle = this.props.bsStyle === "error" ? "danger" : this.props.bsStyle;
-    const clearButton = <Button onClick={this.clear} bsStyle={buttonStyle || "default"} disabled={!this.state.inputValue}>{this.props.clearButtonElement}</Button>;
     return <div id={this.props.id ? this.props.id + "_container" : null}>
       <OverlayTrigger ref="overlay" trigger="click" rootClose placement={this.props.calendarPlacement} overlay={popOver} delayHide={100}>
-        <Input
-          {...this.props}
-          value={this.state.inputValue || ''}
-          ref="input"
-          type="text"
-          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-          onChange={this.handleInputChange}
-          buttonAfter={clearButton}
-          name={null}
-          id={null}
-        />
+        <FormGroup>
+          <InputGroup>
+            <FormControl
+              {...this.props}
+              value={this.state.inputValue || ''}
+              ref="input"
+              type="text"
+              placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+              onFocus={this.handleFocus}
+              onBlur={this.handleBlur}
+              onChange={this.handleInputChange}
+              name={null}
+              id={null}
+            />
+            <InputGroup.Button>
+              <Button
+                onClick={this.clear}
+                bsStyle={buttonStyle || "default"}
+                disabled={!this.state.inputValue}>
+                  {this.props.clearButtonElement}
+              </Button>
+            </InputGroup.Button>
+          </InputGroup>
+        </FormGroup>
       </OverlayTrigger>
       <input type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
     </div>;
