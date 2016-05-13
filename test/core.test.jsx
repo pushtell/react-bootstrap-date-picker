@@ -251,8 +251,8 @@ describe("Date Picker", function() {
     TestUtils.Simulate.click(dayElement);
     assert.notEqual(value, null);
     TestUtils.Simulate.click(clearButtonElement);
-    // assert.equal(value, null);
-    // ReactDOM.unmountComponentAtNode(container);
+    assert.equal(value, null);
+    ReactDOM.unmountComponentAtNode(container);
   }));
   it("should call focus and blur handlers.", co.wrap(function *(){
     const id = UUID.v4();
