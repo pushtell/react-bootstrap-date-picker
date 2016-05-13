@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Grid from "react-bootstrap/lib/Grid";
 import Row from "react-bootstrap/lib/Row";
 import Col from "react-bootstrap/lib/Col";
-import NavBar from "react-bootstrap/lib/NavBar";
+import { Navbar } from "react-bootstrap";
 import Nav from "react-bootstrap/lib/Nav";
 import NavItem from "react-bootstrap/lib/NavItem";
 import DatePicker from "../src/index.jsx";
@@ -34,13 +34,13 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col xs={12}>
-          <NavBar>
+          <Navbar>
             <Nav bsStyle="pills">
               <NavItem href="https://github.com/pushtell/react-bootstrap-date-picker/blob/master/example/app.jsx">Example Source</NavItem>
               <NavItem href="https://github.com/pushtell/react-bootstrap-date-picker">Documentation on Github</NavItem>
               <NavItem href="https://www.npmjs.com/package/react-bootstrap-date-picker">NPM Package</NavItem>
             </Nav>
-          </NavBar>
+          </Navbar>
         </Col>
       </Row>
       <Row>
@@ -102,7 +102,7 @@ const App = React.createClass({
         </Col>
         <Col sm={4}>
           <form>
-            <DatePicker label="DD/MM/YYYY" dateFormat="DD/MM/YYYY" onChange={this.handleChange} value={this.state.date} help="Help" />
+            <DatePicker label="DD-MM-YYYY" dateFormat="DD-MM-YYYY" onChange={this.handleChange} value={this.state.date} help="Help" />
           </form>
         </Col>
         <Col sm={4}>

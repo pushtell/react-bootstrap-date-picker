@@ -71,7 +71,7 @@ DatePicker component. Renders as a [react-bootstrap input element](https://react
 [Input element](https://react-bootstrap.github.io/components.html#forms) properties are passed through to the input element.
 
 * **Properties:**
-  * `dateFormat` - Date format. `"MM/DD/YYYY"` or `"DD/MM/YYYY"` or `"YYYY/MM/DD"`
+  * `dateFormat` - Date format. E.g. `"YYYY/MM/DD"` or `"DD-MM-YYYY"` or `"MM DD YYYY"`. (Any combination of DD, MM, YYYY and separator)
     * **Optional**
     * **Type:** `string`
     * **Example:** `"MM/DD/YYYY"`

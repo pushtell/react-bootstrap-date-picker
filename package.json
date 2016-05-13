@@ -18,7 +18,7 @@
   },
   "peerDependencies": {
     "react": ">=0.14.0",
-    "react-bootstrap": "^0.28.1"
+    "react-bootstrap": "^0.29.4"
   },
   "devDependencies": {
     "assert": "*",
@@ -46,7 +46,7 @@
     "mocha-babel": "*",
     "node-uuid": "*",
     "react": "^15.0.1",
-    "react-bootstrap": "^0.28.1",
+    "react-bootstrap": "^0.29.4",
     "react-dom": "^15.0.1",
     "regenerator": "*",
     "regenerator-loader": "*",
