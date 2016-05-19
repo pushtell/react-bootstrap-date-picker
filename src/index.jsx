@@ -2,12 +2,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import InputGroup from 'react-bootstrap/lib/InputGroup';
 import Popover from 'react-bootstrap/lib/Popover';
 import Button from 'react-bootstrap/lib/Button';
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger';
+import Overlay from 'react-bootstrap/lib/Overlay';
 
 const CalendarHeader = React.createClass({
   displayName: "DatePickerHeader",
@@ -52,14 +51,14 @@ const Calendar = React.createClass({
     displayDate: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
-    cellPadding: React.PropTypes.string.isRequired,
-    onUnmount: React.PropTypes.func.isRequired
-  },
-  componentWillUnmount(){
-    this.props.onUnmount();
+    cellPadding: React.PropTypes.string.isRequired
   },
   handleClick(day) {
     const newSelectedDate = new Date(this.props.displayDate);
+    newSelectedDate.setHours(12);
+    newSelectedDate.setMinutes(0);
+    newSelectedDate.setSeconds(0);
+    newSelectedDate.setMilliseconds(0);
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
   },
@@ -142,7 +141,7 @@ export default React.createClass({
     dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
   },
   getDefaultProps() {
-    const language = (window.navigator.userLanguage || window.navigator.language || '').toLowerCase();
+    const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
     const dateFormat = !language || language === "en-us" ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
     return {
       cellPadding: "5px",
@@ -160,6 +159,7 @@ export default React.createClass({
   getInitialState() {
     var state = this.makeDateValues(this.props.value);
     state.focused = false;
+    state.inputFocused = false;
     state.placeholder = this.props.placeholder || this.props.dateFormat;
     state.separator = this.props.dateFormat.match(/[^A-Z]/)[0];
     return state;
@@ -191,7 +191,7 @@ export default React.createClass({
     }
   },
   handleHide(e){
-    if(document.activeElement === ReactDOM.findDOMNode(this.refs.input)) {
+    if(this.state.inputFocused) {
       return;
     }
     this.setState({
@@ -201,11 +201,19 @@ export default React.createClass({
       this.props.onBlur(e);
     }
   },
+  handleKeyDown(e){
+    if(e.which === 9 && this.state.inputFocused) {
+      this.setState({
+        focused: false
+      });
+    }
+  },
   handleFocus(e){
-    if(this.refs.overlay.state.isOverlayShown === true) {
+    if(this.state.focused === true) {
       return;
     }
     this.setState({
+      inputFocused: true,
       focused: true
     });
     if(this.props.onFocus) {
@@ -213,15 +221,12 @@ export default React.createClass({
     }
   },
   handleBlur(e){
-    if(this.refs.overlay.state.isOverlayShown === true) {
-      return;
-    }
     this.setState({
-      focused: false
+      inputFocused: false
     });
-    if(this.props.onBlur) {
-      this.props.onBlur(e);
-    }
+  },
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return !(this.state.inputFocused === true && nextState.inputFocused === false);
   },
   getValue(){
     return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
@@ -229,7 +234,7 @@ export default React.createClass({
   makeInputValueString(date) {
     const month = date.getMonth() + 1;
     const day = date.getDate();
-    
+
     //this method is executed during intialState setup... handle a missing state properly
     var separator = (this.state ? this.state.separator : this.props.dateFormat.match(/[^A-Z]/)[0]);
     if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
@@ -321,9 +326,9 @@ export default React.createClass({
       inputValue: this.makeInputValueString(newSelectedDate),
       selectedDate: newSelectedDate,
       displayDate: newSelectedDate,
-      value: newSelectedDate.toISOString()
+      value: newSelectedDate.toISOString(),
+      focused: false
     });
-    this.refs.overlay.handleDelayedHide();
     if(this.props.onChange) {
       this.props.onChange(newSelectedDate.toISOString());
     }
@@ -342,38 +347,27 @@ export default React.createClass({
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
-    const popOver = <Popover id="calendar" title={calendarHeader}>
-      <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} onUnmount={this.handleHide} />
-    </Popover>;
-    const buttonStyle = this.props.bsStyle === "error" ? "danger" : this.props.bsStyle;
-    return <div id={this.props.id ? this.props.id + "_container" : null}>
-      <OverlayTrigger ref="overlay" trigger="click" rootClose placement={this.props.calendarPlacement} overlay={popOver} delayHide={100}>
-        <FormGroup>
-          <InputGroup>
-            <FormControl
-              {...this.props}
-              value={this.state.inputValue || ''}
-              ref="input"
-              type="text"
-              placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
-              onFocus={this.handleFocus}
-              onBlur={this.handleBlur}
-              onChange={this.handleInputChange}
-              name={null}
-              id={null}
-            />
-            <InputGroup.Button>
-              <Button
-                onClick={this.clear}
-                bsStyle={buttonStyle || "default"}
-                disabled={!this.state.inputValue}>
-                  {this.props.clearButtonElement}
-              </Button>
-            </InputGroup.Button>
-          </InputGroup>
-        </FormGroup>
-      </OverlayTrigger>
+    return <InputGroup ref="inputGroup" bsClass={this.props.bsClass} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
+      <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
+        <Popover id="calendar" title={calendarHeader}>
+          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} />
+        </Popover>
+      </Overlay>
+      <div ref="overlayContainer" />
       <input type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
-    </div>;
+      <FormControl
+        onKeyDown={this.handleKeyDown}
+        value={this.state.inputValue || ''}
+        ref="input"
+        type="text"
+        placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+        onFocus={this.handleFocus}
+        onBlur={this.handleBlur}
+        onChange={this.handleInputChange}
+        name={null}
+        id={null}
+      />
+      <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
+    </InputGroup>;
   }
 });

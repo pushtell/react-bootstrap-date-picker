@@ -70,7 +70,7 @@ describe("Date Picker", function() {
     });
     const hiddenInputElement = document.getElementById(id);
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     assert.equal(hiddenInputElement.value, '');
     TestUtils.Simulate.click(dayElement);
@@ -94,7 +94,7 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     assert.equal(value, null);
     TestUtils.Simulate.click(dayElement);
@@ -115,7 +115,7 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     const dayElement = document.querySelector("table tbody tr:nth-child(5) td:nth-of-type(2)");
     assert.equal(dayElement.innerHTML, '29');
     TestUtils.Simulate.click(dayElement);
@@ -169,7 +169,7 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     TestUtils.Simulate.click(dayElement);
     const popover = document.querySelector(".popover");
@@ -194,14 +194,14 @@ describe("Date Picker", function() {
     });
     const hiddenInputElement = document.getElementById(id);
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     const previousButtonElement = document.querySelector(".pull-left");
     const nextButtonElement = document.querySelector(".pull-right");
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     TestUtils.Simulate.click(previousButtonElement);
     TestUtils.Simulate.click(dayElement);
     var previousMonthISOString = hiddenInputElement.value;
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     TestUtils.Simulate.click(nextButtonElement);
     TestUtils.Simulate.click(dayElement);
     var currentMonthISOString = hiddenInputElement.value;
@@ -221,14 +221,14 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
+    TestUtils.Simulate.focus(inputElement);
     const nextButtonElement = document.querySelector(".pull-right");
     for(let i = 0; i < 12; i++) {
       TestUtils.Simulate.click(nextButtonElement);
     }
     ReactDOM.unmountComponentAtNode(container);
   }));
-  it("should updated a change handler when cleared.", co.wrap(function *(){
+  it("should update via a change handler when cleared.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
     const App = React.createClass({
@@ -245,8 +245,8 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const inputElement = document.querySelector("input.form-control");
-    TestUtils.Simulate.click(inputElement);
-    const clearButtonElement = document.querySelector(".form-group button");
+    TestUtils.Simulate.focus(inputElement);
+    const clearButtonElement = document.querySelector("span.input-group-addon");
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     TestUtils.Simulate.click(dayElement);
     assert.notEqual(value, null);
@@ -260,7 +260,6 @@ describe("Date Picker", function() {
     const App = React.createClass({
       getInitialState: function() {
         return {
-          blurred: false,
           focused: false
         }
       },
@@ -271,13 +270,13 @@ describe("Date Picker", function() {
       },
       blurHandler: function() {
         this.setState({
-          blurred: true
+          focused: false
         });
       },
       render: function(){
         return <div>
-          {this.state.focused ? <div id="focused" /> : null}
-          {this.state.blurred ? <div id="blurred" /> : null}
+          <div id='blurringClickTarget'>Blurring Click Target</div>
+          {this.state.focused ? <div id="focused">Focused</div> : <div id="blurred">Blurred</div>}
           <DatePicker id={id} onBlur={this.blurHandler} onFocus={this.focusHandler} />
         </div>;
       }
@@ -286,15 +285,12 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const inputElement = document.querySelector("input.form-control");
-    inputElement.focus();
-    yield new Promise(function(resolve, reject){
-      setTimeout(resolve, 1000);
-    });
-    inputElement.blur();
-    yield new Promise(function(resolve, reject){
-      setTimeout(resolve, 2000);
-    });
+    const blurringClickTarget = document.getElementById("blurringClickTarget");
+    assert.notEqual(document.getElementById("blurred"), null);
+    TestUtils.Simulate.focus(inputElement);
     assert.notEqual(document.getElementById("focused"), null);
+    TestUtils.Simulate.blur(inputElement);
+    blurringClickTarget.click(); // React-overlays won't hide on a synthetic event so can't use TestUtils here.
     assert.notEqual(document.getElementById("blurred"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
@@ -368,9 +364,9 @@ describe("Date Picker", function() {
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
-    const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_container input.form-control");
-    const dd_mm_yyyy_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_container input.form-control");
-    const yyyy_mm_dd_inputElement = document.querySelector("#" + yyyy_mm_dd_id + "_container input.form-control");
+    const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_group input.form-control");
+    const dd_mm_yyyy_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_group input.form-control");
+    const yyyy_mm_dd_inputElement = document.querySelector("#" + yyyy_mm_dd_id + "_group input.form-control");
     mm_dd_yyyy_inputElement.value = "05/31/1980";
     TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
     assert.equal(mm_dd_yyyy_inputElement.value, "05/31/1980");

@@ -11,7 +11,7 @@
     "picker"
   ],
   "main": "lib/index.js",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "React-Bootstrap based date picker.",
   "directories": {
     "test": "test"
@@ -28,6 +28,7 @@
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "babel-preset-stage-1": "*",
+    "babel-plugin-add-module-exports": "^0.1.2",
     "co": "*",
     "envify": "*",
     "es6-promise": "*",
@@ -58,7 +59,7 @@
     "example": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base example/ --config ./example/webpack.example.config.js",
     "gh-pages": "./node_modules/webpack/bin/webpack.js --content-base example/ --config ./example/webpack.example.config.js; cp ./example/index.html /tmp/index.html; cp ./example/bundle.js /tmp/bundle.js; git checkout gh-pages; cp /tmp/index.html ./index.html; cp /tmp/bundle.js ./bundle.js; git commit -a -m 'Automatic Example Update'; git push origin gh-pages; git checkout master;",
     "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
-    "build": "doctoc . --github --title '<h1>Table of Contents</h1>'; ./node_modules/babel-cli/bin/babel.js ./src --out-dir ./lib;"
+    "build": "doctoc . --github --title '<h1>Table of Contents</h1>'; ./node_modules/babel-cli/bin/babel.js ./src --plugins add-module-exports --out-dir ./lib;"
   },
   "repository": {
     "type": "git",

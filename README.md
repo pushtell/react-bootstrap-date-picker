@@ -54,8 +54,11 @@ var App = React.createClass({
     });
   },
   render: function(){
-    return <div>
-      <DatePicker value={this.state.value} onChange={this.handleChange} />
+    return <FormGroup>
+        <ControlLabel>DD-MM-YYYY</ControlLabel>
+        <DatePicker value={this.state.value} onChange={this.handleChange} />
+        <HelpBlock>Help</HelpBlock>
+      </FormGroup>;
     </div>;
   }
 });
@@ -66,11 +69,34 @@ var App = React.createClass({
 
 ### `<DatePicker />`
 
-DatePicker component. Renders as a [react-bootstrap input element](https://react-bootstrap.github.io/components.html#forms).
+DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bootstrap.github.io/components.html#forms-input-groups).
 
-[Input element](https://react-bootstrap.github.io/components.html#forms) properties are passed through to the input element.
+[InputGroup](https://react-bootstrap.github.io/components.html#forms-input-groups) properties are passed through to the input group.
 
 * **Properties:**
+  * `value` - ISO date string representing the current value.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `2016-05-19T16:00:00.000Z`
+  * `onChange` - Focus callback function.
+    * **Optional**
+    * **Type:** `function`
+    * **Callback Arguments:**
+      * `value` - ISO date string representing the selected value.
+        * **Type:** `String`
+        * **Example:** `2016-05-19T16:00:00.000Z`
+  * `onFocus` - Focus callback function.
+    * **Optional**
+    * **Type:** `function`
+    * **Callback Arguments:**
+      * `event` - Focus event.
+        * **Type:** `Event`
+  * `onBlur` - Blur callback function.
+    * **Optional**
+    * **Type:** `function`
+    * **Callback Arguments:**
+      * `event` - Blur event.
+        * **Type:** `Event`
   * `dateFormat` - Date format. E.g. `"YYYY/MM/DD"` or `"DD-MM-YYYY"` or `"MM DD YYYY"`. (Any combination of DD, MM, YYYY and separator)
     * **Optional**
     * **Type:** `string`

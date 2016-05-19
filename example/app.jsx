@@ -8,6 +8,9 @@ import Nav from "react-bootstrap/lib/Nav";
 import NavItem from "react-bootstrap/lib/NavItem";
 import DatePicker from "../src/index.jsx";
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 
 const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -16,7 +19,8 @@ const App = React.createClass({
   getInitialState() {
     return {
       date: new Date().toISOString(),
-      previousDate: null
+      previousDate: null,
+      focused: false
     };
   },
   handleChange(value) {
@@ -50,9 +54,9 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={6}>
-          <form>
-            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} />
-          </form>
+          <FormGroup>
+            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="change_handler_example" />
+          </FormGroup>
         </Col>
       </Row>
       <Row>
@@ -62,9 +66,11 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={6}>
-          <form>
-            <DatePicker placeholder="Placeholder" help="Open console to see focus/blur logging." value={this.state.date} onFocus={() => {console.log("Focus")}} onBlur={() => {console.log("Blur")}}/>
-          </form>
+          <FormGroup>
+            <ControlLabel>{this.state.focused ? "Focused" : "Blurred"}</ControlLabel>
+            <DatePicker placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
+            <HelpBlock>This is {this.state.focused ? "focused" : "blurred"}.</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
       <Row>
@@ -74,19 +80,25 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={4}>
-          <form>
-            <DatePicker bsStyle="success" label="Success" placeholder="Placeholder" help="Help" />
-          </form>
+          <FormGroup validationState="success">
+            <ControlLabel>Success</ControlLabel>
+            <DatePicker placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={4}>
-          <form>
-            <DatePicker bsStyle="warning" label="Warning" placeholder="Placeholder" value={this.state.date} help="Help" />
-          </form>
+          <FormGroup validationState="warning">
+            <ControlLabel>Warning</ControlLabel>
+            <DatePicker placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={4}>
-          <form>
-            <DatePicker bsStyle="error" label="Error" placeholder="Placeholder" value={this.state.date} help="Help" />
-          </form>
+          <FormGroup validationState="error">
+            <ControlLabel>Error</ControlLabel>
+            <DatePicker placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
       <Row>
@@ -96,19 +108,25 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={4}>
-          <form>
-            <DatePicker label="MM/DD/YYYY" dateFormat="MM/DD/YYYY" onChange={this.handleChange} value={this.state.date} help="Help" />
-          </form>
+          <FormGroup>
+            <ControlLabel>MM/DD/YYYY</ControlLabel>
+            <DatePicker dateFormat="MM/DD/YYYY" onChange={this.handleChange} value={this.state.date} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={4}>
-          <form>
-            <DatePicker label="DD-MM-YYYY" dateFormat="DD-MM-YYYY" onChange={this.handleChange} value={this.state.date} help="Help" />
-          </form>
+          <FormGroup>
+            <ControlLabel>DD-MM-YYYY</ControlLabel>
+            <DatePicker dateFormat="DD-MM-YYYY" onChange={this.handleChange} value={this.state.date} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={4}>
-          <form>
-            <DatePicker label="YYYY/MM/DD" dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.date} help="Help" />
-          </form>
+          <FormGroup>
+            <ControlLabel>YYYY/MM/DD</ControlLabel>
+            <DatePicker dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.date} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
       <Row>
@@ -118,24 +136,32 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Clear Button" placeholder="Placeholder" clearButtonElement={<Glyphicon glyph="star" />} />
-          </form>
+          <FormGroup>
+            <ControlLabel>Clear Button</ControlLabel>
+            <DatePicker placeholder="Placeholder" clearButtonElement={<Glyphicon glyph="star" />} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Previous / Next Buttons" placeholder="Placeholder" previousButtonElement={<Glyphicon glyph="star" />}  nextButtonElement={<Glyphicon glyph="star" />}  />
-          </form>
+          <FormGroup>
+            <ControlLabel>Previous / Next Buttons</ControlLabel>
+            <DatePicker placeholder="Placeholder" previousButtonElement={<Glyphicon glyph="star" />}  nextButtonElement={<Glyphicon glyph="star" />}  />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Padding" placeholder="Placeholder" cellPadding="10px" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Padding</ControlLabel>
+            <DatePicker placeholder="Placeholder" cellPadding="10px" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Day and Month Labels" placeholder="Placeholder" dayLabels={spanishDayLabels} monthLabels={spanishMonthLabels} />
-          </form>
+          <FormGroup>
+            <ControlLabel>Day and Month Labels</ControlLabel>
+            <DatePicker placeholder="Placeholder" dayLabels={spanishDayLabels} monthLabels={spanishMonthLabels} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
       <Row>
@@ -145,24 +171,32 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Top" placeholder="Placeholder" calendarPlacement="top" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Top</ControlLabel>
+            <DatePicker placeholder="Placeholder" calendarPlacement="top" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Right" placeholder="Placeholder" calendarPlacement="right"/>
-          </form>
+          <FormGroup>
+            <ControlLabel>Right</ControlLabel>
+            <DatePicker placeholder="Placeholder" calendarPlacement="right" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Bottom" placeholder="Placeholder" calendarPlacement="bottom" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Bottom</ControlLabel>
+            <DatePicker placeholder="Placeholder" calendarPlacement="bottom" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={3}>
-          <form>
-            <DatePicker label="Left" placeholder="Placeholder" calendarPlacement="left" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Left</ControlLabel>
+            <DatePicker placeholder="Placeholder" calendarPlacement="left" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
       <Row>
@@ -172,38 +206,50 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={6}>
-          <form>
-            <DatePicker bsSize="small" label="Label" placeholder="Placeholder" help="Help" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Label</ControlLabel>
+            <DatePicker placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={6}>
-          <form>
-            <DatePicker bsSize="small" label="Label" placeholder="Placeholder" value={this.state.date} help="Help" />
-          </form>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm={6}>
-          <form>
-            <DatePicker label="Label" placeholder="Placeholder" help="Help" />
-          </form>
-        </Col>
-        <Col sm={6}>
-          <form>
-            <DatePicker label="Label" placeholder="Placeholder" value={this.state.date} help="Help" />
-          </form>
+          <FormGroup bsSize="small">
+            <ControlLabel>Label</ControlLabel>
+            <DatePicker placeholder="Placeholder" value={this.state.date} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
       <Row>
         <Col sm={6}>
-          <form>
-            <DatePicker bsSize="large" label="Label Date" placeholder="Placeholder" help="Help" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Label</ControlLabel>
+            <DatePicker placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
         <Col sm={6}>
-          <form>
-            <DatePicker bsSize="large" label="Label" placeholder="Placeholder" value={this.state.date} help="Help" />
-          </form>
+          <FormGroup>
+            <ControlLabel>Label</ControlLabel>
+            <DatePicker placeholder="Placeholder" value={this.state.date} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup bsSize="large">
+            <ControlLabel>Label</ControlLabel>
+            <DatePicker placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup bsSize="large">
+            <ControlLabel>Label</ControlLabel>
+            <DatePicker placeholder="Placeholder" value={this.state.date} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
         </Col>
       </Row>
     </Grid>;
