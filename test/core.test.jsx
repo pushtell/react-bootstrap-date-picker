@@ -130,7 +130,7 @@ describe("Date Picker", function() {
       },
       render: function(){
         return <div>
-          <DatePicker id={id} onChange={this.handleChange} />
+          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" />
         </div>;
       }
     });
