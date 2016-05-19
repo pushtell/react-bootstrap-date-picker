@@ -55,11 +55,10 @@ var App = React.createClass({
   },
   render: function(){
     return <FormGroup>
-        <ControlLabel>DD-MM-YYYY</ControlLabel>
-        <DatePicker value={this.state.value} onChange={this.handleChange} />
-        <HelpBlock>Help</HelpBlock>
-      </FormGroup>;
-    </div>;
+      <ControlLabel>Label</ControlLabel>
+      <DatePicker value={this.state.value} onChange={this.handleChange} />
+      <HelpBlock>Help</HelpBlock>
+    </FormGroup>;
   }
 });
 
@@ -77,14 +76,14 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
   * `value` - ISO date string representing the current value.
     * **Optional**
     * **Type:** `string`
-    * **Example:** `2016-05-19T16:00:00.000Z`
+    * **Example:** `"2016-05-19T16:00:00.000Z"`
   * `onChange` - Focus callback function.
     * **Optional**
     * **Type:** `function`
     * **Callback Arguments:**
       * `value` - ISO date string representing the selected value.
         * **Type:** `String`
-        * **Example:** `2016-05-19T16:00:00.000Z`
+        * **Example:** `"2016-05-19T16:00:00.000Z"`
   * `onFocus` - Focus callback function.
     * **Optional**
     * **Type:** `function`
