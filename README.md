@@ -37,7 +37,6 @@ npm install react-bootstrap-date-picker
 ## Usage
 
 ```js
-
 var DatePicker = require("react-bootstrap-date-picker");
 
 var App = React.createClass({
