@@ -206,6 +206,9 @@ export default React.createClass({
       this.setState({
         focused: false
       });
+      if(this.props.onBlur) {
+        this.props.onBlur(e);
+      }
     }
   },
   handleFocus(e){
@@ -329,6 +332,9 @@ export default React.createClass({
       value: newSelectedDate.toISOString(),
       focused: false
     });
+    if(this.props.onBlur) {
+      this.props.onBlur(new Event("Change Date"));
+    }
     if(this.props.onChange) {
       this.props.onChange(newSelectedDate.toISOString());
     }

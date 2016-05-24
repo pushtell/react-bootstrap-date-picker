@@ -68,7 +68,7 @@ const App = React.createClass({
         <Col sm={6}>
           <FormGroup>
             <ControlLabel>{this.state.focused ? "Focused" : "Blurred"}</ControlLabel>
-            <DatePicker placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
+            <DatePicker onChange={this.handleChange}  placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
             <HelpBlock>This is {this.state.focused ? "focused" : "blurred"}.</HelpBlock>
           </FormGroup>
         </Col>
