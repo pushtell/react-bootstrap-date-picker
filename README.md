@@ -95,10 +95,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Callback Arguments:**
       * `event` - Blur event.
         * **Type:** `Event`
-  * `dateFormat` - Date format. E.g. `"YYYY/MM/DD"` or `"DD-MM-YYYY"` or `"MM DD YYYY"`. (Any combination of DD, MM, YYYY and separator)
+  * `dateFormat` - Date format. Any combination of DD, MM, YYYY and separator.
     * **Optional**
     * **Type:** `string`
-    * **Example:** `"MM/DD/YYYY"`
+    * **Examples:** `"MM/DD/YYYY"`, `"YYYY/MM/DD"`, `"MM-DD-YYYY"`, or `"DD MM YYYY"`
   * `clearButtonElement` - Character or component to use for the clear button.
     * **Optional**
     * **Type:** `string` or `ReactClass`
