@@ -11,7 +11,7 @@
     "picker"
   ],
   "main": "lib/index.js",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "React-Bootstrap based date picker.",
   "directories": {
     "test": "test"

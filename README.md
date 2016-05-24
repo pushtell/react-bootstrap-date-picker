@@ -98,7 +98,7 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
   * `dateFormat` - Date format. Any combination of DD, MM, YYYY and separator.
     * **Optional**
     * **Type:** `string`
-    * **Examples:** `"MM/DD/YYYY"`, `"YYYY/MM/DD"`, `"DD-MM-YYYY"`, or `"DD MM YYYY"`
+    * **Examples:** `"MM/DD/YYYY"`, `"YYYY/MM/DD"`, `"MM-DD-YYYY"`, or `"DD MM YYYY"`
   * `clearButtonElement` - Character or component to use for the clear button.
     * **Optional**
     * **Type:** `string` or `ReactClass`
