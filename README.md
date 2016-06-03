@@ -12,6 +12,8 @@ See the demo at [pushtell.github.io/react-bootstrap-date-picker](http://pushtell
 
 Please [★ on GitHub](https://github.com/pushtell/react-bootstrap-date-picker)!
 
+Using this module in production? [We'd love to hear about it.](https://github.com/pushtell/react-bootstrap-date-picker/issues/17)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 <h1>Table of Contents</h1>

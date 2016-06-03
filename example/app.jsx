@@ -54,7 +54,7 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={6}>
-          <FormGroup>
+          <FormGroup controlId="change_handler">
             <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="change_handler_example" />
           </FormGroup>
         </Col>
