@@ -43,7 +43,7 @@ var DatePicker = require("react-bootstrap-date-picker");
 
 var App = React.createClass({
   getInitialState: function(){
-    var value = new Date().getISOString();
+    var value = new Date().toISOString();
     return {
       value: value
     }
