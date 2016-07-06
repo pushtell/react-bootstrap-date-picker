@@ -125,6 +125,7 @@ export default React.createClass({
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
+    onClear: React.PropTypes.func,
     clearButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
@@ -150,6 +151,7 @@ export default React.createClass({
                     'May', 'June', 'July', 'August', 'September',
                     'October', 'November', 'December'],
       clearButtonElement: "×",
+      onClear: this.clear,
       previousButtonElement: "<",
       nextButtonElement: ">",
       calendarPlacement: "bottom",
@@ -371,7 +373,7 @@ export default React.createClass({
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
       />
-      <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
+      <InputGroup.Addon onClick={this.props.onClear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
     </InputGroup>;
   }
 });
