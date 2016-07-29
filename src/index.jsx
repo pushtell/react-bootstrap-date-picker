@@ -151,7 +151,6 @@ export default React.createClass({
                     'May', 'June', 'July', 'August', 'September',
                     'October', 'November', 'December'],
       clearButtonElement: "×",
-      onClear: this.clear,
       previousButtonElement: "<",
       nextButtonElement: ">",
       calendarPlacement: "bottom",
@@ -186,8 +185,15 @@ export default React.createClass({
       inputValue: inputValue
     }
   },
+
   clear() {
-    this.setState(this.makeDateValues(null));
+    if(this.props.onClear){
+      this.props.onClear();
+    }
+    else{
+      this.setState(this.makeDateValues(null));
+    }
+    
     if(this.props.onChange) {
       this.props.onChange(null);
     }
@@ -373,7 +379,7 @@ export default React.createClass({
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
       />
-      <InputGroup.Addon onClick={this.props.onClear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
+      <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
     </InputGroup>;
   }
 });
