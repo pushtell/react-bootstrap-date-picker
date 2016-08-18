@@ -105,6 +105,9 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string` or `ReactClass`
     * **Example:** `"×"`
+  * `onClear` - Defines what happens when clear button is clicked.
+    * **Optional**
+    * **Type:** `function`
   * `previousButtonElement` - Character or component to use for the calendar's previous button.
     * **Optional**
     * **Type:** `string` or `ReactClass`

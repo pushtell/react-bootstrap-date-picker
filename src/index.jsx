@@ -125,6 +125,7 @@ export default React.createClass({
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
+    onClear: React.PropTypes.func,
     clearButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
@@ -184,8 +185,15 @@ export default React.createClass({
       inputValue: inputValue
     }
   },
+
   clear() {
-    this.setState(this.makeDateValues(null));
+    if(this.props.onClear){
+      this.props.onClear();
+    }
+    else{
+      this.setState(this.makeDateValues(null));
+    }
+    
     if(this.props.onChange) {
       this.props.onChange(null);
     }
