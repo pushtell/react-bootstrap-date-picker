@@ -309,12 +309,12 @@ describe("Date Picker", function() {
     const inputElement = document.querySelector("input.form-control");
     inputElement.value = "0";
     TestUtils.Simulate.change(inputElement);
-    inputElement.value = "05";
+    inputElement.value = "053";
     TestUtils.Simulate.change(inputElement);
-    assert.equal(inputElement.value, "05/");
-    inputElement.value = "05/31";
+    assert.equal(inputElement.value, "05/3");
+    inputElement.value = "05/311";
     TestUtils.Simulate.change(inputElement);
-    assert.equal(inputElement.value, "05/31/");
+    assert.equal(inputElement.value, "05/31/1");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should automatically insert in YYYY/MM/DD format.", co.wrap(function *(){
@@ -332,12 +332,12 @@ describe("Date Picker", function() {
     const inputElement = document.querySelector("input.form-control");
     inputElement.value = "0";
     TestUtils.Simulate.change(inputElement);
-    inputElement.value = "1980";
+    inputElement.value = "19800";
     TestUtils.Simulate.change(inputElement);
-    assert.equal(inputElement.value, "1980/");
-    inputElement.value = "1980/05";
+    assert.equal(inputElement.value, "1980/0");
+    inputElement.value = "1980/053";
     TestUtils.Simulate.change(inputElement);
-    assert.equal(inputElement.value, "1980/05/");
+    assert.equal(inputElement.value, "1980/05/3");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should render dates in different formats.", co.wrap(function *(){
