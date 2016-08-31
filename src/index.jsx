@@ -383,7 +383,9 @@ export default React.createClass({
       focused: false
     });
     if(this.props.onBlur) {
-      this.props.onBlur(new Event("Change Date"));
+      const event = document.createEvent('CustomEvent');
+      event.initEvent("Change Date", true, false);
+      this.props.onBlur(event);
     }
     if(this.props.onChange) {
       this.props.onChange(newSelectedDate.toISOString());
