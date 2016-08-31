@@ -292,21 +292,21 @@ export default React.createClass({
     let inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator);
     let month, day, year;
     if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      if(!inputValue.match(/[0-1][0-9]\/[0-3][0-9]\/[1-2][0-9][0-9][0-9]/)) {
+      if(!inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
         return this.handleBadInput(originalValue);
       }
       month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
       year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
     } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      if(!inputValue.match(/[0-1][0-9]\/[0-3][0-9]\/[1-2][0-9][0-9][0-9]/)) {
+      if(!inputValue.match(/[0-3][0-9].[0-1][0-9].[1-2][0-9][0-9][0-9]/)) {
         return this.handleBadInput(originalValue);
       }
       day = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       month = inputValue.slice(3,5).replace(/[^0-9]/g, '');
       year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
     } else {
-      if(!inputValue.match(/[1-2][0-9][0-9][0-9]\/[0-3][0-9]\/[0-9][0-9]/)) {
+      if(!inputValue.match(/[1-2][0-9][0-9][0-9].[0-1][0-9].[0-3][0-9]/)) {
         return this.handleBadInput(originalValue);
       }
       year = inputValue.slice(0,4).replace(/[^0-9]/g, '');
@@ -320,14 +320,7 @@ export default React.createClass({
       return this.handleBadInput(originalValue);
     }
     if(!isNaN(monthInteger) && !isNaN(dayInteger) && !isNaN(yearInteger) && monthInteger <= 12 && dayInteger <= 31 && yearInteger > 999) {
-      const selectedDate = new Date();
-      selectedDate.setHours(12);
-      selectedDate.setMinutes(0);
-      selectedDate.setSeconds(0);
-      selectedDate.setMilliseconds(0);
-      selectedDate.setYear(yearInteger);
-      selectedDate.setMonth(monthInteger - 1);
-      selectedDate.setDate(dayInteger);
+      const selectedDate = new Date(yearInteger, monthInteger - 1, dayInteger, 12, 0, 0, 0);
       this.setState({
         selectedDate: selectedDate,
         displayDate: selectedDate,
@@ -335,34 +328,6 @@ export default React.createClass({
       });
       if(this.props.onChange) {
         this.props.onChange(selectedDate.toISOString());
-      }
-    }
-    if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      inputValue = month + inputValue.slice(2,3).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + day + inputValue.slice(5,6).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + year;
-    } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      inputValue = day + inputValue.slice(2,3).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + month + inputValue.slice(5,6).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + year;
-    } else {
-      inputValue = year + inputValue.slice(4,5).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '') + month + inputValue.slice(7,8).replace(new RegExp('[^\\' + this.state.separator + ']', 'g'), '');
-    }
-    if(this.props.dateFormat.match(/YYYY.MM.DD/)) {
-      if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
-        if(inputValue.length == 4) {
-          inputValue += this.state.separator;
-        }
-        if(inputValue.length == 7) {
-          inputValue += this.state.separator;
-        }
-        inputValue = inputValue.slice(0, 10);
-      }
-    } else {
-      if(this.state.inputValue && inputValue.length > this.state.inputValue.length) {
-        if(inputValue.length == 2) {
-          inputValue += this.state.separator;
-        }
-        if(inputValue.length == 5) {
-          inputValue += this.state.separator;
-        }
-        inputValue = inputValue.slice(0, 10);
       }
     }
     this.setState({
