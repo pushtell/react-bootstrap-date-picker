@@ -389,4 +389,19 @@ describe("Date Picker", function() {
     assert.equal(yyyy_mm_dd_inputElement.value, "1999/12/31");
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("week should start on Monday.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} weekStartsOnMonday />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Mon");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });

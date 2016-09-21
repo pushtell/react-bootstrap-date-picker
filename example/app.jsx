@@ -60,16 +60,26 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
-        <Col xs={12}>
+        <Col xs={6}>
           <h2>Blur and Focus Events</h2>
+        </Col>
+        <Col xs={6}>
+          <h2>Week Starts on Monday</h2>
         </Col>
       </Row>
       <Row>
         <Col sm={6}>
           <FormGroup>
             <ControlLabel>{this.state.focused ? "Focused" : "Blurred"}</ControlLabel>
-            <DatePicker onChange={this.handleChange}  placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
+            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
             <HelpBlock>This is {this.state.focused ? "focused" : "blurred"}.</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Week Starts on Monday</ControlLabel>
+            <DatePicker onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
+            <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
       </Row>
