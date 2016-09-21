@@ -132,6 +132,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"top"`
+  * `weekStartsOnMonday` - Makes the calendar's weel to start on Monday.
+    * **Optional**
+    * **Type:** `boolean`
+    * **Example:** `true`
 
 ## Tests
 

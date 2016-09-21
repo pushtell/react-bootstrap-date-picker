@@ -2,11 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import FormControl from 'react-bootstrap/lib/FormControl';
-import InputGroup from 'react-bootstrap/lib/InputGroup';
-import Popover from 'react-bootstrap/lib/Popover';
-import Button from 'react-bootstrap/lib/Button';
-import Overlay from 'react-bootstrap/lib/Overlay';
+import { Button, FormControl, InputGroup, Overlay, Popover } from 'react-bootstrap';
 
 const CalendarHeader = React.createClass({
   displayName: "DatePickerHeader",
@@ -51,7 +47,8 @@ const Calendar = React.createClass({
     displayDate: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
-    cellPadding: React.PropTypes.string.isRequired
+    cellPadding: React.PropTypes.string.isRequired,
+    weekStartsOnMonday: React.PropTypes.bool
   },
   handleClick(day) {
     const newSelectedDate = new Date(this.props.displayDate);
@@ -73,7 +70,7 @@ const Calendar = React.createClass({
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const startingDay = firstDay.getDay();
+    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() + 1) : firstDay.getDay();
     let monthLength = daysInMonth[month];
     if (month == 1) {
       if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0){
@@ -126,6 +123,7 @@ export default React.createClass({
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
     onClear: React.PropTypes.func,
+    weekStartsOnMonday: React.PropTypes.bool,
     clearButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
@@ -144,9 +142,10 @@ export default React.createClass({
   getDefaultProps() {
     const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
     const dateFormat = !language || language === "en-us" ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+    const dayLabels = this.props.weekStartsOnMonday ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return {
       cellPadding: "5px",
-      dayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      dayLabels,
       monthLabels: ['January', 'February', 'March', 'April',
                     'May', 'June', 'July', 'August', 'September',
                     'October', 'November', 'December'],
@@ -373,7 +372,7 @@ export default React.createClass({
     return <InputGroup ref="inputGroup" bsClass={this.props.bsClass} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
       <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
         <Popover id="calendar" title={calendarHeader}>
-          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} />
+          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
