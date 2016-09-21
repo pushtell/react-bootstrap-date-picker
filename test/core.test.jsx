@@ -401,6 +401,8 @@ describe("Date Picker", function() {
     yield new Promise(function(resolve, reject){
       ReactDOM.render(<App />, container, resolve);
     });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
     assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Mon");
     ReactDOM.unmountComponentAtNode(container);
   }));

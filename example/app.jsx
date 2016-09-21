@@ -78,7 +78,7 @@ const App = React.createClass({
         <Col sm={6}>
           <FormGroup>
             <ControlLabel>Week Starts on Monday</ControlLabel>
-            <DatePicker onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
+            <DatePicker onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>

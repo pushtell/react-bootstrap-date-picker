@@ -70,7 +70,7 @@ const Calendar = React.createClass({
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() + 1) : firstDay.getDay();
+    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() - 1) : firstDay.getDay();
     let monthLength = daysInMonth[month];
     if (month == 1) {
       if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0){
@@ -142,10 +142,9 @@ export default React.createClass({
   getDefaultProps() {
     const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
     const dateFormat = !language || language === "en-us" ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
-    const dayLabels = this.props.weekStartsOnMonday ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return {
       cellPadding: "5px",
-      dayLabels,
+      dayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       monthLabels: ['January', 'February', 'March', 'April',
                     'May', 'June', 'July', 'August', 'September',
                     'October', 'November', 'December'],
@@ -158,6 +157,11 @@ export default React.createClass({
   },
   getInitialState() {
     var state = this.makeDateValues(this.props.value);
+    if(this.props.weekStartsOnMonday) {
+      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1))
+    } else {
+      state.dayLabels = this.props.dayLabels;
+    }
     state.focused = false;
     state.inputFocused = false;
     state.placeholder = this.props.placeholder || this.props.dateFormat;
@@ -382,7 +386,7 @@ export default React.createClass({
     return <InputGroup ref="inputGroup" bsClass={this.props.bsClass} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
       <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
         <Popover id="calendar" title={calendarHeader}>
-          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.props.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
+          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
