@@ -198,7 +198,7 @@ export default React.createClass({
       this.props.onChange(null);
     }
   },
-  handleHide(e){
+  handleHide(){
     if(this.state.inputFocused) {
       return;
     }
@@ -206,7 +206,10 @@ export default React.createClass({
       focused: false
     });
     if(this.props.onBlur) {
-      this.props.onBlur(e);
+      const event = document.createEvent('CustomEvent');
+      event.initEvent("Change Date", true, false);
+      ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
+      this.props.onBlur(event);
     }
   },
   handleKeyDown(e){
@@ -215,7 +218,10 @@ export default React.createClass({
         focused: false
       });
       if(this.props.onBlur) {
-        this.props.onBlur(e);
+        const event = document.createEvent('CustomEvent');
+        event.initEvent("Change Date", true, false);
+        ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
+        this.props.onBlur(event);
       }
     }
   },
@@ -228,7 +234,10 @@ export default React.createClass({
       focused: true
     });
     if(this.props.onFocus) {
-      this.props.onFocus(e);
+      const event = document.createEvent('CustomEvent');
+      event.initEvent("Change Date", true, false);
+      ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
+      this.props.onFocus(event);
     }
   },
   handleBlur(e){
@@ -350,6 +359,7 @@ export default React.createClass({
     if(this.props.onBlur) {
       const event = document.createEvent('CustomEvent');
       event.initEvent("Change Date", true, false);
+      ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
       this.props.onBlur(event);
     }
     if(this.props.onChange) {
@@ -377,7 +387,7 @@ export default React.createClass({
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
-      <input type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
+      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
       <FormControl
         onKeyDown={this.handleKeyDown}
         value={this.state.inputValue || ''}

@@ -257,18 +257,23 @@ describe("Date Picker", function() {
   it("should call focus and blur handlers.", co.wrap(function *(){
     const id = UUID.v4();
     var results = {};
+    var value = new Date().toISOString();
     const App = React.createClass({
       getInitialState: function() {
         return {
           focused: false
         }
       },
-      focusHandler: function() {
+      focusHandler: function(e) {
+        assert.equal(e.target, document.querySelector("input[type=hidden]"));
+        assert.equal(e.target.value, value);
         this.setState({
           focused: true
         });
       },
-      blurHandler: function() {
+      blurHandler: function(e) {
+        assert.equal(e.target, document.querySelector("input[type=hidden]"));
+        assert.equal(e.target.value, value);
         this.setState({
           focused: false
         });
@@ -277,7 +282,7 @@ describe("Date Picker", function() {
         return <div>
           <div id='blurringClickTarget'>Blurring Click Target</div>
           {this.state.focused ? <div id="focused">Focused</div> : <div id="blurred">Blurred</div>}
-          <DatePicker id={id} onBlur={this.blurHandler} onFocus={this.focusHandler} />
+          <DatePicker id={id} onBlur={this.blurHandler} onFocus={this.focusHandler} value={value} />
         </div>;
       }
     });
