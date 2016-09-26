@@ -14,14 +14,18 @@ const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio
 
 describe("Date Picker", function() {
   this.timeout(30000);
-  let container;
+  let container, calendarContainer;
   before(function(){
     container = document.createElement("div");
     container.id = "react";
     document.getElementsByTagName('body')[0].appendChild(container);
+    calendarContainer = document.createElement("div"); // optional container for the calendar popover
+    calendarContainer.id = "calendarContainer";
+    document.getElementsByTagName('body')[0].appendChild(calendarContainer);
   });
   after(function(){
     document.getElementsByTagName('body')[0].removeChild(container);
+    document.getElementsByTagName('body')[0].removeChild(calendarContainer);
   });
   it("should render an empty date picker.", co.wrap(function *(){
     const id = UUID.v4();
@@ -404,6 +408,23 @@ describe("Date Picker", function() {
     const inputElement = document.querySelector("input.form-control");
     TestUtils.Simulate.focus(inputElement);
     assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Mon");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should allow placing the popover calendar in a container specified in the props.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarContainer={calendarContainer} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.notEqual(document.querySelector("#calendarContainer #calendar"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
 });

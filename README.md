@@ -132,7 +132,11 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"top"`
-  * `weekStartsOnMonday` - Makes the calendar's weel to start on Monday.
+  * `calendarContainer` - Overlay container for the popover calendar. When placing the date-picker in a scrolling container, set this prop to some ancestor of the scrolling container.
+    * **Optional**
+    * **Type:** A DOM element or a component
+    * **Example:** `document.body`
+  * `weekStartsOnMonday` - Makes the calendar's week to start on Monday.
     * **Optional**
     * **Type:** `boolean`
     * **Example:** `true`

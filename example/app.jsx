@@ -14,6 +14,8 @@ import HelpBlock from 'react-bootstrap/lib/HelpBlock';
 
 const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const wapperDivStyle = { border: '1px solid #ccc' };
+const scrollingDivStyle = { padding: '10px', height: '70px', overflow: 'auto' };
 
 const App = React.createClass({
   getInitialState() {
@@ -207,6 +209,31 @@ const App = React.createClass({
             <DatePicker placeholder="Placeholder" calendarPlacement="left" />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <h2>Placed in a Scrolling Container</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <h4>Popover in scroll region</h4>
+          <div style={wapperDivStyle}>
+            <div style={scrollingDivStyle}>
+                <DatePicker placeholder="Start Date" /><br/>
+                <DatePicker placeholder="End Date" />
+            </div>
+          </div>
+        </Col>
+        <Col sm={6}>
+          <h4>Popover outside scroll region</h4>
+          <div style={wapperDivStyle}>
+            <div style={scrollingDivStyle}>
+                <DatePicker placeholder="Start Date" calendarContainer={document.body} /><br/>
+                <DatePicker placeholder="End Date"  calendarContainer={document.body} />
+            </div>
+          </div>
         </Col>
       </Row>
       <Row>
