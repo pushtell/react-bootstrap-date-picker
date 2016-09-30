@@ -184,6 +184,26 @@ describe("Date Picker", function() {
     assert.notEqual("Mx", -1);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should render without clear button element", co.wrap(function *(){
+    const id = UUID.v4();
+    const clearButtonElement = <div id="clear-button-element"></div>;
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker
+            id={id}
+            clearButtonElement={clearButtonElement}
+            showClearButton={false}
+            />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    assert.equal(document.getElementById("clear-button-element"), null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should go to the previous and next month.", co.wrap(function *(){
     const id = UUID.v4();
     const App = React.createClass({

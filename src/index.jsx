@@ -128,6 +128,7 @@ export default React.createClass({
       React.PropTypes.string,
       React.PropTypes.object
     ]),
+    showClearButton: React.PropTypes.bool,
     previousButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
@@ -138,6 +139,7 @@ export default React.createClass({
     ]),
     calendarPlacement: React.PropTypes.string,
     dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
+
   },
   getDefaultProps() {
     const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
@@ -152,7 +154,8 @@ export default React.createClass({
       previousButtonElement: "<",
       nextButtonElement: ">",
       calendarPlacement: "bottom",
-      dateFormat: dateFormat
+      dateFormat: dateFormat,
+      showClearButton: true,
     }
   },
   getInitialState() {
@@ -383,7 +386,7 @@ export default React.createClass({
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
-    return <InputGroup ref="inputGroup" bsClass={this.props.bsClass} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
+    return <InputGroup ref="inputGroup"  bsClass={this.props.showClearButton ? this.props.bsClass : ""} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
       <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
         <Popover id="calendar" title={calendarHeader}>
           <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
@@ -400,8 +403,9 @@ export default React.createClass({
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
+        style={{width: "100%"}}
       />
-      <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
+      {this.props.showClearButton && <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>}
     </InputGroup>;
   }
 });

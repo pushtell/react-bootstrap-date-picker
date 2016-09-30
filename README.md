@@ -105,6 +105,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string` or `ReactClass`
     * **Example:** `"×"`
+  * `showClearButton` - Toggles the visibility of the clearButton
+    * **Optional**
+    * **Type:** `bool` 
+    * **Example:** `false`
   * `onClear` - Defines what happens when clear button is clicked.
     * **Optional**
     * **Type:** `function`

@@ -289,6 +289,19 @@ const App = React.createClass({
           </FormGroup>
         </Col>
       </Row>
+      <Row>
+        <Col xs={12}>
+          <h2>No clear button visible</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup controlId="no_clear_button">
+            <DatePicker placeholder="Placeholder" value={this.state.date} 
+            id="no_clear_button_example" showClearButton={false}/>
+          </FormGroup>
+        </Col>
+      </Row>
     </Grid>;
   }
 });
