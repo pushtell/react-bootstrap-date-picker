@@ -447,4 +447,46 @@ describe("Date Picker", function() {
     assert.notEqual(document.querySelector("#calendarContainer #calendar"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should disable the input.", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} disabled={true}/>
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const hiddenInputElement = document.getElementById(id);
+    const inputElement = document.querySelector("input.form-control");
+    assert.equal(inputElement.disabled, true);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should disable the input.", co.wrap(function *(){
+    const id = UUID.v4();
+    let value = new Date().toISOString();
+    let originalValue = value;
+    const App = React.createClass({
+      handleChange: function(newValue){
+        value = newValue;
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} disabled={true} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    assert.equal(inputElement.disabled, true);
+    const clearButtonElement = document.querySelector("span.input-group-addon");
+    TestUtils.Simulate.click(clearButtonElement);
+    assert.equal(value, originalValue);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });

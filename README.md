@@ -78,6 +78,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"2016-05-19T16:00:00.000Z"`
+  * `disabled` - Whether or not component is disabled.
+    * **Optional**
+    * **Type:** `bool`
+    * **Example:** `false`
   * `onChange` - Focus callback function.
     * **Optional**
     * **Type:** `function`
@@ -107,7 +111,7 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Example:** `"×"`
   * `showClearButton` - Toggles the visibility of the clearButton
     * **Optional**
-    * **Type:** `bool` 
+    * **Type:** `bool`
     * **Example:** `false`
   * `onClear` - Defines what happens when clear button is clicked.
     * **Optional**
