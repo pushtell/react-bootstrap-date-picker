@@ -123,6 +123,7 @@ export default React.createClass({
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
     onClear: React.PropTypes.func,
+    disabled: React.PropTypes.bool,
     weekStartsOnMonday: React.PropTypes.bool,
     clearButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
@@ -156,6 +157,7 @@ export default React.createClass({
       calendarPlacement: "bottom",
       dateFormat: dateFormat,
       showClearButton: true,
+      disabled: false
     }
   },
   getInitialState() {
@@ -399,13 +401,14 @@ export default React.createClass({
         value={this.state.inputValue || ''}
         ref="input"
         type="text"
+        disabled={this.props.disabled}
         placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
         style={{width: "100%"}}
       />
-      {this.props.showClearButton && <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>}
+      {this.props.showClearButton && <InputGroup.Addon onClick={this.props.disabled ? null : this.clear} style={{cursor:(this.state.inputValue && !this.props.disabled) ? "pointer" : "not-allowed"}}><div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>{this.props.clearButtonElement}</div></InputGroup.Addon>}
     </InputGroup>;
   }
 });

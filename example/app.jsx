@@ -50,14 +50,26 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
-        <Col xs={12}>
+        <Col xs={6}>
           <h2>Change Handler</h2>
+        </Col>
+        <Col xs={6}>
+          <h2>Disabled</h2>
         </Col>
       </Row>
       <Row>
         <Col sm={6}>
           <FormGroup controlId="change_handler">
+            <ControlLabel>Change Handler</ControlLabel>
             <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="change_handler_example" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup controlId="disabled">
+            <ControlLabel>Disabled</ControlLabel>
+            <DatePicker disabled={true} onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="disabled_example" />
+            <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
       </Row>
@@ -147,31 +159,40 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
-        <Col sm={3}>
-          <FormGroup>
-            <ControlLabel>Clear Button</ControlLabel>
-            <DatePicker placeholder="Placeholder" clearButtonElement={<Glyphicon glyph="star" />} />
-            <HelpBlock>Help</HelpBlock>
-          </FormGroup>
-        </Col>
-        <Col sm={3}>
+        <Col sm={4}>
           <FormGroup>
             <ControlLabel>Previous / Next Buttons</ControlLabel>
             <DatePicker placeholder="Placeholder" previousButtonElement={<Glyphicon glyph="star" />}  nextButtonElement={<Glyphicon glyph="star" />}  />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
-        <Col sm={3}>
+        <Col sm={4}>
           <FormGroup>
             <ControlLabel>Padding</ControlLabel>
             <DatePicker placeholder="Placeholder" cellPadding="10px" />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
-        <Col sm={3}>
+        <Col sm={4}>
           <FormGroup>
             <ControlLabel>Day and Month Labels</ControlLabel>
             <DatePicker placeholder="Placeholder" dayLabels={spanishDayLabels} monthLabels={spanishMonthLabels} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Clear Button</ControlLabel>
+            <DatePicker placeholder="Placeholder" clearButtonElement={<Glyphicon glyph="star" />} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup controlId="no_clear_button">
+            <ControlLabel>No Clear Button</ControlLabel>
+            <DatePicker placeholder="Placeholder" showClearButton={false} />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
@@ -286,19 +307,6 @@ const App = React.createClass({
             <ControlLabel>Label</ControlLabel>
             <DatePicker placeholder="Placeholder" value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
-          </FormGroup>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={12}>
-          <h2>No clear button visible</h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm={6}>
-          <FormGroup controlId="no_clear_button">
-            <DatePicker placeholder="Placeholder" value={this.state.date} 
-            id="no_clear_button_example" showClearButton={false}/>
           </FormGroup>
         </Col>
       </Row>
