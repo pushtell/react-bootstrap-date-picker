@@ -289,6 +289,18 @@ const App = React.createClass({
           </FormGroup>
         </Col>
       </Row>
+      <Row>
+        <Col xs={12}>
+          <h2>Disabled</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup controlId="disabled">
+            <DatePicker disabled placeholder="Placeholder" value={this.state.date} id="disabled_example" />
+          </FormGroup>
+        </Col>
+      </Row>
     </Grid>;
   }
 });

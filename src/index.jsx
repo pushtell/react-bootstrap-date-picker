@@ -136,6 +136,7 @@ export default React.createClass({
       React.PropTypes.string,
       React.PropTypes.object
     ]),
+    disabled: React.PropTypes.bool,
     calendarPlacement: React.PropTypes.string,
     dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
   },
@@ -152,7 +153,8 @@ export default React.createClass({
       previousButtonElement: "<",
       nextButtonElement: ">",
       calendarPlacement: "bottom",
-      dateFormat: dateFormat
+      dateFormat: dateFormat,
+      disabled: false,
     }
   },
   getInitialState() {
@@ -190,6 +192,9 @@ export default React.createClass({
   },
 
   clear() {
+    if(this.props.disabled)
+      return;
+      
     if(this.props.onClear){
       this.props.onClear();
     }
@@ -383,15 +388,17 @@ export default React.createClass({
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
-    return <InputGroup ref="inputGroup" bsClass={this.props.bsClass} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
+    return <InputGroup disabled   ref="inputGroup" bsClass={this.props.bsClass} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
+      {!this.props.disabled && 
       <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
         <Popover id="calendar" title={calendarHeader}>
           <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
         </Popover>
-      </Overlay>
+      </Overlay>}
       <div ref="overlayContainer" />
-      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
+      <input disabled={this.props.disabled} ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
       <FormControl
+        disabled={this.props.disabled}
         onKeyDown={this.handleKeyDown}
         value={this.state.inputValue || ''}
         ref="input"
@@ -401,7 +408,7 @@ export default React.createClass({
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
       />
-      <InputGroup.Addon onClick={this.clear} style={{cursor:this.state.inputValue ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
+      <InputGroup.Addon disabled={this.props.disabled} onClick={this.clear} style={{cursor:this.state.inputValue && !this.props.disabled ? "pointer" : "not-allowed"}}>{this.props.clearButtonElement}</InputGroup.Addon>
     </InputGroup>;
   }
 });

@@ -427,4 +427,50 @@ describe("Date Picker", function() {
     assert.notEqual(document.querySelector("#calendarContainer #calendar"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should not open the calendar and therefore not select a date.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} disabled/>
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const hiddenInputElement = document.getElementById(id);
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
+    assert.equal(dayElement, null);
+    assert.equal(hiddenInputElement.value, '');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+
+  it("should not be able to click clear button", co.wrap(function *(){
+    const id = UUID.v4();
+    let value="12/12/2016"
+    const App = React.createClass({
+      handleChange: function(newValue){
+        value = newValue;
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} disabled
+          onChange={this.handleChange} />
+        </div>;
+      }
+    });
+  
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+
+    const hiddenInputElement = document.getElementById(id)
+    const clearButtonElement = document.querySelector("span.input-group-addon");
+    TestUtils.Simulate.click(clearButtonElement);
+    assert.equal(value, "12/12/2016");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
