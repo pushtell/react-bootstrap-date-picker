@@ -406,7 +406,7 @@ export default React.createClass({
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
-        style={{width: "100%"}}
+        style={{width: "100%", borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px'}}
       />
       {this.props.showClearButton && <InputGroup.Addon onClick={this.props.disabled ? null : this.clear} style={{cursor:(this.state.inputValue && !this.props.disabled) ? "pointer" : "not-allowed"}}><div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>{this.props.clearButtonElement}</div></InputGroup.Addon>}
     </InputGroup>;
