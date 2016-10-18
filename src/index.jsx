@@ -389,13 +389,6 @@ export default React.createClass({
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
     return <InputGroup ref="inputGroup"  bsClass={this.props.showClearButton ? this.props.bsClass : ""} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
-      <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
-        <Popover id="calendar" title={calendarHeader}>
-          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
-        </Popover>
-      </Overlay>
-      <div ref="overlayContainer" />
-      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
       <FormControl
         onKeyDown={this.handleKeyDown}
         value={this.state.inputValue || ''}
@@ -408,6 +401,13 @@ export default React.createClass({
         onChange={this.handleInputChange}
         style={{width: "100%"}}
       />
+      <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
+        <Popover id="calendar" title={calendarHeader}>
+          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
+        </Popover>
+      </Overlay>
+      <div ref="overlayContainer" />
+      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
       {this.props.showClearButton && <InputGroup.Addon onClick={this.props.disabled ? null : this.clear} style={{cursor:(this.state.inputValue && !this.props.disabled) ? "pointer" : "not-allowed"}}><div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>{this.props.clearButtonElement}</div></InputGroup.Addon>}
     </InputGroup>;
   }
