@@ -489,4 +489,91 @@ describe("Date Picker", function() {
     assert.equal(value, originalValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should expose the date value as configured in valueFormat", co.wrap(function *(){
+    const d = new Date();
+    const mm_dd_yyyy_id = "_" + UUID.v4();
+    const dd_mm_yyyy_id = "_" + UUID.v4();
+    const yyyy_mm_dd_id = "_" + UUID.v4();
+    const mm_dd_yyyy_datestring = "MM-DD-YYYY";
+    const dd_mm_yyyy_datestring = "DD-MM-YYYY";
+    const yyyy_mm_dd_datestring = "YYYY-MM-DD";
+    const mm_dd_yyyy_value = (d.getMonth()+1) + "-" + d.getDate() + "-" + d.getFullYear();
+    const dd_mm_yyyy_value = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+    const yyyy_mm_dd_value = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+    const updated = {};
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: null
+        }
+      },
+      handleChange: function(newValue, id){
+        updated[id] = newValue;
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={mm_dd_yyyy_id} valueFormat={mm_dd_yyyy_datestring} dateFormat={mm_dd_yyyy_datestring} onChange={(newValue) => {this.handleChange(newValue, mm_dd_yyyy_id) }} value={this.state.value} />
+          <DatePicker id={dd_mm_yyyy_id} valueFormat={dd_mm_yyyy_datestring} dateFormat={dd_mm_yyyy_datestring} onChange={(newValue) => {this.handleChange(newValue, dd_mm_yyyy_id) }} value={this.state.value} />
+          <DatePicker id={yyyy_mm_dd_id} valueFormat={yyyy_mm_dd_datestring} dateFormat={yyyy_mm_dd_datestring} onChange={(newValue) => {this.handleChange(newValue, yyyy_mm_dd_id) }} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+        ReactDOM.render(<App />, container, resolve);
+    });
+    const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_group input.form-control");
+    const dd_mm_yyyy_id_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_group input.form-control");
+    const yyyy_mm_dd_inputElement = document.querySelector("#" + yyyy_mm_dd_id + "_group input.form-control");
+    mm_dd_yyyy_inputElement.value = mm_dd_yyyy_value;
+    dd_mm_yyyy_id_inputElement.value = dd_mm_yyyy_value;
+    yyyy_mm_dd_inputElement.value = yyyy_mm_dd_value;
+
+    TestUtils.Simulate.change(dd_mm_yyyy_id_inputElement);
+    TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
+    TestUtils.Simulate.change(yyyy_mm_dd_inputElement);
+
+    assert.equal(updated[mm_dd_yyyy_id], mm_dd_yyyy_value);
+    assert.equal(updated[dd_mm_yyyy_id], dd_mm_yyyy_value);
+    assert.equal(updated[yyyy_mm_dd_id], yyyy_mm_dd_value);
+
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should accept the date value as configured in valueFormat", co.wrap(function *(){
+    const d = new Date();
+    const mm_dd_yyyy_id = "_" + UUID.v4();
+    const dd_mm_yyyy_id = "_" + UUID.v4();
+    const yyyy_mm_dd_id = "_" + UUID.v4();
+    const mm_dd_yyyy_datestring = "MM-DD-YYYY";
+    const dd_mm_yyyy_datestring = "DD-MM-YYYY";
+    const yyyy_mm_dd_datestring = "YYYY-MM-DD";
+    const values = {};
+    values[mm_dd_yyyy_id] = (d.getMonth()+1) + "-" + d.getDate() + "-" + d.getFullYear();
+    values[dd_mm_yyyy_id] = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear();
+    values[yyyy_mm_dd_id] = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: values
+        }
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={mm_dd_yyyy_id} ref="test" valueFormat={mm_dd_yyyy_datestring} dateFormat="YYYY-MM-DD" value={this.state.value[mm_dd_yyyy_id]} />
+          <DatePicker id={dd_mm_yyyy_id} valueFormat={dd_mm_yyyy_datestring} dateFormat="YYYY-MM-DD" value={this.state.value[dd_mm_yyyy_id]} />
+          <DatePicker id={yyyy_mm_dd_id} valueFormat={yyyy_mm_dd_datestring} dateFormat="YYYY-MM-DD" value={this.state.value[yyyy_mm_dd_id]} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_group input.form-control");
+    const dd_mm_yyyy_id_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_group input.form-control");
+    const yyyy_mm_dd_inputElement = document.querySelector("#" + yyyy_mm_dd_id + "_group input.form-control");
+    const expected = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+    assert.equal(mm_dd_yyyy_inputElement.value, expected);
+    assert.equal(dd_mm_yyyy_id_inputElement.value, expected);
+    assert.equal(yyyy_mm_dd_inputElement.value, expected);
+  }));
 });

@@ -139,8 +139,8 @@ export default React.createClass({
       React.PropTypes.object
     ]),
     calendarPlacement: React.PropTypes.string,
-    dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
-
+    dateFormat: React.PropTypes.string,  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
+    valueFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
   },
   getDefaultProps() {
     const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
@@ -156,6 +156,7 @@ export default React.createClass({
       nextButtonElement: ">",
       calendarPlacement: "bottom",
       dateFormat: dateFormat,
+      valueFormat: null,
       showClearButton: true,
       disabled: false
     }
@@ -175,6 +176,13 @@ export default React.createClass({
   },
   makeDateValues(isoString) {
     let displayDate;
+    if (this.props.valueFormat && isoString) {
+      // Parse string to iso format now.
+      isoString = new Date(isoString.substr(this.props.valueFormat.indexOf('YYYY'), 4) + '-' +
+          isoString.substr(this.props.valueFormat.indexOf('MM'), 2) + '-' +
+          isoString.substr(this.props.valueFormat.indexOf('DD'), 2) + 'T00:00:00.000Z').toISOString();
+
+    }
     const selectedDate = isoString ? new Date(isoString) : null;
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if(selectedDate) {
@@ -257,7 +265,7 @@ export default React.createClass({
     return !(this.state.inputFocused === true && nextState.inputFocused === false);
   },
   getValue(){
-    return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
+    return this.state.selectedDate ? this.convertDateToFormattedValue(this.state.selectedDate) : null;
   },
   makeInputValueString(date) {
     const month = date.getMonth() + 1;
@@ -344,7 +352,7 @@ export default React.createClass({
         value: selectedDate.toISOString()
       });
       if(this.props.onChange) {
-        this.props.onChange(selectedDate.toISOString());
+        this.props.onChange(this.convertDateToFormattedValue(selectedDate));
       }
     }
     this.setState({
@@ -371,8 +379,13 @@ export default React.createClass({
       this.props.onBlur(event);
     }
     if(this.props.onChange) {
-      this.props.onChange(newSelectedDate.toISOString());
+      this.props.onChange(this.convertDateToFormattedValue(newSelectedDate));
     }
+  },
+  convertDateToFormattedValue(date) {
+      return this.props.valueFormat
+          ? this.props.valueFormat.replace(/MM/g, date.getMonth()+1).replace(/DD/g, date.getDate()).replace(/YYYY/g, date.getFullYear())
+          : date.toISOString();
   },
   componentWillReceiveProps(newProps) {
     const value = newProps.value;
