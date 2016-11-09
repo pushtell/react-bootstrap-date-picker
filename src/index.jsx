@@ -48,7 +48,8 @@ const Calendar = React.createClass({
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
     cellPadding: React.PropTypes.string.isRequired,
-    weekStartsOnMonday: React.PropTypes.bool
+    weekStartsOnMonday: React.PropTypes.bool,
+    roundedCorners: React.PropTypes.bool
   },
   handleClick(day) {
     const newSelectedDate = new Date(this.props.displayDate);
@@ -85,7 +86,7 @@ const Calendar = React.createClass({
         if (day <= monthLength && (i > 0 || j >= startingDay)) {
           const selected = day === selectedDay && month == selectedMonth && year === selectedYear;
           const current = day === currentDay && month == currentMonth && year === currentYear;
-          week.push(<td key={j} onClick={this.handleClick.bind(this, day)} style={{cursor: "pointer", padding: this.props.cellPadding}} className={selected ? "bg-primary" : current ? "text-muted" : null}>{day}</td>);
+          week.push(<td key={j} onClick={this.handleClick.bind(this, day)} style={{cursor: "pointer", padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }} className={selected ? "bg-primary" : current ? "text-muted" : null}>{day}</td>);
           day++;
         } else {
           week.push(<td key={j} />);
@@ -139,8 +140,8 @@ export default React.createClass({
       React.PropTypes.object
     ]),
     calendarPlacement: React.PropTypes.string,
-    dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
-
+    dateFormat: React.PropTypes.string,  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
+    roundedCorners: React.PropTypes.bool
   },
   getDefaultProps() {
     const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
@@ -157,7 +158,8 @@ export default React.createClass({
       calendarPlacement: "bottom",
       dateFormat: dateFormat,
       showClearButton: true,
-      disabled: false
+      disabled: false,
+      roundedCorners: false
     }
   },
   getInitialState() {
@@ -391,7 +393,7 @@ export default React.createClass({
     return <InputGroup ref="inputGroup"  bsClass={this.props.showClearButton ? this.props.bsClass : ""} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
       <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
         <Popover id="calendar" title={calendarHeader}>
-          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} />
+          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday}  roundedCorners={this.props.roundedCorners} />
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
