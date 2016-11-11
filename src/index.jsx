@@ -199,6 +199,7 @@ export default React.createClass({
     name: React.PropTypes.string,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
+    customControl: React.PropTypes.object,
   },
 
   getDefaultProps() {
@@ -482,6 +483,30 @@ export default React.createClass({
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
 
+    const control = this.props.customControl
+      ? React.cloneElement(this.props.customControl, {
+        onKeyDown: this.handleKeyDown,
+        value: this.state.inputValue || '',
+        placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
+        ref: 'input',
+        disabled: this.props.disabled,
+        onFocus: this.handleFocus,
+        onBlur: this.handleBlur,
+        onChange: this.handleInputChange,
+      })
+      : <FormControl
+          onKeyDown={this.handleKeyDown}
+          value={this.state.inputValue || ''}
+          ref="input"
+          type="text"
+          disabled={this.props.disabled}
+          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          onChange={this.handleInputChange}
+          style={{width: '100%'}} />;
+    console.log('control', control);
+
     return <InputGroup
       ref="inputGroup"
       bsClass={this.props.showClearButton ? this.props.bsClass : ''}
@@ -509,19 +534,8 @@ export default React.createClass({
       </Overlay>
       <div ref="overlayContainer" />
       <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
-      <FormControl
-        onKeyDown={this.handleKeyDown}
-        value={this.state.inputValue || ''}
-        ref="input"
-        type="text"
-        disabled={this.props.disabled}
-        placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
-        onFocus={this.handleFocus}
-        onBlur={this.handleBlur}
-        onChange={this.handleInputChange}
-        style={{width: '100%'}}
-      />
-      {this.props.showClearButton && <InputGroup.Addon
+      {control}
+      {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
         onClick={this.props.disabled ? null : this.clear}
         style={{cursor:(this.state.inputValue && !this.props.disabled) ? 'pointer' : 'not-allowed'}}>
         <div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>
