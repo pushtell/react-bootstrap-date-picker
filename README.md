@@ -148,6 +148,18 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `boolean`
     * **Example:** `true`
+  * `showTodayButton` - Toggles the visibility of the today-button.
+    * **Optional**
+    * **Type:** `boolean`
+    * **Example:** `false`
+  * `todayButtonLabel` - Label for the today-button
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"Today"`
+  * `customControl` - Overwrite the default `FormControl` component with your own component.
+    * **Optional**
+    * **Type:** `React.Component`
+    * **Example:** `<CustomControl />`
 
 ## Tests
 
