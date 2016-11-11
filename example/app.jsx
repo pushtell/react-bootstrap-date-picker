@@ -310,6 +310,16 @@ const App = React.createClass({
           </FormGroup>
         </Col>
       </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup bsSize="large">
+            <ControlLabel>Show today button</ControlLabel>
+            <DatePicker showTodayButton />
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+        </Col>
+      </Row>
     </Grid>;
   }
 });

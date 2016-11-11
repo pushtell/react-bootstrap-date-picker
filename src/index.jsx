@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
+  Button,
   FormControl,
   InputGroup,
   Overlay,
@@ -23,7 +24,7 @@ const CalendarHeader = React.createClass({
     nextButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
-    ]).isRequired
+    ]).isRequired,
   },
 
   handleClickPrevious() {
@@ -41,7 +42,7 @@ const CalendarHeader = React.createClass({
   render() {
     return <div className="text-center">
       <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>{this.props.previousButtonElement}</div>
-        <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+      <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
       <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>{this.props.nextButtonElement}</div>
     </div>;
   }
@@ -58,7 +59,9 @@ const Calendar = React.createClass({
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
     cellPadding: React.PropTypes.string.isRequired,
-    weekStartsOnMonday: React.PropTypes.bool
+    weekStartsOnMonday: React.PropTypes.bool,
+    showTodayButton: React.PropTypes.bool,
+    todayButtonLabel: React.PropTypes.string,
   },
 
   handleClick(day) {
@@ -68,6 +71,15 @@ const Calendar = React.createClass({
     newSelectedDate.setSeconds(0);
     newSelectedDate.setMilliseconds(0);
     newSelectedDate.setDate(day);
+    this.props.onChange(newSelectedDate);
+  },
+
+  handleClickToday() {
+    const newSelectedDate = new Date();
+    newSelectedDate.setHours(12);
+    newSelectedDate.setMinutes(0);
+    newSelectedDate.setSeconds(0);
+    newSelectedDate.setMilliseconds(0);
     this.props.onChange(newSelectedDate);
   },
 
@@ -134,6 +146,18 @@ const Calendar = React.createClass({
       <tbody>
         {weeks}
       </tbody>
+      {this.props.showTodayButton && <tfoot>
+        <tr>
+          <td colSpan={this.props.dayLabels.length}>
+            <Button
+              block
+              bsSize="xsmall"
+              onClick={this.handleClickToday.bind(this)}>
+              {this.props.todayButtonLabel}
+            </Button>
+          </td>
+        </tr>
+      </tfoot>}
     </table>;
   }
 });
@@ -173,6 +197,8 @@ export default React.createClass({
     calendarContainer: React.PropTypes.object,
     id: React.PropTypes.string,
     name: React.PropTypes.string,
+    showTodayButton: React.PropTypes.bool,
+    todayButtonLabel: React.PropTypes.string,
   },
 
   getDefaultProps() {
@@ -190,7 +216,9 @@ export default React.createClass({
       calendarPlacement: 'bottom',
       dateFormat: dateFormat,
       showClearButton: true,
-      disabled: false
+      disabled: false,
+      showTodayButton: false,
+      todayButtonLabel: 'Today',
     };
   },
 
@@ -474,7 +502,9 @@ export default React.createClass({
             displayDate={this.state.displayDate}
             onChange={this.onChangeDate}
             dayLabels={this.state.dayLabels}
-            weekStartsOnMonday={this.props.weekStartsOnMonday} />
+            weekStartsOnMonday={this.props.weekStartsOnMonday}
+            showTodayButton={this.props.showTodayButton}
+            todayButtonLabel={this.props.todayButtonLabel} />
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
