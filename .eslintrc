@@ -1,0 +1,47 @@
+{
+  "root": true,
+  "ecmaFeatures": {
+    "jsx": true,
+    "modules": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true,
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest": true,
+  },
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": ["react"],
+  "rules": {
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "jsx-quotes": ["error", "prefer-double"],
+    "keyword-spacing": ["error", { "after": true }],
+    "no-console": "warn",
+    "no-const-assign": "error",
+    "no-duplicate-imports": "error",
+    "no-trailing-spaces": "error",
+    "no-unused-vars": "warn",
+    "no-use-before-define": "error",
+    "no-useless-concat": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-template": "error",
+    "quotes": ["error", "single"],
+    "radix": ["error", "always"],
+    "semi": ["error", "always"],
+    "template-curly-spacing": ["error", "never"],
+    "react/no-find-dom-node": ["off"]
+  }
+}
