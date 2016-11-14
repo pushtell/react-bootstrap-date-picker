@@ -505,7 +505,6 @@ export default React.createClass({
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
           style={{width: '100%'}} />;
-    console.log('control', control);
 
     return <InputGroup
       ref="inputGroup"
