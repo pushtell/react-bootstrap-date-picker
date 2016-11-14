@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Grid from "react-bootstrap/lib/Grid";
 import Row from "react-bootstrap/lib/Row";
 import Col from "react-bootstrap/lib/Col";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Button } from "react-bootstrap";
 import Nav from "react-bootstrap/lib/Nav";
 import NavItem from "react-bootstrap/lib/NavItem";
 import DatePicker from "../src/index.jsx";
@@ -310,10 +310,36 @@ const App = React.createClass({
           </FormGroup>
         </Col>
       </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup bsSize="large">
+            <ControlLabel>Show today button</ControlLabel>
+            <DatePicker showTodayButton />
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup bsSize="large">
+            <ControlLabel>Use custom control</ControlLabel>
+            <DatePicker customControl={<CustomControl />} />
+          </FormGroup>
+        </Col>
+      </Row>
     </Grid>;
   }
 });
 
+const CustomControl = React.createClass({
+  displayName: 'CustomControl',
+
+  render() {
+    const {
+      value,
+      placeholder,
+      ...rest,
+    } = this.props;
+
+    return <Button {...rest}>{value || placeholder}</Button>;
+  },
+});
+
 ReactDOM.render(<App />, document.getElementById('react'));
-
-
