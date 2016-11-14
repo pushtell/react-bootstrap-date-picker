@@ -148,7 +148,7 @@ const Calendar = React.createClass({
       </tbody>
       {this.props.showTodayButton && <tfoot>
         <tr>
-          <td colSpan={this.props.dayLabels.length}>
+          <td colSpan={this.props.dayLabels.length} style={{ paddingTop: '9px' }}>
             <Button
               block
               bsSize="xsmall"
