@@ -123,6 +123,7 @@ export default React.createClass({
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
     onClear: React.PropTypes.func,
+    autoFocus: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
     weekStartsOnMonday: React.PropTypes.bool,
     clearButtonElement: React.PropTypes.oneOfType([
@@ -157,6 +158,7 @@ export default React.createClass({
       calendarPlacement: "bottom",
       dateFormat: dateFormat,
       showClearButton: true,
+      autoFocus: false,
       disabled: false
     }
   },
@@ -401,6 +403,7 @@ export default React.createClass({
         value={this.state.inputValue || ''}
         ref="input"
         type="text"
+        autoFocus={this.props.autoFocus}
         disabled={this.props.disabled}
         placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
         onFocus={this.handleFocus}
