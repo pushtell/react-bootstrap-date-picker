@@ -5,7 +5,7 @@ import assert from "assert";
 import co from "co";
 import ES6Promise from 'es6-promise';
 import UUID from "node-uuid";
-import TestUtils from 'react/lib/ReactTestUtils';
+import TestUtils from 'react-addons-test-utils';
 
 ES6Promise.polyfill();
 
