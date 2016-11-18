@@ -205,7 +205,7 @@ export default React.createClass({
     }
 
     if(this.props.onChange) {
-      this.props.onChange(null);
+      this.props.onChange(null, null);
     }
   },
   handleHide(){
@@ -260,6 +260,9 @@ export default React.createClass({
   },
   getValue(){
     return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
+  },
+  getFormattedValue(){
+    return this.state.displayDate ? this.state.inputValue : null;
   },
   makeInputValueString(date) {
     const month = date.getMonth() + 1;
@@ -346,7 +349,7 @@ export default React.createClass({
         value: selectedDate.toISOString()
       });
       if(this.props.onChange) {
-        this.props.onChange(selectedDate.toISOString());
+        this.props.onChange(selectedDate.toISOString(), inputValue);
       }
     }
     this.setState({
@@ -359,8 +362,9 @@ export default React.createClass({
     });
   },
   onChangeDate(newSelectedDate) {
+    const inputValue = this.makeInputValueString(newSelectedDate);
     this.setState({
-      inputValue: this.makeInputValueString(newSelectedDate),
+      inputValue: inputValue,
       selectedDate: newSelectedDate,
       displayDate: newSelectedDate,
       value: newSelectedDate.toISOString(),
@@ -373,7 +377,7 @@ export default React.createClass({
       this.props.onBlur(event);
     }
     if(this.props.onChange) {
-      this.props.onChange(newSelectedDate.toISOString());
+      this.props.onChange(newSelectedDate.toISOString(), inputValue);
     }
   },
   componentWillReceiveProps(newProps) {

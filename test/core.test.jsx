@@ -84,9 +84,11 @@ describe("Date Picker", function() {
   it("should open the calendar, select a date, and trigger a change event.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
+    let formattedValue = null;
     const App = React.createClass({
-      handleChange: function(newValue){
+      handleChange: function(newValue, newFormattedValue){
         value = newValue;
+        formattedValue = newFormattedValue;
       },
       render: function(){
         return <div>
@@ -101,8 +103,10 @@ describe("Date Picker", function() {
     TestUtils.Simulate.focus(inputElement);
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     assert.equal(value, null);
+    assert.equal(formattedValue, null);
     TestUtils.Simulate.click(dayElement);
     assert(typeof value === "string");
+    assert(typeof formattedValue === "string");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should open the calendar and render 29 days on a leap year.", co.wrap(function *(){
@@ -128,9 +132,11 @@ describe("Date Picker", function() {
   it("should update via a change handler when the input is changed.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
+    let formattedValue = null;
     const App = React.createClass({
-      handleChange: function(newValue){
+      handleChange: function(newValue, newFormattedValue){
         value = newValue;
+        formattedValue = newFormattedValue;
       },
       render: function(){
         return <div>
@@ -148,6 +154,7 @@ describe("Date Picker", function() {
     assert.equal(date.getMonth(), 4);
     assert.equal(date.getDate(), 31);
     assert.equal(date.getFullYear(), 1980);
+    assert.equal(formattedValue, "05/31/1980");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should render with custom elements", co.wrap(function *(){
@@ -255,9 +262,11 @@ describe("Date Picker", function() {
   it("should update via a change handler when cleared.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
+    let formattedValue = null;
     const App = React.createClass({
-      handleChange: function(newValue){
+      handleChange: function(newValue, newFormattedValue){
         value = newValue;
+        formattedValue = newFormattedValue;
       },
       render: function(){
         return <div>
@@ -274,8 +283,10 @@ describe("Date Picker", function() {
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     TestUtils.Simulate.click(dayElement);
     assert.notEqual(value, null);
+    assert.notEqual(formattedValue, null);
     TestUtils.Simulate.click(clearButtonElement);
     assert.equal(value, null);
+    assert.equal(formattedValue, null);
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should call focus and blur handlers.", co.wrap(function *(){
@@ -373,20 +384,28 @@ describe("Date Picker", function() {
     const mm_dd_yyyy_id = "_" + UUID.v4();
     const dd_mm_yyyy_id = "_" + UUID.v4();
     const yyyy_mm_dd_id = "_" + UUID.v4();
+    const values = {};
+    const formattedValues = {};
+    const getValues = {};
+    const getFormattedValues = {};
     const App = React.createClass({
       getInitialState: function(){
         return {
           value: null
         }
       },
-      handleChange(value){
-        this.setState({value:value});
+      handleChange(newValue, newFormattedValue, dateFormat){
+        this.setState({value:newValue});
+        values[dateFormat] = newValue;
+        formattedValues[dateFormat] = newFormattedValue;
+        getValues[dateFormat] = this.refs[dateFormat].getValue();
+        getFormattedValues[dateFormat] = this.refs[dateFormat].getFormattedValue();
       },
       render: function(){
         return <div>
-          <DatePicker id={mm_dd_yyyy_id} dateFormat="MM/DD/YYYY" onChange={this.handleChange} value={this.state.value} />
-          <DatePicker id={dd_mm_yyyy_id} dateFormat="DD/MM/YYYY" onChange={this.handleChange} value={this.state.value} />
-          <DatePicker id={yyyy_mm_dd_id} dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.value} />
+          <DatePicker ref="MM/DD/YYYY" id={mm_dd_yyyy_id} dateFormat="MM/DD/YYYY" onChange={(newValue, newFormattedValue) => this.handleChange(newValue, newFormattedValue, "MM/DD/YYYY")} value={this.state.value} />
+          <DatePicker ref="DD/MM/YYYY" id={dd_mm_yyyy_id} dateFormat="DD/MM/YYYY" onChange={(newValue, newFormattedValue) => this.handleChange(newValue, newFormattedValue, "DD/MM/YYYY")} value={this.state.value} />
+          <DatePicker ref="YYYY/MM/DD" id={yyyy_mm_dd_id} dateFormat="YYYY/MM/DD" onChange={(newValue, newFormattedValue) => this.handleChange(newValue, newFormattedValue, "YYYY/MM/DD")} value={this.state.value} />
         </div>;
       }
     });
@@ -396,21 +415,88 @@ describe("Date Picker", function() {
     const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_group input.form-control");
     const dd_mm_yyyy_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_group input.form-control");
     const yyyy_mm_dd_inputElement = document.querySelector("#" + yyyy_mm_dd_id + "_group input.form-control");
+    let date;
     mm_dd_yyyy_inputElement.value = "05/31/1980";
     TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
+    TestUtils.Simulate.change(dd_mm_yyyy_inputElement);
+    TestUtils.Simulate.change(yyyy_mm_dd_inputElement);
     assert.equal(mm_dd_yyyy_inputElement.value, "05/31/1980");
     assert.equal(dd_mm_yyyy_inputElement.value, "31/05/1980");
     assert.equal(yyyy_mm_dd_inputElement.value, "1980/05/31");
+    date = new Date(values["MM/DD/YYYY"]);
+    assert.equal(date.getMonth(), 4);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1980);
+    date = new Date(values["DD/MM/YYYY"]);
+    assert.equal(date.getMonth(), 4);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1980);
+    date = new Date(values["YYYY/MM/DD"]);
+    assert.equal(date.getMonth(), 4);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1980);
+    date = new Date(getValues["MM/DD/YYYY"]);
+    assert.equal(date.getMonth(), 4);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1980);
+    date = new Date(getValues["DD/MM/YYYY"]);
+    assert.equal(date.getMonth(), 4);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1980);
+    date = new Date(getValues["YYYY/MM/DD"]);
+    assert.equal(date.getMonth(), 4);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1980);
+    assert.equal(formattedValues["MM/DD/YYYY"], "05/31/1980");
+    assert.equal(formattedValues["DD/MM/YYYY"], "31/05/1980");
+    assert.equal(formattedValues["YYYY/MM/DD"], "1980/05/31");
+    assert.equal(getFormattedValues["MM/DD/YYYY"], "05/31/1980");
+    assert.equal(getFormattedValues["DD/MM/YYYY"], "31/05/1980");
+    assert.equal(getFormattedValues["YYYY/MM/DD"], "1980/05/31");
     dd_mm_yyyy_inputElement.value = "15/04/2015";
     TestUtils.Simulate.change(dd_mm_yyyy_inputElement);
+    TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
+    TestUtils.Simulate.change(yyyy_mm_dd_inputElement);
     assert.equal(mm_dd_yyyy_inputElement.value, "04/15/2015");
     assert.equal(dd_mm_yyyy_inputElement.value, "15/04/2015");
     assert.equal(yyyy_mm_dd_inputElement.value, "2015/04/15");
+    date = new Date(values["MM/DD/YYYY"]);
+    assert.equal(date.getMonth(), 3);
+    assert.equal(date.getDate(), 15);
+    assert.equal(date.getFullYear(), 2015);
+    date = new Date(values["DD/MM/YYYY"]);
+    assert.equal(date.getMonth(), 3);
+    assert.equal(date.getDate(), 15);
+    assert.equal(date.getFullYear(), 2015);
+    date = new Date(values["YYYY/MM/DD"]);
+    assert.equal(date.getMonth(), 3);
+    assert.equal(date.getDate(), 15);
+    assert.equal(date.getFullYear(), 2015);
+    assert.equal(formattedValues["MM/DD/YYYY"], "04/15/2015");
+    assert.equal(formattedValues["DD/MM/YYYY"], "15/04/2015");
+    assert.equal(formattedValues["YYYY/MM/DD"], "2015/04/15");
     yyyy_mm_dd_inputElement.value = "1999/12/31";
     TestUtils.Simulate.change(yyyy_mm_dd_inputElement);
+    TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
+    TestUtils.Simulate.change(dd_mm_yyyy_inputElement);
     assert.equal(mm_dd_yyyy_inputElement.value, "12/31/1999");
     assert.equal(dd_mm_yyyy_inputElement.value, "31/12/1999");
     assert.equal(yyyy_mm_dd_inputElement.value, "1999/12/31");
+    date = new Date(values["MM/DD/YYYY"]);
+    assert.equal(date.getMonth(), 11);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1999);
+    date = new Date(values["DD/MM/YYYY"]);
+    assert.equal(date.getMonth(), 11);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1999);
+    date = new Date(values["YYYY/MM/DD"]);
+    assert.equal(date.getMonth(), 11);
+    assert.equal(date.getDate(), 31);
+    assert.equal(date.getFullYear(), 1999);
+    assert.equal(formattedValues["MM/DD/YYYY"], "12/31/1999");
+    assert.equal(formattedValues["DD/MM/YYYY"], "31/12/1999");
+    assert.equal(formattedValues["YYYY/MM/DD"], "1999/12/31");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("week should start on Monday.", co.wrap(function *(){
