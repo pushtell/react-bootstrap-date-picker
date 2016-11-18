@@ -78,6 +78,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"2016-05-19T16:00:00.000Z"`
+  * `autoFocus` - Whether or not component starts with focus.
+    * **Optional**
+    * **Type:** `bool`
+    * **Example:** `false`
   * `disabled` - Whether or not component is disabled.
     * **Optional**
     * **Type:** `bool`

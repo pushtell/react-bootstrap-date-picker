@@ -447,6 +447,40 @@ describe("Date Picker", function() {
     assert.notEqual(document.querySelector("#calendarContainer #calendar"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should have no focus with autoFocus false.", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} autoFocus={false}/>
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    assert.notEqual(inputElement, document.activeElement);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should have focus with autoFocus true.", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} autoFocus={true}/>
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    assert.equal(inputElement, document.activeElement);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should disable the input.", co.wrap(function *(){
     const id = UUID.v4();
     const value = new Date().toISOString();
