@@ -30,6 +30,7 @@
     "babel-preset-react": "*",
     "babel-preset-stage-1": "*",
     "co": "*",
+    "doctoc": "^1.2.0",
     "envify": "*",
     "es6-promise": "*",
     "expose-loader": "*",
