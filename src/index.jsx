@@ -152,6 +152,7 @@ const Calendar = React.createClass({
             <Button
               block
               bsSize="xsmall"
+              className="u-today-button"
               onClick={this.handleClickToday}>
               {this.props.todayButtonLabel}
             </Button>
