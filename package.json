@@ -11,7 +11,7 @@
     "picker"
   ],
   "main": "lib/index.js",
-  "version": "3.8.0",
+  "version": "3.8.1",
   "description": "React-Bootstrap based date picker.",
   "directories": {
     "test": "test"
@@ -41,6 +41,7 @@
     "karma-coverage": "*",
     "karma-coveralls": "*",
     "karma-firefox-launcher": "*",
+    "karma-safari-launcher": "*",
     "karma-mocha": "*",
     "karma-sourcemap-loader": "*",
     "karma-webpack": "*",

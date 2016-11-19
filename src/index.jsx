@@ -116,6 +116,7 @@ const Calendar = React.createClass({
 export default React.createClass({
   displayName: "DatePicker",
   propTypes: {
+    defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
     cellPadding: React.PropTypes.string,
     placeholder: React.PropTypes.string,
@@ -141,7 +142,6 @@ export default React.createClass({
     ]),
     calendarPlacement: React.PropTypes.string,
     dateFormat: React.PropTypes.string  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
-
   },
   getDefaultProps() {
     const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
@@ -163,7 +163,10 @@ export default React.createClass({
     }
   },
   getInitialState() {
-    var state = this.makeDateValues(this.props.value);
+    if(this.props.value && this.props.defaultValue) {
+      throw new Error("Conflicting DatePicker properties 'value' and 'defaultValue'");
+    }
+    var state = this.makeDateValues(this.props.value || this.props.defaultValue);
     if(this.props.weekStartsOnMonday) {
       state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1))
     } else {

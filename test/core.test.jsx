@@ -650,6 +650,7 @@ describe("Date Picker", function() {
         checkMonthAndYear(date.toISOString());
       }
     }
+    ReactDOM.unmountComponentAtNode(container);
   }));
   it("should display the correct day of the week in the calendar when starting on Monday.", co.wrap(function *(){
     const id = UUID.v4();
@@ -697,6 +698,52 @@ describe("Date Picker", function() {
         checkMonthAndYear(date.toISOString());
       }
     }
+    ReactDOM.unmountComponentAtNode(container);
   }));
-
+  it("should set a default value", co.wrap(function *(){
+    const id = UUID.v4();
+    const defaultValue = new Date().toISOString();
+    let value = null;
+    let formattedValue = null;
+    const App = React.createClass({
+      handleChange: function(newValue, newFormattedValue){
+        value = newValue;
+        formattedValue = newFormattedValue;
+      },
+      render: function(){
+        return <div>
+          <DatePicker defaultValue={defaultValue} id={id} onChange={this.handleChange} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const hiddenInputElement = document.getElementById(id);
+    assertIsoStringsHaveSameDate(hiddenInputElement.value, defaultValue);
+    assert.equal(value, null);
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.change(inputElement);
+    assert.notEqual(value, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should error if value and default value are both set.", co.wrap(function *(){
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker value={value} defaultValue={value} />
+        </div>;
+      }
+    });
+    try {
+      yield new Promise(function(resolve, reject){
+        ReactDOM.render(<App />, container, resolve);
+      });      
+      throw new Error("Value and default value should not be set simultaneously");
+    } catch (e) {
+      assert(e.message.indexOf("Conflicting") !== -1)
+    }
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
