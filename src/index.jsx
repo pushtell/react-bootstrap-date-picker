@@ -401,7 +401,7 @@ export default React.createClass({
         onFocus={this.handleFocus}
         onBlur={this.handleBlur}
         onChange={this.handleInputChange}
-        style={{width: "100%"}}
+        style={{width: "100%", borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px'}}
       />
       <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
         <Popover id="calendar" title={calendarHeader}>
