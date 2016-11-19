@@ -303,7 +303,7 @@ export default React.createClass({
     }
   },
 
-  handleFocus(e) {
+  handleFocus() {
     if (this.state.focused === true) {
       return;
     }
@@ -321,7 +321,7 @@ export default React.createClass({
     }
   },
 
-  handleBlur(e) {
+  handleBlur() {
     this.setState({
       inputFocused: false
     });
@@ -384,7 +384,7 @@ export default React.createClass({
     });
   },
 
-  handleInputChange(e) {
+  handleInputChange() {
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator);
 
