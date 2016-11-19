@@ -629,17 +629,18 @@ describe("Date Picker", function() {
       TestUtils.Simulate.change(inputElement);
       TestUtils.Simulate.focus(inputElement);
       const weekElements = document.querySelectorAll("table tbody tr");
-      weekElements.forEach(weekElement => {
-        const dayElements = weekElement.querySelectorAll("td");
-        dayElements.forEach((dayElement, index) => {
+      for(let i = 0; i < weekElements.length; i++) {
+        const dayElements = weekElements[i].querySelectorAll("td");
+        for(let j = 0; j < dayElements.length; j++) {
+          const dayElement = dayElements[j];
           if(dayElement.innerHTML === '') {
             return;
           }
           TestUtils.Simulate.click(dayElement);
           let date = new Date(hiddenInputElement.value);
-          assert.equal(date.getDay(), index);
-        });
-      });
+          assert.equal(date.getDay(), j);
+        }
+      }
     }
     const today = new Date();
     for(let year = today.getFullYear() - 2; year < today.getFullYear() + 2; year++) {
@@ -677,17 +678,18 @@ describe("Date Picker", function() {
       TestUtils.Simulate.change(inputElement);
       TestUtils.Simulate.focus(inputElement);
       const weekElements = document.querySelectorAll("table tbody tr");
-      weekElements.forEach(weekElement => {
-        const dayElements = weekElement.querySelectorAll("td");
-        dayElements.forEach((dayElement, index) => {
+      for(let i = 0; i < weekElements.length; i++) {
+        const dayElements = weekElements[i].querySelectorAll("td");
+        for(let j = 0; j < dayElements.length; j++) {
+          const dayElement = dayElements[j];
           if(dayElement.innerHTML === '') {
             return;
           }
           TestUtils.Simulate.click(dayElement);
           let date = new Date(hiddenInputElement.value);
-          assert.equal(date.getDay(), index === 6 ? 0 : index + 1);
-        });
-      });
+          assert.equal(date.getDay(), j === 6 ? 0 : j + 1);
+        }
+      }
     }
     const today = new Date();
     for(let year = today.getFullYear() - 2; year < today.getFullYear() + 2; year++) {
