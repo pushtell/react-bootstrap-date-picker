@@ -83,7 +83,7 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
   * `value` - ISO date string representing the current value.
     * **Optional**
     * **Type:** `string`
-    * **Example:** `"2016-05-19T16:00:00.000Z"`
+    * **Example:** `"2016-05-19T12:00:00.000Z"`
   * `autoFocus` - Whether or not component starts with focus.
     * **Optional**
     * **Type:** `bool`
