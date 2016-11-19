@@ -605,4 +605,39 @@ describe("Date Picker", function() {
     assertIsoStringsHaveSameDate(value, originalValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should display 1st January 2017 as Sunday", co.wrap(function *(){
+    let date = new Date("01/01/2017");
+    let startDate = date.toISOString();
+    const originalStartDate = startDate;
+
+    var weekday = new Array(7);
+    weekday[0] = "Monday";
+    weekday[1] = "Tuesday";
+    weekday[2] = "Wednesday";
+    weekday[3] = "Thursday";
+    weekday[4] = "Friday";
+    weekday[5] = "Saturday";
+    weekday[6]=  "Sunday";
+
+    const App = React.createClass({
+      handleChange: function(newDate){
+        startDate = newDate;
+      },
+      render: function() {
+        return <div>
+          <DatePicker weekStartsOnMonday={ true } value={ startDate } onChange={ this.handleChange }></DatePicker>
+        </div>
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const dayElement = document.querySelector("table tbody tr td");
+    TestUtils.Simulate.click(dayElement);
+    let inputWeekday = new Date(inputElement.value).getDay();
+    assert.equal(weekday[inputWeekday], weekday[6]);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
