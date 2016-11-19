@@ -67,7 +67,6 @@ describe("Date Picker", function() {
     });
     const hiddenInputElement = document.getElementById(id);
     assertIsoStringsHaveSameDate(hiddenInputElement.value, value);
-    console.log(hiddenInputElement.value, hiddenInputElement.getAttribute('data-formattedvalue'));
     assert.equal(hiddenInputElement.getAttribute('data-formattedvalue'), `${value.slice(5,7)}/${value.slice(8,10)}/${value.slice(0,4)}`);
     ReactDOM.unmountComponentAtNode(container);
   }));
@@ -605,4 +604,99 @@ describe("Date Picker", function() {
     assertIsoStringsHaveSameDate(value, originalValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should display the correct day of the week in the calendar.", co.wrap(function *(){
+    const id = UUID.v4();
+    let value = null;
+    let formattedValue = null;
+    const App = React.createClass({
+      handleChange: function(newValue, newFormattedValue){
+        value = newValue;
+        formattedValue = newFormattedValue;
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    const hiddenInputElement = document.getElementById(id);
+    const checkMonthAndYear = function(startValue) {
+      inputElement.value = `${startValue.slice(5,7)}/${startValue.slice(8,10)}/${startValue.slice(0,4)}`;
+      TestUtils.Simulate.change(inputElement);
+      TestUtils.Simulate.focus(inputElement);
+      const weekElements = document.querySelectorAll("table tbody tr");
+      weekElements.forEach(weekElement => {
+        const dayElements = weekElement.querySelectorAll("td");
+        dayElements.forEach((dayElement, index) => {
+          if(dayElement.innerHTML === '') {
+            return;
+          }
+          TestUtils.Simulate.click(dayElement);
+          let date = new Date(hiddenInputElement.value);
+          assert.equal(date.getDay(), index);
+        });
+      });
+    }
+    const today = new Date();
+    for(let year = today.getFullYear() - 2; year < today.getFullYear() + 2; year++) {
+      for(let month = 0; month < 12; month++) {
+        const date = new Date();
+        date.setMonth(month);
+        date.setYear(year);
+        checkMonthAndYear(date.toISOString());
+      }
+    }
+  }));
+  it("should display the correct day of the week in the calendar when starting on Monday.", co.wrap(function *(){
+    const id = UUID.v4();
+    let value = null;
+    let formattedValue = null;
+    const App = React.createClass({
+      handleChange: function(newValue, newFormattedValue){
+        value = newValue;
+        formattedValue = newFormattedValue;
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" weekStartsOnMonday />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    const hiddenInputElement = document.getElementById(id);
+    const checkMonthAndYear = function(startValue) {
+      inputElement.value = `${startValue.slice(5,7)}/${startValue.slice(8,10)}/${startValue.slice(0,4)}`;
+      TestUtils.Simulate.change(inputElement);
+      TestUtils.Simulate.focus(inputElement);
+      const weekElements = document.querySelectorAll("table tbody tr");
+      weekElements.forEach(weekElement => {
+        const dayElements = weekElement.querySelectorAll("td");
+        dayElements.forEach((dayElement, index) => {
+          if(dayElement.innerHTML === '') {
+            return;
+          }
+          TestUtils.Simulate.click(dayElement);
+          let date = new Date(hiddenInputElement.value);
+          assert.equal(date.getDay(), index === 6 ? 0 : index + 1);
+        });
+      });
+    }
+    const today = new Date();
+    for(let year = today.getFullYear() - 2; year < today.getFullYear() + 2; year++) {
+      for(let month = 0; month < 12; month++) {
+        const date = new Date();
+        date.setMonth(month);
+        date.setYear(year);
+        checkMonthAndYear(date.toISOString());
+      }
+    }
+  }));
+
 });

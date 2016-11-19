@@ -70,7 +70,7 @@ const Calendar = React.createClass({
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() - 1) : firstDay.getDay();
+    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1) : firstDay.getDay();
     let monthLength = daysInMonth[month];
     if (month == 1) {
       if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0){
