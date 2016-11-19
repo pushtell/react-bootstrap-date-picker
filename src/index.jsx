@@ -177,16 +177,12 @@ export default React.createClass({
   },
   makeDateValues(isoString) {
     let displayDate;
-    const selectedDate = isoString ? new Date(isoString) : null;
+    const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if(selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
-      displayDate = new Date();
-      displayDate.setHours(12);
-      displayDate.setMinutes(0);
-      displayDate.setSeconds(0);
-      displayDate.setMilliseconds(0);
+      displayDate = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
     }
     return {
       value: selectedDate ? selectedDate.toISOString() : null,
@@ -195,7 +191,6 @@ export default React.createClass({
       inputValue: inputValue
     }
   },
-
   clear() {
     if(this.props.onClear){
       this.props.onClear();
@@ -414,7 +409,7 @@ export default React.createClass({
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
-      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
+      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
       {this.props.showClearButton && <InputGroup.Addon onClick={this.props.disabled ? null : this.clear} style={{cursor:(this.state.inputValue && !this.props.disabled) ? "pointer" : "not-allowed"}}><div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>{this.props.clearButtonElement}</div></InputGroup.Addon>}
     </InputGroup>;
   }

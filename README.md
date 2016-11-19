@@ -48,16 +48,22 @@ var App = React.createClass({
       value: value
     }
   },
-  handleChange: function(value) {
-    // value is an ISO String.
+  handleChange: function(value, formattedValue) {
     this.setState({
-      value: value
+      value: value, // ISO String, ex: "2016-11-19T12:00:00.000Z"
+      formattedValue: formattedValue // Formatted String, ex: "11/19/2016"
     });
+  },
+  componentDidUpdate() {
+    // Access ISO String and formatted values from the DOM.
+    var hiddenInputElement = document.getElementById("example-datepicker");
+    console.log(hiddenInputElement.value); // ISO String, ex: "2016-11-19T12:00:00.000Z"
+    console.log(hiddenInputElement.getAttribute('data-formattedvalue')) // Formatted String, ex: "11/19/2016"
   },
   render: function(){
     return <FormGroup>
       <ControlLabel>Label</ControlLabel>
-      <DatePicker value={this.state.value} onChange={this.handleChange} />
+      <DatePicker id="example-datepicker" value={this.state.value} onChange={this.handleChange} />
       <HelpBlock>Help</HelpBlock>
     </FormGroup>;
   }
@@ -92,7 +98,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Callback Arguments:**
       * `value` - ISO date string representing the selected value.
         * **Type:** `String`
-        * **Example:** `"2016-05-19T16:00:00.000Z"`
+        * **Example:** `"2016-05-19T12:00:00.000Z"`
+      * `formattedValue` - String representing the formatted value as defined by the `dateFormat` property.
+        * **Type:** `String`
+        * **Example:** `"05/19/2016"`
   * `onFocus` - Focus callback function.
     * **Optional**
     * **Type:** `function`
@@ -152,6 +161,8 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `boolean`
     * **Example:** `true`
+
+* **Methods:**
 
 ## Tests
 

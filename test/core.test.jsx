@@ -12,6 +12,14 @@ ES6Promise.polyfill();
 const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
+const assertIsoStringsHaveSameDate = (IsoStringA, IsoStringB) => {
+  const dateA = new Date(IsoStringA);
+  const dateB = new Date(IsoStringB);
+  assert.equal(dateA.getMonth(), dateB.getMonth());
+  assert.equal(dateA.getDate(), dateB.getDate());
+  assert.equal(dateA.getFullYear(), dateB.getFullYear());
+}
+
 describe("Date Picker", function() {
   this.timeout(30000);
   let container, calendarContainer;
@@ -41,6 +49,7 @@ describe("Date Picker", function() {
     });
     const hiddenInputElement = document.getElementById(id);
     assert.equal(hiddenInputElement.value, "");
+    assert.equal(hiddenInputElement.getAttribute('data-formattedvalue'), "");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should render a date picker with a value.", co.wrap(function *(){
@@ -57,7 +66,9 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const hiddenInputElement = document.getElementById(id);
-    assert.equal(hiddenInputElement.value, value);
+    assertIsoStringsHaveSameDate(hiddenInputElement.value, value);
+    console.log(hiddenInputElement.value, hiddenInputElement.getAttribute('data-formattedvalue'));
+    assert.equal(hiddenInputElement.getAttribute('data-formattedvalue'), `${value.slice(5,7)}/${value.slice(8,10)}/${value.slice(0,4)}`);
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should open the calendar and select a date.", co.wrap(function *(){
@@ -77,8 +88,10 @@ describe("Date Picker", function() {
     TestUtils.Simulate.focus(inputElement);
     const dayElement = document.querySelector("table tbody tr:nth-child(2) td");
     assert.equal(hiddenInputElement.value, '');
+    assert.equal(hiddenInputElement.getAttribute('data-formattedvalue'), "");
     TestUtils.Simulate.click(dayElement);
     assert.notEqual(hiddenInputElement.value, '');
+    assert.notEqual(hiddenInputElement.getAttribute('data-formattedvalue'), "");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should open the calendar, select a date, and trigger a change event.", co.wrap(function *(){
@@ -301,14 +314,14 @@ describe("Date Picker", function() {
       },
       focusHandler: function(e) {
         assert.equal(e.target, document.querySelector("input[type=hidden]"));
-        assert.equal(e.target.value, value);
+        assertIsoStringsHaveSameDate(e.target.value, value);
         this.setState({
           focused: true
         });
       },
       blurHandler: function(e) {
         assert.equal(e.target, document.querySelector("input[type=hidden]"));
-        assert.equal(e.target.value, value);
+        assertIsoStringsHaveSameDate(e.target.value, value);
         this.setState({
           focused: false
         });
@@ -398,8 +411,14 @@ describe("Date Picker", function() {
         this.setState({value:newValue});
         values[dateFormat] = newValue;
         formattedValues[dateFormat] = newFormattedValue;
-        getValues[dateFormat] = this.refs[dateFormat].getValue();
-        getFormattedValues[dateFormat] = this.refs[dateFormat].getFormattedValue();
+      },
+      componentDidUpdate() {
+        getValues["MM/DD/YYYY"] = this.refs["MM/DD/YYYY"].getValue();
+        getFormattedValues["MM/DD/YYYY"] = this.refs["MM/DD/YYYY"].getFormattedValue();
+        getValues["DD/MM/YYYY"] = this.refs["DD/MM/YYYY"].getValue();
+        getFormattedValues["DD/MM/YYYY"] = this.refs["DD/MM/YYYY"].getFormattedValue();
+        getValues["YYYY/MM/DD"] = this.refs["YYYY/MM/DD"].getValue();
+        getFormattedValues["YYYY/MM/DD"] = this.refs["YYYY/MM/DD"].getFormattedValue();
       },
       render: function(){
         return <div>
@@ -409,8 +428,9 @@ describe("Date Picker", function() {
         </div>;
       }
     });
+    const app = <App />;
     yield new Promise(function(resolve, reject){
-      ReactDOM.render(<App />, container, resolve);
+      ReactDOM.render(app, container, resolve);
     });
     const mm_dd_yyyy_inputElement = document.querySelector("#" + mm_dd_yyyy_id + "_group input.form-control");
     const dd_mm_yyyy_inputElement = document.querySelector("#" + dd_mm_yyyy_id + "_group input.form-control");
@@ -423,30 +443,12 @@ describe("Date Picker", function() {
     assert.equal(mm_dd_yyyy_inputElement.value, "05/31/1980");
     assert.equal(dd_mm_yyyy_inputElement.value, "31/05/1980");
     assert.equal(yyyy_mm_dd_inputElement.value, "1980/05/31");
-    date = new Date(values["MM/DD/YYYY"]);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
-    date = new Date(values["DD/MM/YYYY"]);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
-    date = new Date(values["YYYY/MM/DD"]);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
-    date = new Date(getValues["MM/DD/YYYY"]);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
-    date = new Date(getValues["DD/MM/YYYY"]);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
-    date = new Date(getValues["YYYY/MM/DD"]);
-    assert.equal(date.getMonth(), 4);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1980);
+    assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", values["MM/DD/YYYY"]);
+    assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", values["DD/MM/YYYY"]);
+    assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", values["YYYY/MM/DD"]);
+    assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", getValues["MM/DD/YYYY"]);
+    assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", getValues["DD/MM/YYYY"]);
+    assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", getValues["YYYY/MM/DD"]);
     assert.equal(formattedValues["MM/DD/YYYY"], "05/31/1980");
     assert.equal(formattedValues["DD/MM/YYYY"], "31/05/1980");
     assert.equal(formattedValues["YYYY/MM/DD"], "1980/05/31");
@@ -460,21 +462,18 @@ describe("Date Picker", function() {
     assert.equal(mm_dd_yyyy_inputElement.value, "04/15/2015");
     assert.equal(dd_mm_yyyy_inputElement.value, "15/04/2015");
     assert.equal(yyyy_mm_dd_inputElement.value, "2015/04/15");
-    date = new Date(values["MM/DD/YYYY"]);
-    assert.equal(date.getMonth(), 3);
-    assert.equal(date.getDate(), 15);
-    assert.equal(date.getFullYear(), 2015);
-    date = new Date(values["DD/MM/YYYY"]);
-    assert.equal(date.getMonth(), 3);
-    assert.equal(date.getDate(), 15);
-    assert.equal(date.getFullYear(), 2015);
-    date = new Date(values["YYYY/MM/DD"]);
-    assert.equal(date.getMonth(), 3);
-    assert.equal(date.getDate(), 15);
-    assert.equal(date.getFullYear(), 2015);
+    assertIsoStringsHaveSameDate("2015-04-15T12:00:00.000Z", values["MM/DD/YYYY"]);
+    assertIsoStringsHaveSameDate("2015-04-15T12:00:00.000Z", values["DD/MM/YYYY"]);
+    assertIsoStringsHaveSameDate("2015-04-15T12:00:00.000Z", values["YYYY/MM/DD"]);
+    assertIsoStringsHaveSameDate("2015-04-15T12:00:00.000Z", getValues["MM/DD/YYYY"]);
+    assertIsoStringsHaveSameDate("2015-04-15T12:00:00.000Z", getValues["DD/MM/YYYY"]);
+    assertIsoStringsHaveSameDate("2015-04-15T12:00:00.000Z", getValues["YYYY/MM/DD"]);
     assert.equal(formattedValues["MM/DD/YYYY"], "04/15/2015");
     assert.equal(formattedValues["DD/MM/YYYY"], "15/04/2015");
     assert.equal(formattedValues["YYYY/MM/DD"], "2015/04/15");
+    assert.equal(getFormattedValues["MM/DD/YYYY"], "04/15/2015");
+    assert.equal(getFormattedValues["DD/MM/YYYY"], "15/04/2015");
+    assert.equal(getFormattedValues["YYYY/MM/DD"], "2015/04/15");
     yyyy_mm_dd_inputElement.value = "1999/12/31";
     TestUtils.Simulate.change(yyyy_mm_dd_inputElement);
     TestUtils.Simulate.change(mm_dd_yyyy_inputElement);
@@ -482,21 +481,18 @@ describe("Date Picker", function() {
     assert.equal(mm_dd_yyyy_inputElement.value, "12/31/1999");
     assert.equal(dd_mm_yyyy_inputElement.value, "31/12/1999");
     assert.equal(yyyy_mm_dd_inputElement.value, "1999/12/31");
-    date = new Date(values["MM/DD/YYYY"]);
-    assert.equal(date.getMonth(), 11);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1999);
-    date = new Date(values["DD/MM/YYYY"]);
-    assert.equal(date.getMonth(), 11);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1999);
-    date = new Date(values["YYYY/MM/DD"]);
-    assert.equal(date.getMonth(), 11);
-    assert.equal(date.getDate(), 31);
-    assert.equal(date.getFullYear(), 1999);
+    assertIsoStringsHaveSameDate("1999-12-31T12:00:00.000Z", values["MM/DD/YYYY"]);
+    assertIsoStringsHaveSameDate("1999-12-31T12:00:00.000Z", values["DD/MM/YYYY"]);
+    assertIsoStringsHaveSameDate("1999-12-31T12:00:00.000Z", values["YYYY/MM/DD"]);
+    assertIsoStringsHaveSameDate("1999-12-31T12:00:00.000Z", getValues["MM/DD/YYYY"]);
+    assertIsoStringsHaveSameDate("1999-12-31T12:00:00.000Z", getValues["DD/MM/YYYY"]);
+    assertIsoStringsHaveSameDate("1999-12-31T12:00:00.000Z", getValues["YYYY/MM/DD"]);
     assert.equal(formattedValues["MM/DD/YYYY"], "12/31/1999");
     assert.equal(formattedValues["DD/MM/YYYY"], "31/12/1999");
     assert.equal(formattedValues["YYYY/MM/DD"], "1999/12/31");
+    assert.equal(getFormattedValues["MM/DD/YYYY"], "12/31/1999");
+    assert.equal(getFormattedValues["DD/MM/YYYY"], "31/12/1999");
+    assert.equal(getFormattedValues["YYYY/MM/DD"], "1999/12/31");
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("week should start on Monday.", co.wrap(function *(){
@@ -606,7 +602,7 @@ describe("Date Picker", function() {
     assert.equal(inputElement.disabled, true);
     const clearButtonElement = document.querySelector("span.input-group-addon");
     TestUtils.Simulate.click(clearButtonElement);
-    assert.equal(value, originalValue);
+    assertIsoStringsHaveSameDate(value, originalValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
 });
