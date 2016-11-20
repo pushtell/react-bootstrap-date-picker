@@ -9,6 +9,7 @@ module.exports = function (karma) {
     plugins: [
       'karma-firefox-launcher',
       'karma-chrome-launcher',
+      'karma-safari-launcher',
       'karma-mocha',
       'karma-coveralls',
       'karma-coverage',
@@ -127,7 +128,7 @@ module.exports = function (karma) {
       return key.indexOf("bs_") !== -1;
     });
   } else {
-    options.browsers = ['Chrome', 'Firefox'];
+    options.browsers = ['Chrome', 'Firefox', 'Safari'];
   }
   if(process.env.COVERALLS_REPO_TOKEN) {
     options.reporters.push('coveralls');

@@ -94,7 +94,7 @@ const Calendar = React.createClass({
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() - 1) : firstDay.getDay();
+    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1) : firstDay.getDay();
 
     let monthLength = daysInMonth[month];
     if (month == 1) {
@@ -167,6 +167,7 @@ export default React.createClass({
   displayName: 'DatePicker',
 
   propTypes: {
+    defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
     cellPadding: React.PropTypes.string,
     placeholder: React.PropTypes.string,
@@ -176,6 +177,7 @@ export default React.createClass({
     onClear: React.PropTypes.func,
     onBlur: React.PropTypes.func,
     onFocus: React.PropTypes.func,
+    autoFocus: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
     weekStartsOnMonday: React.PropTypes.bool,
     clearButtonElement: React.PropTypes.oneOfType([
@@ -218,6 +220,7 @@ export default React.createClass({
       calendarPlacement: 'bottom',
       dateFormat: dateFormat,
       showClearButton: true,
+      autoFocus: false,
       disabled: false,
       showTodayButton: false,
       todayButtonLabel: 'Today',
@@ -225,9 +228,12 @@ export default React.createClass({
   },
 
   getInitialState() {
-    const state = this.makeDateValues(this.props.value);
-    if (this.props.weekStartsOnMonday) {
-      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
+    if(this.props.value && this.props.defaultValue) {
+      throw new Error("Conflicting DatePicker properties 'value' and 'defaultValue'");
+    }
+    var state = this.makeDateValues(this.props.value || this.props.defaultValue);
+    if(this.props.weekStartsOnMonday) {
+      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1))
     } else {
       state.dayLabels = this.props.dayLabels;
     }
@@ -240,17 +246,12 @@ export default React.createClass({
 
   makeDateValues(isoString) {
     let displayDate;
-    const selectedDate = isoString ? new Date(isoString) : null;
+    const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if (selectedDate) {
       displayDate = new Date(selectedDate);
-    }
-    else {
-      displayDate = new Date();
-      displayDate.setHours(12);
-      displayDate.setMinutes(0);
-      displayDate.setSeconds(0);
-      displayDate.setMilliseconds(0);
+    } else {
+      displayDate = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
     }
 
     return {
@@ -269,8 +270,8 @@ export default React.createClass({
       this.setState(this.makeDateValues(null));
     }
 
-    if (this.props.onChange) {
-      this.props.onChange(null);
+    if(this.props.onChange) {
+      this.props.onChange(null, null);
     }
   },
 
@@ -334,6 +335,10 @@ export default React.createClass({
 
   getValue() {
     return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
+  },
+
+  getFormattedValue() {
+    return this.state.displayDate ? this.state.inputValue : null;
   },
 
   makeInputValueString(date) {
@@ -431,8 +436,8 @@ export default React.createClass({
         value: selectedDate.toISOString()
       });
 
-      if (this.props.onChange) {
-        this.props.onChange(selectedDate.toISOString());
+      if(this.props.onChange) {
+        this.props.onChange(selectedDate.toISOString(), inputValue);
       }
     }
 
@@ -448,8 +453,9 @@ export default React.createClass({
   },
 
   onChangeDate(newSelectedDate) {
+    const inputValue = this.makeInputValueString(newSelectedDate);
     this.setState({
-      inputValue: this.makeInputValueString(newSelectedDate),
+      inputValue: inputValue,
       selectedDate: newSelectedDate,
       displayDate: newSelectedDate,
       value: newSelectedDate.toISOString(),
@@ -463,8 +469,8 @@ export default React.createClass({
       this.props.onBlur(event);
     }
 
-    if (this.props.onChange) {
-      this.props.onChange(newSelectedDate.toISOString());
+    if(this.props.onChange) {
+      this.props.onChange(newSelectedDate.toISOString(), inputValue);
     }
   },
 
@@ -500,6 +506,7 @@ export default React.createClass({
           value={this.state.inputValue || ''}
           ref="input"
           type="text"
+          autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
           placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
           onFocus={this.handleFocus}
@@ -533,7 +540,7 @@ export default React.createClass({
         </Popover>
       </Overlay>
       <div ref="overlayContainer" />
-      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
+      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
       {control}
       {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
         onClick={this.props.disabled ? null : this.clear}
