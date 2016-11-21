@@ -212,8 +212,8 @@ export default React.createClass({
       cellPadding: '5px',
       dayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       monthLabels: ['January', 'February', 'March', 'April',
-                    'May', 'June', 'July', 'August', 'September',
-                    'October', 'November', 'December'],
+        'May', 'June', 'July', 'August', 'September',
+        'October', 'November', 'December'],
       clearButtonElement: '×',
       previousButtonElement: '<',
       nextButtonElement: '>',
@@ -228,12 +228,12 @@ export default React.createClass({
   },
 
   getInitialState() {
-    if(this.props.value && this.props.defaultValue) {
-      throw new Error("Conflicting DatePicker properties 'value' and 'defaultValue'");
+    if (this.props.value && this.props.defaultValue) {
+      throw new Error('Conflicting DatePicker properties \'value\' and \'defaultValue\'');
     }
-    var state = this.makeDateValues(this.props.value || this.props.defaultValue);
-    if(this.props.weekStartsOnMonday) {
-      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1))
+    const state = this.makeDateValues(this.props.value || this.props.defaultValue);
+    if (this.props.weekStartsOnMonday) {
+      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
     } else {
       state.dayLabels = this.props.dayLabels;
     }
@@ -270,7 +270,7 @@ export default React.createClass({
       this.setState(this.makeDateValues(null));
     }
 
-    if(this.props.onChange) {
+    if (this.props.onChange) {
       this.props.onChange(null, null);
     }
   },
@@ -436,7 +436,7 @@ export default React.createClass({
         value: selectedDate.toISOString()
       });
 
-      if(this.props.onChange) {
+      if (this.props.onChange) {
         this.props.onChange(selectedDate.toISOString(), inputValue);
       }
     }
@@ -469,7 +469,7 @@ export default React.createClass({
       this.props.onBlur(event);
     }
 
-    if(this.props.onChange) {
+    if (this.props.onChange) {
       this.props.onChange(newSelectedDate.toISOString(), inputValue);
     }
   },

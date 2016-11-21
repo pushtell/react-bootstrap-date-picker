@@ -11,7 +11,7 @@
     "picker"
   ],
   "main": "lib/index.js",
-  "version": "3.7.0",
+  "version": "3.9.0",
   "description": "React-Bootstrap based date picker.",
   "directories": {
     "test": "test"
@@ -24,17 +24,18 @@
     "assert": "*",
     "babel": "^6.1.18",
     "babel-cli": "^6.7.5",
+    "babel-eslint": "^7.1.1",
     "babel-loader": "^6.2.0",
+    "babel-plugin-add-module-exports": "^0.1.2",
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "babel-preset-stage-1": "*",
-    "babel-plugin-add-module-exports": "^0.1.2",
     "co": "*",
     "envify": "*",
     "es6-promise": "*",
-    "eslint": "3.7.1",
+    "eslint": "^3.7.1",
     "eslint-loader": "1.5.0",
-    "eslint-plugin-react": "6.4.1",
+    "eslint-plugin-react": "^6.7.1",
     "expose-loader": "*",
     "isparta-loader": "*",
     "karma": "*",
@@ -63,7 +64,7 @@
     "gh-pages": "./node_modules/webpack/bin/webpack.js --content-base example/ --config ./example/webpack.example.config.js; cp ./example/index.html /tmp/index.html; cp ./example/bundle.js /tmp/bundle.js; git checkout gh-pages; cp /tmp/index.html ./index.html; cp /tmp/bundle.js ./bundle.js; chmod -x .git/hooks/pre-commit .git/hooks/post-commit; git commit -a -m 'Automatic Example Update'; git push origin gh-pages; chmod +x .git/hooks/pre-commit .git/hooks/post-commit; git checkout master;",
     "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
     "build": "doctoc . --github --title '<h1>Table of Contents</h1>'; ./node_modules/babel-cli/bin/babel.js ./src --plugins add-module-exports --out-dir ./lib;",
-    "lint": "eslint ./src/**"
+    "lint": "./node_modules/.bin/eslint --fix ./src/**"
   },
   "repository": {
     "type": "git",
