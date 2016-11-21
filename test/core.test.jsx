@@ -748,4 +748,45 @@ describe("Date Picker", function() {
     }
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it('should render with today button element', co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker
+            id={id}
+            showTodayButton={true}
+            todayButtonLabel="Today is the day"
+            />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector('input.form-control');
+    TestUtils.Simulate.focus(inputElement);
+    const todayElement = document.querySelector('.u-today-button');
+    assert.equal(todayElement.innerText, 'Today is the day');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it('should render custom-button element', co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker
+            id={id}
+            customControl={<button id="test-btn">Test button</button>} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const customElement = document.getElementById('test-btn');
+    assert.notEqual(customElement, null);
+    assert.equal(customElement.innerText, 'Test button');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
