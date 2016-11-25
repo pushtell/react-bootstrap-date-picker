@@ -228,6 +228,7 @@ export default React.createClass({
       disabled: false,
       showTodayButton: false,
       todayButtonLabel: 'Today',
+      instanceCount: instanceCount++,
       style: {
         width: '100%'
       }
@@ -482,10 +483,6 @@ export default React.createClass({
     }
   },
 
-  componentWillMount() {
-    instanceCount += 1;
-  },
-
   componentWillReceiveProps(newProps) {
     const value = newProps.value;
     if (this.getValue() !== value) {
@@ -543,7 +540,7 @@ export default React.createClass({
         target={() => ReactDOM.findDOMNode(this.refs.input)}
         placement={this.props.calendarPlacement}
         delayHide={200}>
-        <Popover id={`date-picker-popover-${instanceCount}`} className="date-picker-popover" title={calendarHeader}>
+        <Popover id={`date-picker-popover-${this.props.instanceCount}`} className="date-picker-popover" title={calendarHeader}>
           <Calendar
             cellPadding={this.props.cellPadding}
             selectedDate={this.state.selectedDate}
