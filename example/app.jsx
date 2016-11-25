@@ -198,6 +198,27 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
+        <Col sm={4}>
+          <FormGroup>
+            <ControlLabel>FormControl Style</ControlLabel>
+            <DatePicker style={{width:"100%", backgroundColor:"#FFEEEE"}} />
+            <HelpBlock>&#123;width:"100%", backgroundColor:"#FFEEEE"&#125;</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={4}>
+          <FormGroup>
+            <ControlLabel>Today button</ControlLabel>
+            <DatePicker showTodayButton />
+          </FormGroup>
+        </Col>
+        <Col sm={4}>
+          <FormGroup>
+            <ControlLabel>Control element</ControlLabel>
+            <DatePicker customControl={<CustomControl />} />
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={12}>
           <h2>Placement</h2>
         </Col>
@@ -307,20 +328,6 @@ const App = React.createClass({
             <ControlLabel>Label</ControlLabel>
             <DatePicker placeholder="Placeholder" value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
-          </FormGroup>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm={6}>
-          <FormGroup bsSize="large">
-            <ControlLabel>Show today button</ControlLabel>
-            <DatePicker showTodayButton />
-          </FormGroup>
-        </Col>
-        <Col sm={6}>
-          <FormGroup bsSize="large">
-            <ControlLabel>Use custom control</ControlLabel>
-            <DatePicker customControl={<CustomControl />} />
           </FormGroup>
         </Col>
       </Row>
