@@ -527,7 +527,7 @@ export default React.createClass({
         target={() => ReactDOM.findDOMNode(this.refs.input)}
         placement={this.props.calendarPlacement}
         delayHide={200}>
-        <Popover id="calendar" title={calendarHeader}>
+        <Popover title={calendarHeader}>
           <Calendar
             cellPadding={this.props.cellPadding}
             selectedDate={this.state.selectedDate}
