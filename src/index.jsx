@@ -539,7 +539,7 @@ export default React.createClass({
             todayButtonLabel={this.props.todayButtonLabel} />
         </Popover>
       </Overlay>
-      <div ref="overlayContainer" />
+      <div ref="overlayContainer" style={{position: 'relative'}} />
       <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
       {control}
       {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
