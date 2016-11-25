@@ -390,9 +390,10 @@ export default React.createClass({
     });
   },
 
-  handleInputChange() {
+  handleInputChange(e) {
+
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
-    const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator);
+    const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
 
     let month, day, year;
     if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
