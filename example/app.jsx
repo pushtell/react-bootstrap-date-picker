@@ -207,13 +207,13 @@ const App = React.createClass({
         </Col>
         <Col sm={4}>
           <FormGroup>
-            <ControlLabel>Today button</ControlLabel>
+            <ControlLabel>Today Button</ControlLabel>
             <DatePicker showTodayButton />
           </FormGroup>
         </Col>
         <Col sm={4}>
           <FormGroup>
-            <ControlLabel>Control element</ControlLabel>
+            <ControlLabel>Control Element</ControlLabel>
             <DatePicker customControl={<CustomControl />} />
           </FormGroup>
         </Col>
