@@ -88,6 +88,14 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"2016-05-19T12:00:00.000Z"`
+  * `style` - Style object passed to the `FormControl` input element.
+    * **Optional**
+    * **Type:** `object`
+    * **Example:** `{width: "100%"}`
+  * `className` - Class name passed to the `FormControl` input element.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `example-class`
   * `autoFocus` - Whether or not component starts with focus.
     * **Optional**
     * **Type:** `bool`

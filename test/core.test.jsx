@@ -346,6 +346,24 @@ describe("Date Picker", function() {
     assert.notEqual(document.getElementById("blurred"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it('should trim extra characters.', co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    inputElement.value = "05/31/1980 extra";
+    TestUtils.Simulate.change(inputElement);
+    assert.equal(inputElement.value, "05/31/1980");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should automatically insert slashes.", co.wrap(function *(){
     const id = UUID.v4();
     const App = React.createClass({
@@ -525,7 +543,7 @@ describe("Date Picker", function() {
     });
     const inputElement = document.querySelector("input.form-control");
     TestUtils.Simulate.focus(inputElement);
-    assert.notEqual(document.querySelector("#calendarContainer #calendar"), null);
+    assert.notEqual(document.querySelector("#calendarContainer .date-picker-popover"), null);
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should have no focus with autoFocus false.", co.wrap(function *(){
@@ -770,7 +788,7 @@ describe("Date Picker", function() {
     assert.equal(todayElement.innerText, 'Today is the day');
     ReactDOM.unmountComponentAtNode(container);
   }));
-  it('should render custom-button element', co.wrap(function *(){
+  it('should render a custom button element', co.wrap(function *(){
     const id = UUID.v4();
     const App = React.createClass({
       render: function(){
@@ -787,6 +805,39 @@ describe("Date Picker", function() {
     const customElement = document.getElementById('test-btn');
     assert.notEqual(customElement, null);
     assert.equal(customElement.innerText, 'Test button');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should set the FormControl className.", co.wrap(function *(){
+    const id = UUID.v4();
+    const className = `_${UUID.v4()}`;
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} className={className} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector(`input.${className}`);
+    assert.notEqual(inputElement, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should set the FormControl style.", co.wrap(function *(){
+    const backgroundColor = `rgb(${Math.round(Math.random() * 255, 0)}, ${Math.round(Math.random() * 255, 0)}, ${Math.round(Math.random() * 255, 0)})`;
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker style={{backgroundColor: backgroundColor}}/>
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector('input.form-control');
+    assert.equal(inputElement.style.backgroundColor, backgroundColor);
     ReactDOM.unmountComponentAtNode(container);
   }));
 });

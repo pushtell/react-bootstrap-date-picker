@@ -10,6 +10,8 @@ import {
   Popover,
 } from 'react-bootstrap';
 
+let instanceCount = 0;
+
 const CalendarHeader = React.createClass({
   displayName: 'DatePickerHeader',
 
@@ -169,6 +171,8 @@ export default React.createClass({
   propTypes: {
     defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
+    className: React.PropTypes.string,
+    style: React.PropTypes.object,
     cellPadding: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
@@ -224,6 +228,9 @@ export default React.createClass({
       disabled: false,
       showTodayButton: false,
       todayButtonLabel: 'Today',
+      style: {
+        width: '100%'
+      }
     };
   },
 
@@ -390,7 +397,7 @@ export default React.createClass({
     });
   },
 
-  handleInputChange(e) {
+  handleInputChange() {
 
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
@@ -475,6 +482,10 @@ export default React.createClass({
     }
   },
 
+  componentWillMount() {
+    instanceCount += 1;
+  },
+
   componentWillReceiveProps(newProps) {
     const value = newProps.value;
     if (this.getValue() !== value) {
@@ -501,19 +512,23 @@ export default React.createClass({
         onFocus: this.handleFocus,
         onBlur: this.handleBlur,
         onChange: this.handleInputChange,
+        className: this.props.className,
+        style: this.props.style
       })
       : <FormControl
           onKeyDown={this.handleKeyDown}
           value={this.state.inputValue || ''}
           ref="input"
           type="text"
+          className={this.props.className}
+          style={this.props.style}
           autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
           placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
-          style={{width: '100%'}} />;
+          />;
 
     return <InputGroup
       ref="inputGroup"
@@ -528,7 +543,7 @@ export default React.createClass({
         target={() => ReactDOM.findDOMNode(this.refs.input)}
         placement={this.props.calendarPlacement}
         delayHide={200}>
-        <Popover title={calendarHeader}>
+        <Popover id={`date-picker-popover-${instanceCount}`} className="date-picker-popover" title={calendarHeader}>
           <Calendar
             cellPadding={this.props.cellPadding}
             selectedDate={this.state.selectedDate}
