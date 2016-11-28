@@ -70,29 +70,29 @@ const Calendar = React.createClass({
   },
 
   handleClick(day) {
-    const newSelectedDate = new Date(this.props.displayDate);
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
   },
 
   handleClickToday() {
-    const newSelectedDate = new Date();
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = this.setTimeToNoon(new Date());
     this.props.onChange(newSelectedDate);
   },
 
+  setTimeToNoon(date) {
+    date.setHours(12);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
+
   render() {
-    const currentDate = new Date();
-    const selectedDate = this.props.selectedDate;
-    const minDate = this.props.minDate;
-    const maxDate = this.props.maxDate;
+    const currentDate = this.setTimeToNoon(new Date());
+    const selectedDate = this.props.selectedDate ? this.setTimeToNoon(new Date(this.props.selectedDate)) : null;
+    const minDate = this.props.minDate ? this.setTimeToNoon(new Date(this.props.minDate)) : null;
+    const maxDate = this.props.maxDate ? this.setTimeToNoon(new Date(this.props.maxDate)) : null;
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -226,6 +226,7 @@ export default React.createClass({
     name: React.PropTypes.string,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
+    instanceCount: React.PropTypes.number,
     customControl: React.PropTypes.object,
     roundedCorners: React.PropTypes.bool
   },
