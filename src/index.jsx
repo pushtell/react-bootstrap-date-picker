@@ -2,10 +2,19 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button, FormControl, InputGroup, Overlay, Popover } from 'react-bootstrap';
+import {
+  Button,
+  FormControl,
+  InputGroup,
+  Overlay,
+  Popover,
+} from 'react-bootstrap';
+
+let instanceCount = 0;
 
 const CalendarHeader = React.createClass({
-  displayName: "DatePickerHeader",
+  displayName: 'DatePickerHeader',
+
   propTypes: {
     displayDate: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
@@ -17,23 +26,26 @@ const CalendarHeader = React.createClass({
     nextButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
-    ]).isRequired
+    ]).isRequired,
   },
-  handleClickPrevious(){
+
+  handleClickPrevious() {
     const newDisplayDate = new Date(this.props.displayDate);
     newDisplayDate.setMonth(newDisplayDate.getMonth() - 1);
     this.props.onChange(newDisplayDate);
   },
-  handleClickNext(){
+
+  handleClickNext() {
     const newDisplayDate = new Date(this.props.displayDate);
     newDisplayDate.setMonth(newDisplayDate.getMonth() + 1);
     this.props.onChange(newDisplayDate);
   },
+
   render() {
     return <div className="text-center">
-      <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: "pointer"}}>{this.props.previousButtonElement}</div>
-        <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
-      <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: "pointer"}}>{this.props.nextButtonElement}</div>
+      <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>{this.props.previousButtonElement}</div>
+      <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+      <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>{this.props.nextButtonElement}</div>
     </div>;
   }
 });
@@ -41,7 +53,8 @@ const CalendarHeader = React.createClass({
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 const Calendar = React.createClass({
-  displayName: "DatePickerCalendar",
+  displayName: 'DatePickerCalendar',
+
   propTypes: {
     selectedDate: React.PropTypes.object,
     displayDate: React.PropTypes.object.isRequired,
@@ -51,8 +64,11 @@ const Calendar = React.createClass({
     dayLabels: React.PropTypes.array.isRequired,
     cellPadding: React.PropTypes.string.isRequired,
     weekStartsOnMonday: React.PropTypes.bool,
+    showTodayButton: React.PropTypes.bool,
+    todayButtonLabel: React.PropTypes.string,
     roundedCorners: React.PropTypes.bool
   },
+
   handleClick(day) {
     const newSelectedDate = new Date(this.props.displayDate);
     newSelectedDate.setHours(12);
@@ -62,6 +78,16 @@ const Calendar = React.createClass({
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
   },
+
+  handleClickToday() {
+    const newSelectedDate = new Date();
+    newSelectedDate.setHours(12);
+    newSelectedDate.setMinutes(0);
+    newSelectedDate.setSeconds(0);
+    newSelectedDate.setMilliseconds(0);
+    this.props.onChange(newSelectedDate);
+  },
+
   render() {
     const currentDate = new Date();
     const selectedDate = this.props.selectedDate;
@@ -70,17 +96,19 @@ const Calendar = React.createClass({
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() - 1) : firstDay.getDay();
+    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1) : firstDay.getDay();
+
     let monthLength = daysInMonth[month];
     if (month == 1) {
-      if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0){
+      if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
         monthLength = 29;
       }
     }
+
     const weeks = [];
     let day = 1;
     for (let i = 0; i < 9; i++) {
-      let week = [];
+      const week = [];
       for (let j = 0; j <= 6; j++) {
         if (day <= monthLength && (i > 0 || j >= startingDay)) {
           let className = null;
@@ -88,7 +116,11 @@ const Calendar = React.createClass({
           const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
           const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
           if (beforeMinDate || afterMinDate) {
-            week.push(<td key={j} style={{ padding: this.props.cellPadding }} className="text-muted">
+            week.push(<td
+              key={j}
+              style={{ padding: this.props.cellPadding }}
+              className="text-muted"
+            >
               {day}
             </td>);
           } else {
@@ -97,7 +129,12 @@ const Calendar = React.createClass({
             } else if (Date.parse(date) === Date.parse(currentDate)) {
               className = 'text-primary';
             }
-            week.push(<td key={j} onClick={this.handleClick.bind(this, day)} style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }} className={className}>
+            week.push(<td
+              key={j}
+              onClick={this.handleClick.bind(this, day)}
+              style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+              className={className}
+            >
               {day}
             </td>);
           }
@@ -106,32 +143,54 @@ const Calendar = React.createClass({
           week.push(<td key={j} />);
         }
       }
+
       weeks.push(<tr key={i}>{week}</tr>);
       if (day > monthLength) {
         break;
       }
     }
+
     return <table className="text-center">
       <thead>
         <tr>
           {this.props.dayLabels.map((label, index)=>{
-            return <td key={index} className="text-muted" style={{padding: this.props.cellPadding}}>
+            return <td
+              key={index}
+              className="text-muted"
+              style={{padding: this.props.cellPadding}}>
               <small>{label}</small>
-            </td>
+            </td>;
           })}
         </tr>
       </thead>
       <tbody>
         {weeks}
       </tbody>
+      {this.props.showTodayButton && <tfoot>
+        <tr>
+          <td colSpan={this.props.dayLabels.length} style={{ paddingTop: '9px' }}>
+            <Button
+              block
+              bsSize="xsmall"
+              className="u-today-button"
+              onClick={this.handleClickToday}>
+              {this.props.todayButtonLabel}
+            </Button>
+          </td>
+        </tr>
+      </tfoot>}
     </table>;
   }
 });
 
 export default React.createClass({
-  displayName: "DatePicker",
+  displayName: 'DatePicker',
+
   propTypes: {
+    defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
+    className: React.PropTypes.string,
+    style: React.PropTypes.object,
     minDate: React.PropTypes.string,
     maxDate: React.PropTypes.string,
     cellPadding: React.PropTypes.string,
@@ -140,6 +199,9 @@ export default React.createClass({
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
     onClear: React.PropTypes.func,
+    onBlur: React.PropTypes.func,
+    onFocus: React.PropTypes.func,
+    autoFocus: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
     weekStartsOnMonday: React.PropTypes.bool,
     clearButtonElement: React.PropTypes.oneOfType([
@@ -156,32 +218,52 @@ export default React.createClass({
       React.PropTypes.object
     ]),
     calendarPlacement: React.PropTypes.string,
-    dateFormat: React.PropTypes.string,  // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
+    dateFormat: React.PropTypes.string, // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
+    bsClass: React.PropTypes.string,
+    bsSize: React.PropTypes.string,
+    calendarContainer: React.PropTypes.object,
+    id: React.PropTypes.string,
+    name: React.PropTypes.string,
+    showTodayButton: React.PropTypes.bool,
+    todayButtonLabel: React.PropTypes.string,
+    customControl: React.PropTypes.object,
     roundedCorners: React.PropTypes.bool
   },
+
   getDefaultProps() {
-    const language = typeof window !== "undefined" && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
-    const dateFormat = !language || language === "en-us" ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
+    const language = typeof window !== 'undefined' && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
+    const dateFormat = !language || language === 'en-us' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
     return {
-      cellPadding: "5px",
+      cellPadding: '5px',
       dayLabels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       monthLabels: ['January', 'February', 'March', 'April',
-                    'May', 'June', 'July', 'August', 'September',
-                    'October', 'November', 'December'],
-      clearButtonElement: "×",
-      previousButtonElement: "<",
-      nextButtonElement: ">",
-      calendarPlacement: "bottom",
+        'May', 'June', 'July', 'August', 'September',
+        'October', 'November', 'December'],
+      clearButtonElement: '×',
+      previousButtonElement: '<',
+      nextButtonElement: '>',
+      calendarPlacement: 'bottom',
       dateFormat: dateFormat,
       showClearButton: true,
+      autoFocus: false,
       disabled: false,
+      showTodayButton: false,
+      todayButtonLabel: 'Today',
+      instanceCount: instanceCount++,
+      style: {
+        width: '100%'
+      },
       roundedCorners: false
-    }
+    };
   },
+
   getInitialState() {
-    var state = this.makeDateValues(this.props.value);
-    if(this.props.weekStartsOnMonday) {
-      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1))
+    if (this.props.value && this.props.defaultValue) {
+      throw new Error('Conflicting DatePicker properties \'value\' and \'defaultValue\'');
+    }
+    const state = this.makeDateValues(this.props.value || this.props.defaultValue);
+    if (this.props.weekStartsOnMonday) {
+      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
     } else {
       state.dayLabels = this.props.dayLabels;
     }
@@ -191,130 +273,145 @@ export default React.createClass({
     state.separator = this.props.dateFormat.match(/[^A-Z]/)[0];
     return state;
   },
+
   makeDateValues(isoString) {
     let displayDate;
-    const selectedDate = isoString ? new Date(isoString) : null;
+    const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
-    if(selectedDate) {
+    if (selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
-      displayDate = new Date();
-      displayDate.setHours(12);
-      displayDate.setMinutes(0);
-      displayDate.setSeconds(0);
-      displayDate.setMilliseconds(0);
+      displayDate = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
     }
+
     return {
       value: selectedDate ? selectedDate.toISOString() : null,
       displayDate: displayDate,
       selectedDate: selectedDate,
       inputValue: inputValue
-    }
+    };
   },
 
   clear() {
-    if(this.props.onClear){
+    if (this.props.onClear) {
       this.props.onClear();
     }
-    else{
+    else {
       this.setState(this.makeDateValues(null));
     }
 
-    if(this.props.onChange) {
-      this.props.onChange(null);
+    if (this.props.onChange) {
+      this.props.onChange(null, null);
     }
   },
-  handleHide(){
-    if(this.state.inputFocused) {
+
+  handleHide() {
+    if (this.state.inputFocused) {
       return;
     }
     this.setState({
       focused: false
     });
-    if(this.props.onBlur) {
+    if (this.props.onBlur) {
       const event = document.createEvent('CustomEvent');
-      event.initEvent("Change Date", true, false);
+      event.initEvent('Change Date', true, false);
       ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
       this.props.onBlur(event);
     }
   },
-  handleKeyDown(e){
-    if(e.which === 9 && this.state.inputFocused) {
+
+  handleKeyDown(e) {
+    if (e.which === 9 && this.state.inputFocused) {
       this.setState({
         focused: false
       });
-      if(this.props.onBlur) {
+
+      if (this.props.onBlur) {
         const event = document.createEvent('CustomEvent');
-        event.initEvent("Change Date", true, false);
+        event.initEvent('Change Date', true, false);
         ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
         this.props.onBlur(event);
       }
     }
   },
-  handleFocus(e){
-    if(this.state.focused === true) {
+
+  handleFocus() {
+    if (this.state.focused === true) {
       return;
     }
+
     this.setState({
       inputFocused: true,
       focused: true
     });
-    if(this.props.onFocus) {
+
+    if (this.props.onFocus) {
       const event = document.createEvent('CustomEvent');
-      event.initEvent("Change Date", true, false);
+      event.initEvent('Change Date', true, false);
       ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
       this.props.onFocus(event);
     }
   },
-  handleBlur(e){
+
+  handleBlur() {
     this.setState({
       inputFocused: false
     });
   },
+
   shouldComponentUpdate: function(nextProps, nextState) {
     return !(this.state.inputFocused === true && nextState.inputFocused === false);
   },
-  getValue(){
+
+  getValue() {
     return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
   },
+
+  getFormattedValue() {
+    return this.state.displayDate ? this.state.inputValue : null;
+  },
+
   makeInputValueString(date) {
     const month = date.getMonth() + 1;
     const day = date.getDate();
 
     //this method is executed during intialState setup... handle a missing state properly
-    var separator = (this.state ? this.state.separator : this.props.dateFormat.match(/[^A-Z]/)[0]);
-    if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      return (month > 9 ? month : "0" + month) + separator + (day > 9 ? day : "0" + day) + separator + date.getFullYear();
-    } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      return (day > 9 ? day : "0" + day) + separator + (month > 9 ? month : "0" + month) + separator + date.getFullYear();
-    } else {
-      return date.getFullYear() + separator + (month > 9 ? month : "0" + month) + separator + (day > 9 ? day : "0" + day);
+    const separator = (this.state ? this.state.separator : this.props.dateFormat.match(/[^A-Z]/)[0]);
+    if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
+      return (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`) + separator + date.getFullYear();
+    }
+    else if (this.props.dateFormat.match(/DD.MM.YYYY/)) {
+      return (day > 9 ? day : `0${day}`) + separator + (month > 9 ? month : `0${month}`) + separator + date.getFullYear();
+    }
+    else {
+      return date.getFullYear() + separator + (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`);
     }
   },
+
   handleBadInput(originalValue) {
-    let parts = originalValue.replace(new RegExp(`[^0-9${this.state.separator}]`), '').split(this.state.separator);
-    if(this.props.dateFormat.match(/MM.DD.YYYY/) || this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      if(parts[0] && parts[0].length > 2) {
+    const parts = originalValue.replace(new RegExp(`[^0-9${this.state.separator}]`), '').split(this.state.separator);
+    if (this.props.dateFormat.match(/MM.DD.YYYY/) || this.props.dateFormat.match(/DD.MM.YYYY/)) {
+      if (parts[0] && parts[0].length > 2) {
         parts[1] = parts[0].slice(2) + (parts[1] || '');
         parts[0] = parts[0].slice(0, 2);
       }
-      if(parts[1] && parts[1].length > 2) {
+      if (parts[1] && parts[1].length > 2) {
         parts[2] = parts[1].slice(2) + (parts[2] || '');
         parts[1] = parts[1].slice(0, 2);
       }
-      if(parts[2]) {
+      if (parts[2]) {
         parts[2] = parts[2].slice(0,4);
       }
     } else {
-      if(parts[0] && parts[0].length > 4) {
+      if (parts[0] && parts[0].length > 4) {
         parts[1] = parts[0].slice(4) + (parts[1] || '');
         parts[0] = parts[0].slice(0, 4);
       }
-      if(parts[1] && parts[1].length > 2) {
+      if (parts[1] && parts[1].length > 2) {
         parts[2] = parts[1].slice(2) + (parts[2] || '');
         parts[1] = parts[1].slice(0, 2);
       }
-      if(parts[2]) {
+      if (parts[2]) {
         parts[2] = parts[2].slice(0,2);
       }
     }
@@ -322,82 +419,99 @@ export default React.createClass({
       inputValue: parts.join(this.state.separator)
     });
   },
-  handleInputChange(e){
+
+  handleInputChange() {
+
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
-    let inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator);
+    const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
+
     let month, day, year;
-    if(this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      if(!inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
+    if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
+      if (!inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
         return this.handleBadInput(originalValue);
       }
+
       month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
       year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
-    } else if(this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      if(!inputValue.match(/[0-3][0-9].[0-1][0-9].[1-2][0-9][0-9][0-9]/)) {
+    } else if (this.props.dateFormat.match(/DD.MM.YYYY/)) {
+      if (!inputValue.match(/[0-3][0-9].[0-1][0-9].[1-2][0-9][0-9][0-9]/)) {
         return this.handleBadInput(originalValue);
       }
+
       day = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       month = inputValue.slice(3,5).replace(/[^0-9]/g, '');
       year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
     } else {
-      if(!inputValue.match(/[1-2][0-9][0-9][0-9].[0-1][0-9].[0-3][0-9]/)) {
+      if (!inputValue.match(/[1-2][0-9][0-9][0-9].[0-1][0-9].[0-3][0-9]/)) {
         return this.handleBadInput(originalValue);
       }
+
       year = inputValue.slice(0,4).replace(/[^0-9]/g, '');
       month = inputValue.slice(5,7).replace(/[^0-9]/g, '');
       day = inputValue.slice(8,10).replace(/[^0-9]/g, '');
     }
+
     const monthInteger = parseInt(month, 10);
     const dayInteger = parseInt(day, 10);
     const yearInteger = parseInt(year, 10);
-    if(monthInteger > 12 || dayInteger > 31) {
+    if (monthInteger > 12 || dayInteger > 31) {
       return this.handleBadInput(originalValue);
     }
-    if(!isNaN(monthInteger) && !isNaN(dayInteger) && !isNaN(yearInteger) && monthInteger <= 12 && dayInteger <= 31 && yearInteger > 999) {
+
+    if (!isNaN(monthInteger) && !isNaN(dayInteger) && !isNaN(yearInteger) && monthInteger <= 12 && dayInteger <= 31 && yearInteger > 999) {
       const selectedDate = new Date(yearInteger, monthInteger - 1, dayInteger, 12, 0, 0, 0);
       this.setState({
         selectedDate: selectedDate,
         displayDate: selectedDate,
         value: selectedDate.toISOString()
       });
-      if(this.props.onChange) {
-        this.props.onChange(selectedDate.toISOString());
+
+      if (this.props.onChange) {
+        this.props.onChange(selectedDate.toISOString(), inputValue);
       }
     }
+
     this.setState({
       inputValue: inputValue
     });
   },
+
   onChangeMonth(newDisplayDate) {
     this.setState({
       displayDate: newDisplayDate
     });
   },
+
   onChangeDate(newSelectedDate) {
+    const inputValue = this.makeInputValueString(newSelectedDate);
     this.setState({
-      inputValue: this.makeInputValueString(newSelectedDate),
+      inputValue: inputValue,
       selectedDate: newSelectedDate,
       displayDate: newSelectedDate,
       value: newSelectedDate.toISOString(),
       focused: false
     });
-    if(this.props.onBlur) {
+
+    if (this.props.onBlur) {
       const event = document.createEvent('CustomEvent');
-      event.initEvent("Change Date", true, false);
+      event.initEvent('Change Date', true, false);
       ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
       this.props.onBlur(event);
     }
-    if(this.props.onChange) {
-      this.props.onChange(newSelectedDate.toISOString());
+
+    if (this.props.onChange) {
+      this.props.onChange(newSelectedDate.toISOString(), inputValue);
     }
   },
+
   componentWillReceiveProps(newProps) {
     const value = newProps.value;
-    if(this.getValue() !== value) {
+    if (this.getValue() !== value) {
       this.setState(this.makeDateValues(value));
     }
   },
+
   render() {
     const calendarHeader = <CalendarHeader
       previousButtonElement={this.props.previousButtonElement}
@@ -406,27 +520,74 @@ export default React.createClass({
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
-    return <InputGroup ref="inputGroup"  bsClass={this.props.showClearButton ? this.props.bsClass : ""} bsSize={this.props.bsSize} id={this.props.id ? this.props.id + "_group" : null}>
-      <Overlay rootClose={true} onHide={this.handleHide} show={this.state.focused} container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)} target={() => ReactDOM.findDOMNode(this.refs.input)} placement={this.props.calendarPlacement} delayHide={200}>
-        <Popover id="calendar" title={calendarHeader}>
-          <Calendar cellPadding={this.props.cellPadding} selectedDate={this.state.selectedDate} displayDate={this.state.displayDate} onChange={this.onChangeDate} dayLabels={this.state.dayLabels} weekStartsOnMonday={this.props.weekStartsOnMonday} minDate={this.props.minDate} maxDate={this.props.maxDate}  roundedCorners={this.props.roundedCorners}/>
+
+    const control = this.props.customControl
+      ? React.cloneElement(this.props.customControl, {
+        onKeyDown: this.handleKeyDown,
+        value: this.state.inputValue || '',
+        placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
+        ref: 'input',
+        disabled: this.props.disabled,
+        onFocus: this.handleFocus,
+        onBlur: this.handleBlur,
+        onChange: this.handleInputChange,
+        className: this.props.className,
+        style: this.props.style
+      })
+      : <FormControl
+          onKeyDown={this.handleKeyDown}
+          value={this.state.inputValue || ''}
+          ref="input"
+          type="text"
+          className={this.props.className}
+          style={this.props.style}
+          autoFocus={this.props.autoFocus}
+          disabled={this.props.disabled}
+          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          onChange={this.handleInputChange}
+          />;
+
+    return <InputGroup
+      ref="inputGroup"
+      bsClass={this.props.showClearButton ? this.props.bsClass : ''}
+      bsSize={this.props.bsSize}
+      id={this.props.id ? `${this.props.id}_group` : null}>
+      <Overlay
+        rootClose={true}
+        onHide={this.handleHide}
+        show={this.state.focused}
+        container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)}
+        target={() => ReactDOM.findDOMNode(this.refs.input)}
+        placement={this.props.calendarPlacement}
+        delayHide={200}>
+        <Popover id={`date-picker-popover-${this.props.instanceCount}`} className="date-picker-popover" title={calendarHeader}>
+          <Calendar
+            cellPadding={this.props.cellPadding}
+            selectedDate={this.state.selectedDate}
+            displayDate={this.state.displayDate}
+            onChange={this.onChangeDate}
+            dayLabels={this.state.dayLabels}
+            weekStartsOnMonday={this.props.weekStartsOnMonday}
+            showTodayButton={this.props.showTodayButton}
+            todayButtonLabel={this.props.todayButtonLabel}
+            minDate={this.props.minDate}
+            maxDate={this.props.maxDate}
+            roundedCorners={this.props.roundedCorners}
+           />
         </Popover>
       </Overlay>
-      <div ref="overlayContainer" />
-      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} />
-      <FormControl
-        onKeyDown={this.handleKeyDown}
-        value={this.state.inputValue || ''}
-        ref="input"
-        type="text"
-        disabled={this.props.disabled}
-        placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
-        onFocus={this.handleFocus}
-        onBlur={this.handleBlur}
-        onChange={this.handleInputChange}
-        style={{width: "100%"}}
-      />
-      {this.props.showClearButton && <InputGroup.Addon onClick={this.props.disabled ? null : this.clear} style={{cursor:(this.state.inputValue && !this.props.disabled) ? "pointer" : "not-allowed"}}><div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>{this.props.clearButtonElement}</div></InputGroup.Addon>}
+      <div ref="overlayContainer" style={{position: 'relative'}} />
+      <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
+      {control}
+      {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
+        onClick={this.props.disabled ? null : this.clear}
+        style={{cursor:(this.state.inputValue && !this.props.disabled) ? 'pointer' : 'not-allowed'}}>
+        <div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>
+          {this.props.clearButtonElement}
+        </div>
+      </InputGroup.Addon>}
     </InputGroup>;
   }
 });

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Grid from "react-bootstrap/lib/Grid";
 import Row from "react-bootstrap/lib/Row";
 import Col from "react-bootstrap/lib/Col";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Button } from "react-bootstrap";
 import Nav from "react-bootstrap/lib/Nav";
 import NavItem from "react-bootstrap/lib/NavItem";
 import DatePicker from "../src/index.jsx";
@@ -198,6 +198,27 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
+        <Col sm={4}>
+          <FormGroup>
+            <ControlLabel>FormControl Style</ControlLabel>
+            <DatePicker style={{width:"100%", backgroundColor:"#FFEEEE"}} />
+            <HelpBlock>&#123;width:"100%", backgroundColor:"#FFEEEE"&#125;</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={4}>
+          <FormGroup>
+            <ControlLabel>Today Button</ControlLabel>
+            <DatePicker showTodayButton />
+          </FormGroup>
+        </Col>
+        <Col sm={4}>
+          <FormGroup>
+            <ControlLabel>Control Element</ControlLabel>
+            <DatePicker customControl={<CustomControl />} />
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={12}>
           <h2>Placement</h2>
         </Col>
@@ -314,6 +335,18 @@ const App = React.createClass({
   }
 });
 
+const CustomControl = React.createClass({
+  displayName: 'CustomControl',
+
+  render() {
+    const {
+      value,
+      placeholder,
+      ...rest,
+    } = this.props;
+
+    return <Button {...rest}>{value || placeholder}</Button>;
+  },
+});
+
 ReactDOM.render(<App />, document.getElementById('react'));
-
-
