@@ -489,4 +489,69 @@ describe("Date Picker", function() {
     assert.equal(value, originalValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should disable dates outside of min and max dates.", co.wrap(function *(){
+    const id = UUID.v4();
+    const originalValue = "2016-09-15T00:00:00.000Z"
+    const minDate = "2016-09-11T00:00:00.000Z";
+    const maxDate = "2016-09-17T00:00:00.000Z";
+    const justRightValue = "2016-09-11T17:00:00.000Z"
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: originalValue
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} minDate={minDate} maxDate={maxDate} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const hiddenInputElement = document.getElementById(id);
+    const tooEarly = document.querySelector("table tbody tr:nth-child(2) td");
+    const justRight = document.querySelector("table tbody tr:nth-child(3) td");
+    const tooLate = document.querySelector("table tbody tr:nth-child(4) td");
+    assert.equal(hiddenInputElement.value, originalValue);
+    TestUtils.Simulate.click(tooEarly);
+    assert.equal(hiddenInputElement.value, originalValue);
+    TestUtils.Simulate.click(justRight);
+    assert.equal(hiddenInputElement.value, justRightValue);
+    TestUtils.Simulate.click(tooLate);
+    assert.equal(hiddenInputElement.value, justRightValue);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should allow for rounded corners.", co.wrap(function *(){
+    const withoutRoundedCorners = "_" + UUID.v4();
+    const withRoundedCorners = "_" + UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={withoutRoundedCorners} />
+          <DatePicker id={withRoundedCorners} roundedCorners />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const withoutRoundedCorners_inputElement = document.querySelector("#" + withoutRoundedCorners + "_group input.form-control");
+    const withRoundedCorners_inputElement = document.querySelector("#" + withRoundedCorners + "_group input.form-control");
+    TestUtils.Simulate.focus(withoutRoundedCorners_inputElement);
+    const withoutRoundedCornersDayElement = document.querySelector("#" + withoutRoundedCorners + "_group table tbody tr:nth-child(2) td");
+    TestUtils.Simulate.click(withoutRoundedCornersDayElement);
+    assert.equal(withoutRoundedCornersDayElement.style.borderRadius, '0px');
+    TestUtils.Simulate.focus(withRoundedCorners_inputElement);
+    const withRoundedCornersDayElement = document.querySelector("#" + withRoundedCorners + "_group table tbody tr:nth-child(2) td");
+    TestUtils.Simulate.click(withRoundedCornersDayElement);
+    assert.equal(withRoundedCornersDayElement.style.borderRadius, '5px');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
