@@ -759,7 +759,7 @@ describe("Date Picker", function() {
     try {
       yield new Promise(function(resolve, reject){
         ReactDOM.render(<App />, container, resolve);
-      });      
+      });
       throw new Error("Value and default value should not be set simultaneously");
     } catch (e) {
       assert(e.message.indexOf("Conflicting") !== -1)
@@ -838,6 +838,40 @@ describe("Date Picker", function() {
     });
     const inputElement = document.querySelector('input.form-control');
     assert.equal(inputElement.style.backgroundColor, backgroundColor);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("week should start on Thursday.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} weekStartsOn={4} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Thu");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("week should start on Saturday.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} weekStartsOn={6} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Sat");
     ReactDOM.unmountComponentAtNode(container);
   }));
 });

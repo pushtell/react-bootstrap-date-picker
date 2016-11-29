@@ -198,20 +198,28 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
-        <Col sm={4}>
+        <Col sm={6}>
           <FormGroup>
             <ControlLabel>FormControl Style</ControlLabel>
             <DatePicker style={{width:"100%", backgroundColor:"#FFEEEE"}} />
             <HelpBlock>&#123;width:"100%", backgroundColor:"#FFEEEE"&#125;</HelpBlock>
           </FormGroup>
         </Col>
-        <Col sm={4}>
+        <Col sm={6}>
           <FormGroup>
             <ControlLabel>Today Button</ControlLabel>
             <DatePicker showTodayButton />
           </FormGroup>
         </Col>
-        <Col sm={4}>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Thursday First Day of Week</ControlLabel>
+            <DatePicker weekStartsOn={4} />
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
           <FormGroup>
             <ControlLabel>Control Element</ControlLabel>
             <DatePicker customControl={<CustomControl />} />
