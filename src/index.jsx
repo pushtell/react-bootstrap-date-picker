@@ -175,6 +175,7 @@ export default React.createClass({
     style: React.PropTypes.object,
     cellPadding: React.PropTypes.string,
     placeholder: React.PropTypes.string,
+    formatPlaceholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
@@ -499,11 +500,15 @@ export default React.createClass({
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
 
+    const placeholder = this.state.focused
+      ? this.props.formatPlaceholder || this.props.dateFormat
+      : this.state.placeholder
+
     const control = this.props.customControl
       ? React.cloneElement(this.props.customControl, {
         onKeyDown: this.handleKeyDown,
         value: this.state.inputValue || '',
-        placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
+        placeholder,
         ref: 'input',
         disabled: this.props.disabled,
         onFocus: this.handleFocus,
@@ -521,7 +526,7 @@ export default React.createClass({
           style={this.props.style}
           autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
-          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+          placeholder={placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
