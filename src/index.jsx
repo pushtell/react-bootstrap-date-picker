@@ -9,6 +9,7 @@ import {
   Overlay,
   Popover,
 } from 'react-bootstrap';
+import moment from 'moment';
 
 let instanceCount = 0;
 
@@ -30,21 +31,19 @@ const CalendarHeader = React.createClass({
   },
 
   handleClickPrevious() {
-    const newDisplayDate = new Date(this.props.displayDate);
-    newDisplayDate.setMonth(newDisplayDate.getMonth() - 1);
-    this.props.onChange(newDisplayDate);
+    const date = this.props.displayDate;
+    this.props.onChange(date.month(date.month() - 1));
   },
 
   handleClickNext() {
-    const newDisplayDate = new Date(this.props.displayDate);
-    newDisplayDate.setMonth(newDisplayDate.getMonth() + 1);
-    this.props.onChange(newDisplayDate);
+    const date = this.props.displayDate;
+    this.props.onChange(date.month(date.month() + 1));
   },
 
   render() {
     return <div className="text-center">
       <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>{this.props.previousButtonElement}</div>
-      <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+      <span>{this.props.monthLabels[this.props.displayDate.month()]} {this.props.displayDate.year()}</span>
       <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>{this.props.nextButtonElement}</div>
     </div>;
   }
@@ -67,36 +66,27 @@ const Calendar = React.createClass({
   },
 
   handleClick(day) {
-    const newSelectedDate = new Date(this.props.displayDate);
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
-    newSelectedDate.setDate(day);
+    const newSelectedDate = moment(this.props.displayDate).date(day);
     this.props.onChange(newSelectedDate);
   },
 
   handleClickToday() {
-    const newSelectedDate = new Date();
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = moment().startOf('day').hour(12);
     this.props.onChange(newSelectedDate);
   },
 
   render() {
-    const currentDate = new Date();
-    const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-    const selectedDay = this.props.selectedDate ? this.props.selectedDate.getDate() : null;
-    const selectedMonth = this.props.selectedDate ? this.props.selectedDate.getMonth() : null;
-    const selectedYear = this.props.selectedDate ? this.props.selectedDate.getFullYear() : null;
-    const year = this.props.displayDate.getFullYear();
-    const month = this.props.displayDate.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1) : firstDay.getDay();
+    const currentDate = moment();
+    const currentDay = currentDate.date();
+    const currentMonth = currentDate.month();
+    const currentYear = currentDate.year();
+    const selectedDay = this.props.selectedDate ? this.props.selectedDate.date() : null;
+    const selectedMonth = this.props.selectedDate ? this.props.selectedDate.month() : null;
+    const selectedYear = this.props.selectedDate ? this.props.selectedDate.year() : null;
+    const year = this.props.displayDate.year();
+    const month = this.props.displayDate.month();
+    const firstDay = moment([year, month, 1]);
+    const startingDay = this.props.weekStartsOnMonday ? (firstDay.day() === 0 ? 6 : firstDay.day() - 1) : firstDay.day();
 
     let monthLength = daysInMonth[month];
     if (month == 1) {
@@ -253,17 +243,12 @@ export default React.createClass({
   },
 
   makeDateValues(isoString) {
-    let displayDate;
-    const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+    const selectedDate = isoString ? moment(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
-    if (selectedDate) {
-      displayDate = new Date(selectedDate);
-    } else {
-      displayDate = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
-    }
+    const displayDate = selectedDate || moment();
 
     return {
-      value: selectedDate ? selectedDate.toISOString() : null,
+      value: selectedDate ? selectedDate.format() : null,
       displayDate: displayDate,
       selectedDate: selectedDate,
       inputValue: inputValue
@@ -350,20 +335,7 @@ export default React.createClass({
   },
 
   makeInputValueString(date) {
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    //this method is executed during intialState setup... handle a missing state properly
-    const separator = (this.state ? this.state.separator : this.props.dateFormat.match(/[^A-Z]/)[0]);
-    if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      return (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`) + separator + date.getFullYear();
-    }
-    else if (this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      return (day > 9 ? day : `0${day}`) + separator + (month > 9 ? month : `0${month}`) + separator + date.getFullYear();
-    }
-    else {
-      return date.getFullYear() + separator + (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`);
-    }
+    return date.format(this.props.dateFormat)
   },
 
   handleBadInput(originalValue) {
@@ -403,56 +375,19 @@ export default React.createClass({
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
 
-    let month, day, year;
-    if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      if (!inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
-        return this.handleBadInput(originalValue);
-      }
-
-      month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
-      day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
-      year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
-    } else if (this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      if (!inputValue.match(/[0-3][0-9].[0-1][0-9].[1-2][0-9][0-9][0-9]/)) {
-        return this.handleBadInput(originalValue);
-      }
-
-      day = inputValue.slice(0,2).replace(/[^0-9]/g, '');
-      month = inputValue.slice(3,5).replace(/[^0-9]/g, '');
-      year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
-    } else {
-      if (!inputValue.match(/[1-2][0-9][0-9][0-9].[0-1][0-9].[0-3][0-9]/)) {
-        return this.handleBadInput(originalValue);
-      }
-
-      year = inputValue.slice(0,4).replace(/[^0-9]/g, '');
-      month = inputValue.slice(5,7).replace(/[^0-9]/g, '');
-      day = inputValue.slice(8,10).replace(/[^0-9]/g, '');
-    }
-
-    const monthInteger = parseInt(month, 10);
-    const dayInteger = parseInt(day, 10);
-    const yearInteger = parseInt(year, 10);
-    if (monthInteger > 12 || dayInteger > 31) {
+    const selectedDate = moment(inputValue, this.props.dateFormat, true);
+    if (!selectedDate.isValid()) {
       return this.handleBadInput(originalValue);
     }
-
-    if (!isNaN(monthInteger) && !isNaN(dayInteger) && !isNaN(yearInteger) && monthInteger <= 12 && dayInteger <= 31 && yearInteger > 999) {
-      const selectedDate = new Date(yearInteger, monthInteger - 1, dayInteger, 12, 0, 0, 0);
-      this.setState({
-        selectedDate: selectedDate,
-        displayDate: selectedDate,
-        value: selectedDate.toISOString()
-      });
-
-      if (this.props.onChange) {
-        this.props.onChange(selectedDate.toISOString(), inputValue);
-      }
-    }
-
     this.setState({
-      inputValue: inputValue
+      displayDate: selectedDate,
+      inputValue: inputValue,
+      selectedDate: selectedDate,
+      value: selectedDate.format()
     });
+    if (this.props.onChange) {
+      this.props.onChange(selectedDate.format(), inputValue);
+    }
   },
 
   onChangeMonth(newDisplayDate) {

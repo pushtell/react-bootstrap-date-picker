@@ -16,6 +16,9 @@
   "directories": {
     "test": "test"
   },
+  "dependencies": {
+    "moment": "^2.17.0"
+  },
   "peerDependencies": {
     "react": ">=0.14.0",
     "react-bootstrap": "^0.30.2"
