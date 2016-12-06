@@ -840,4 +840,51 @@ describe("Date Picker", function() {
     assert.equal(inputElement.style.backgroundColor, backgroundColor);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should set the plaheholder", co.wrap(function *(){
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker placeholder="foo" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    assert.equal(inputElement.placeholder, "foo");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should show dateFormat as placeholder when focused", co.wrap(function *(){
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker dateFormat="YYYY-MM-DD" placeholder="foo" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.equal(inputElement.placeholder, "YYYY-MM-DD");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should show formatPlaceholder when focused", co.wrap(function *(){
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker formatPlaceholder="bar" placeholder="foo" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.equal(inputElement.placeholder, "bar");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });

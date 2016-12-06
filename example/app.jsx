@@ -98,6 +98,30 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
+        <Col xs={6}>
+          <h2>Auto Focus</h2>
+        </Col>
+        <Col xs={6}>
+          <h2>Different placeholder on focus</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Auto-focused</ControlLabel>
+            <DatePicker autoFocus onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>With format placeholder</ControlLabel>
+            <DatePicker onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" formatPlaceholder="month/day/year"/>
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={12}>
           <h2>Styles</h2>
         </Col>
