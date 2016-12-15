@@ -555,10 +555,10 @@ export default React.createClass({
       <div ref="overlayContainer" style={{position: 'relative'}} />
       <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
       {control}
-      {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
+      {this.props.showClearButton && !this.props.customControl && this.state.inputValue && <InputGroup.Addon
         onClick={this.props.disabled ? null : this.clear}
-        style={{cursor:(this.state.inputValue && !this.props.disabled) ? 'pointer' : 'not-allowed'}}>
-        <div style={{opacity: (this.state.inputValue && !this.props.disabled) ? 1 : 0.5}}>
+        style={{cursor:this.props.disabled ? 'not-allowed' : 'pointer'}}>
+        <div style={{opacity: this.props.disabled ? 0.5 : 1}}>
           {this.props.clearButtonElement}
         </div>
       </InputGroup.Addon>}
