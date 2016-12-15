@@ -340,7 +340,7 @@ export default React.createClass({
 
   handleBadInput(originalValue) {
     const parts = originalValue.replace(new RegExp(`[^0-9${this.state.separator}]`), '').split(this.state.separator);
-    if (this.props.dateFormat.match(/MM.DD.YYYY/) || this.props.dateFormat.match(/DD.MM.YYYY/)) {
+    if (this.props.dateFormat.match(/MM?.DD?.YYYY/) || this.props.dateFormat.match(/DD?.MM?.YYYY/)) {
       if (parts[0] && parts[0].length > 2) {
         parts[1] = parts[0].slice(2) + (parts[1] || '');
         parts[0] = parts[0].slice(0, 2);
