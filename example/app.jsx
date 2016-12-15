@@ -147,8 +147,8 @@ const App = React.createClass({
         </Col>
         <Col sm={4}>
           <FormGroup>
-            <ControlLabel>YYYY/MM/DD</ControlLabel>
-            <DatePicker dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.date} />
+            <ControlLabel>YYYY/M/D</ControlLabel>
+            <DatePicker dateFormat="YYYY/M/D" onChange={this.handleChange} value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
