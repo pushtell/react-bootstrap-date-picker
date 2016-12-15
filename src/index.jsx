@@ -562,6 +562,7 @@ export default React.createClass({
           {this.props.clearButtonElement}
         </div>
       </InputGroup.Addon>}
+      {this.props.children}
     </InputGroup>;
   }
 });
