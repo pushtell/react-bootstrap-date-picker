@@ -174,6 +174,7 @@ export default React.createClass({
     className: React.PropTypes.string,
     style: React.PropTypes.object,
     cellPadding: React.PropTypes.string,
+    autoComplete: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
@@ -228,6 +229,7 @@ export default React.createClass({
       disabled: false,
       showTodayButton: false,
       todayButtonLabel: 'Today',
+      autoComplete: 'on',
       instanceCount: instanceCount++,
       style: {
         width: '100%'
@@ -510,7 +512,8 @@ export default React.createClass({
         onBlur: this.handleBlur,
         onChange: this.handleInputChange,
         className: this.props.className,
-        style: this.props.style
+        style: this.props.style,
+        autoComplete: this.props.autoComplete,
       })
       : <FormControl
           onKeyDown={this.handleKeyDown}
@@ -525,6 +528,7 @@ export default React.createClass({
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
+          autoComplete={this.props.autoComplete}
           />;
 
     return <InputGroup
