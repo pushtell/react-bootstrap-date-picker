@@ -303,7 +303,10 @@ describe("Date Picker", function() {
     assert.equal(hiddenInputElement.value, value);
     inputElement.value = "02/23/2017";
     TestUtils.Simulate.change(inputElement);
-    assert.equal(hiddenInputElement.value, '2017-02-23T16:00:00.000Z');
+    assert.equal(hiddenInputElement.value.slice(0,10), '2017-02-23');
+    const goodDayElement = document.querySelector("table tbody tr:nth-child(4) td:nth-child(3)");
+    TestUtils.Simulate.click(goodDayElement);
+    assert.equal(hiddenInputElement.value.slice(0,10), '2017-02-21');
     ReactDOM.unmountComponentAtNode(container);
   }));
   it("should update via a change handler when cleared.", co.wrap(function *(){
