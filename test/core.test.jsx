@@ -271,6 +271,44 @@ describe("Date Picker", function() {
     }
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should allow a minDate and maxDate options to disable setting dates prior/after minDate/maxDate", co.wrap(function *() {
+    const id = UUID.v4();
+    const value = "2017-02-22T12:00:00.000Z";
+    const maxDate = "2017-02-25T12:00:00.000Z";
+    const minDate = "2017-02-20T12:00:00.000Z";
+    const App = React.createClass({
+      render: function () {
+        return <div>
+          <DatePicker id={id} minDate={minDate} maxDate={maxDate} value={value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const hiddenInputElement = document.getElementById(id)
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const earlyDayElement = document.querySelector("table tbody tr:nth-child(2) td");
+    TestUtils.Simulate.click(earlyDayElement);
+    assert.equal(hiddenInputElement.value, value);
+    const lateDayElement = document.querySelector("table tbody tr:nth-child(5) td");
+    TestUtils.Simulate.click(lateDayElement);
+    assert.equal(hiddenInputElement.value, value);
+    inputElement.value = "05/31/1980";
+    TestUtils.Simulate.change(inputElement);
+    assert.equal(hiddenInputElement.value, value);
+    inputElement.value = "05/31/2017";
+    TestUtils.Simulate.change(inputElement);
+    assert.equal(hiddenInputElement.value, value);
+    inputElement.value = "02/23/2017";
+    TestUtils.Simulate.change(inputElement);
+    assert.equal(hiddenInputElement.value.slice(0,10), '2017-02-23');
+    const goodDayElement = document.querySelector("table tbody tr:nth-child(4) td:nth-child(3)");
+    TestUtils.Simulate.click(goodDayElement);
+    assert.equal(hiddenInputElement.value.slice(0,10), '2017-02-21');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should update via a change handler when cleared.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
@@ -759,7 +797,7 @@ describe("Date Picker", function() {
     try {
       yield new Promise(function(resolve, reject){
         ReactDOM.render(<App />, container, resolve);
-      });      
+      });
       throw new Error("Value and default value should not be set simultaneously");
     } catch (e) {
       assert(e.message.indexOf("Conflicting") !== -1)

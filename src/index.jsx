@@ -57,6 +57,8 @@ const Calendar = React.createClass({
 
   propTypes: {
     selectedDate: React.PropTypes.object,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     displayDate: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
@@ -98,6 +100,9 @@ const Calendar = React.createClass({
     const firstDay = new Date(year, month, 1);
     const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1) : firstDay.getDay();
 
+    const minimumDate = this.props.minDate && new Date(this.props.minDate);
+    const maximumDate = this.props.maxDate && new Date(this.props.maxDate);
+
     let monthLength = daysInMonth[month];
     if (month == 1) {
       if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
@@ -113,10 +118,13 @@ const Calendar = React.createClass({
         if (day <= monthLength && (i > 0 || j >= startingDay)) {
           const selected = day === selectedDay && month == selectedMonth && year === selectedYear;
           const current = day === currentDay && month == currentMonth && year === currentYear;
+          const afterMinDate = minimumDate ? (year >= minimumDate.getFullYear() && month >= minimumDate.getMonth() && day >= minimumDate.getDate()) : true;
+          const beforeMaxDate = maximumDate ? (year <= maximumDate.getFullYear() && month <= maximumDate.getMonth() && day <= maximumDate.getDate()) : true;
+          const style = Object.assign({padding: this.props.cellPadding}, afterMinDate && beforeMaxDate ? {cursor: 'pointer'} : {cursor: 'not-allowed', color: 'grey'});
           week.push(<td
             key={j}
-            onClick={this.handleClick.bind(this, day)}
-            style={{cursor: 'pointer', padding: this.props.cellPadding}}
+            onClick={afterMinDate && beforeMaxDate ? this.handleClick.bind(this, day) : null}
+            style={style}
             className={selected ? 'bg-primary' : current ? 'text-muted' : null}>
             {day}
           </td>);
@@ -171,6 +179,8 @@ export default React.createClass({
   propTypes: {
     defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     className: React.PropTypes.string,
     style: React.PropTypes.object,
     cellPadding: React.PropTypes.string,
@@ -439,6 +449,12 @@ export default React.createClass({
 
     if (!isNaN(monthInteger) && !isNaN(dayInteger) && !isNaN(yearInteger) && monthInteger <= 12 && dayInteger <= 31 && yearInteger > 999) {
       const selectedDate = new Date(yearInteger, monthInteger - 1, dayInteger, 12, 0, 0, 0);
+      const minDate = new Date(this.props.minDate);
+      const maxDate = new Date(this.props.maxDate);
+      if (selectedDate <= minDate || selectedDate >= maxDate) {
+        return this.handleBadInput(originalValue);
+      }
+
       this.setState({
         selectedDate: selectedDate,
         displayDate: selectedDate,
@@ -544,6 +560,8 @@ export default React.createClass({
           <Calendar
             cellPadding={this.props.cellPadding}
             selectedDate={this.state.selectedDate}
+            minDate={this.props.minDate}
+            maxDate={this.props.maxDate}
             displayDate={this.state.displayDate}
             onChange={this.onChangeDate}
             dayLabels={this.state.dayLabels}
