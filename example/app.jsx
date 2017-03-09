@@ -75,7 +75,7 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col sm={6}>
-          <FormGroup controlId="change_handler">
+          <FormGroup controlId="required">
             <ControlLabel>Required</ControlLabel>
             <DatePicker required onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="required_example" />
             <HelpBlock>Help</HelpBlock>
