@@ -31,12 +31,14 @@ const CalendarHeader = React.createClass({
 
   handleClickPrevious() {
     const newDisplayDate = new Date(this.props.displayDate);
+    newDisplayDate.setDate(1);
     newDisplayDate.setMonth(newDisplayDate.getMonth() - 1);
     this.props.onChange(newDisplayDate);
   },
 
   handleClickNext() {
     const newDisplayDate = new Date(this.props.displayDate);
+    newDisplayDate.setDate(1);
     newDisplayDate.setMonth(newDisplayDate.getMonth() + 1);
     this.props.onChange(newDisplayDate);
   },
