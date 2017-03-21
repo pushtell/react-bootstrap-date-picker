@@ -558,6 +558,7 @@ export default React.createClass({
       bsClass={this.props.showClearButton ? this.props.bsClass : ''}
       bsSize={this.props.bsSize}
       id={this.props.id ? `${this.props.id}_group` : null}>
+      {control}
       <Overlay
         rootClose={true}
         onHide={this.handleHide}
@@ -584,7 +585,6 @@ export default React.createClass({
       </Overlay>
       <div ref="overlayContainer" style={{position: 'relative'}} />
       <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
-      {control}
       {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
         onClick={this.props.disabled ? null : this.clear}
         style={{cursor:(this.state.inputValue && !this.props.disabled) ? 'pointer' : 'not-allowed'}}>
@@ -592,6 +592,7 @@ export default React.createClass({
           {this.props.clearButtonElement}
         </div>
       </InputGroup.Addon>}
+      {this.props.children}
     </InputGroup>;
   }
 });
