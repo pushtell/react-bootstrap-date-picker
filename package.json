@@ -56,8 +56,7 @@
     "react-addons-test-utils": "^15.4.2",
     "react-bootstrap": "^0.30.8",
     "react-dom": "^15.4.2",
-    "regenerator": "^0.9.7",
-    "regenerator-loader": "^3.1.0",
+    "regenerator": "^0.8.46",
     "transform-loader": "^0.2.4",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"
@@ -78,5 +77,8 @@
   "bugs": {
     "url": "https://github.com/pushtell/react-bootstrap-date-picker/issues"
   },
-  "homepage": "https://github.com/pushtell/react-bootstrap-date-picker#readme"
+  "homepage": "https://github.com/pushtell/react-bootstrap-date-picker#readme",
+  "dependencies": {
+    "regenerator-loader": "^3.1.0"
+  }
 }
