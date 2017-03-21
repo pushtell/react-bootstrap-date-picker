@@ -58,41 +58,41 @@ const Calendar = React.createClass({
   propTypes: {
     selectedDate: React.PropTypes.object,
     displayDate: React.PropTypes.object.isRequired,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
     cellPadding: React.PropTypes.string.isRequired,
     weekStartsOnMonday: React.PropTypes.bool,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
+    roundedCorners: React.PropTypes.bool
   },
 
   handleClick(day) {
-    const newSelectedDate = new Date(this.props.displayDate);
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
   },
 
   handleClickToday() {
-    const newSelectedDate = new Date();
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = this.setTimeToNoon(new Date());
     this.props.onChange(newSelectedDate);
   },
 
+  setTimeToNoon(date) {
+    date.setHours(12);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
+
   render() {
-    const currentDate = new Date();
-    const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-    const selectedDay = this.props.selectedDate ? this.props.selectedDate.getDate() : null;
-    const selectedMonth = this.props.selectedDate ? this.props.selectedDate.getMonth() : null;
-    const selectedYear = this.props.selectedDate ? this.props.selectedDate.getFullYear() : null;
+    const currentDate = this.setTimeToNoon(new Date());
+    const selectedDate = this.props.selectedDate ? this.setTimeToNoon(new Date(this.props.selectedDate)) : null;
+    const minDate = this.props.minDate ? this.setTimeToNoon(new Date(this.props.minDate)) : null;
+    const maxDate = this.props.maxDate ? this.setTimeToNoon(new Date(this.props.maxDate)) : null;
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -111,15 +111,33 @@ const Calendar = React.createClass({
       const week = [];
       for (let j = 0; j <= 6; j++) {
         if (day <= monthLength && (i > 0 || j >= startingDay)) {
-          const selected = day === selectedDay && month == selectedMonth && year === selectedYear;
-          const current = day === currentDay && month == currentMonth && year === currentYear;
-          week.push(<td
-            key={j}
-            onClick={this.handleClick.bind(this, day)}
-            style={{cursor: 'pointer', padding: this.props.cellPadding}}
-            className={selected ? 'bg-primary' : current ? 'text-muted' : null}>
-            {day}
-          </td>);
+          let className = null;
+          const date = new Date(year, month, day, 12, 0, 0, 0).toISOString();
+          const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
+          const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
+          if (beforeMinDate || afterMinDate) {
+            week.push(<td
+              key={j}
+              style={{ padding: this.props.cellPadding }}
+              className="text-muted"
+            >
+              {day}
+            </td>);
+          } else {
+            if (Date.parse(date) === Date.parse(selectedDate)) {
+              className = 'bg-primary';
+            } else if (Date.parse(date) === Date.parse(currentDate)) {
+              className = 'text-primary';
+            }
+            week.push(<td
+              key={j}
+              onClick={this.handleClick.bind(this, day)}
+              style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+              className={className}
+            >
+              {day}
+            </td>);
+          }
           day++;
         } else {
           week.push(<td key={j} />);
@@ -173,6 +191,8 @@ export default React.createClass({
     value: React.PropTypes.string,
     className: React.PropTypes.string,
     style: React.PropTypes.object,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     cellPadding: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
@@ -206,7 +226,9 @@ export default React.createClass({
     name: React.PropTypes.string,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
+    instanceCount: React.PropTypes.number,
     customControl: React.PropTypes.object,
+    roundedCorners: React.PropTypes.bool
   },
 
   getDefaultProps() {
@@ -231,7 +253,8 @@ export default React.createClass({
       instanceCount: instanceCount++,
       style: {
         width: '100%'
-      }
+      },
+      roundedCorners: false
     };
   },
 
@@ -549,7 +572,11 @@ export default React.createClass({
             dayLabels={this.state.dayLabels}
             weekStartsOnMonday={this.props.weekStartsOnMonday}
             showTodayButton={this.props.showTodayButton}
-            todayButtonLabel={this.props.todayButtonLabel} />
+            todayButtonLabel={this.props.todayButtonLabel}
+            minDate={this.props.minDate}
+            maxDate={this.props.maxDate}
+            roundedCorners={this.props.roundedCorners}
+           />
         </Popover>
       </Overlay>
       <div ref="overlayContainer" style={{position: 'relative'}} />
