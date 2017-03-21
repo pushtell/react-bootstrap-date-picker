@@ -91,11 +91,11 @@ module.exports = function (karma) {
     singleRun: true,
     webpack: {
       resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
       },
       devtool: 'inline-source-map',
       module: {
-        loaders: [
+        rules: [
           {
             exclude: /(node_modules|lib|example)/,
             loader: 'babel-loader',
@@ -106,7 +106,7 @@ module.exports = function (karma) {
             test: /\.jsx?$/
           }, {
             include: path.resolve('src'),
-            loader: 'isparta',
+            loader: 'isparta-loader',
             test: /\.jsx?$/
           }
         ]
