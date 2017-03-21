@@ -189,6 +189,7 @@ export default React.createClass({
   propTypes: {
     defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
+    required: React.PropTypes.bool,
     className: React.PropTypes.string,
     style: React.PropTypes.object,
     minDate: React.PropTypes.string,
@@ -526,6 +527,7 @@ export default React.createClass({
       ? React.cloneElement(this.props.customControl, {
         onKeyDown: this.handleKeyDown,
         value: this.state.inputValue || '',
+        required: this.props.required,
         placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
         ref: 'input',
         disabled: this.props.disabled,
@@ -538,6 +540,7 @@ export default React.createClass({
       : <FormControl
           onKeyDown={this.handleKeyDown}
           value={this.state.inputValue || ''}
+          required={this.props.required}
           ref="input"
           type="text"
           className={this.props.className}

@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Grid from "react-bootstrap/lib/Grid";
-import Row from "react-bootstrap/lib/Row";
-import Col from "react-bootstrap/lib/Col";
-import { Navbar, Button } from "react-bootstrap";
-import Nav from "react-bootstrap/lib/Nav";
-import NavItem from "react-bootstrap/lib/NavItem";
-import DatePicker from "../src/index.jsx";
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import { Navbar, Button } from 'react-bootstrap';
+import Nav from 'react-bootstrap/lib/Nav';
+import NavItem from 'react-bootstrap/lib/NavItem';
+import DatePicker from '../src/index.jsx';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -74,6 +74,15 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
+        <Col sm={6}>
+          <FormGroup controlId="required">
+            <ControlLabel>Required</ControlLabel>
+            <DatePicker required onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="required_example" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={6}>
           <h2>Blur and Focus Events</h2>
         </Col>
@@ -84,9 +93,9 @@ const App = React.createClass({
       <Row>
         <Col sm={6}>
           <FormGroup>
-            <ControlLabel>{this.state.focused ? "Focused" : "Blurred"}</ControlLabel>
-            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true})}} onBlur={() => {this.setState({focused: false})}} />
-            <HelpBlock>This is {this.state.focused ? "focused" : "blurred"}.</HelpBlock>
+            <ControlLabel>{this.state.focused ? 'Focused' : 'Blurred'}</ControlLabel>
+            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} onFocus={() => {this.setState({focused: true});}} onBlur={() => {this.setState({focused: false});}} />
+            <HelpBlock>This is {this.state.focused ? 'focused' : 'blurred'}.</HelpBlock>
           </FormGroup>
         </Col>
         <Col sm={6}>
@@ -201,7 +210,7 @@ const App = React.createClass({
         <Col sm={4}>
           <FormGroup>
             <ControlLabel>FormControl Style</ControlLabel>
-            <DatePicker style={{width:"100%", backgroundColor:"#FFEEEE"}} />
+            <DatePicker style={{width:'100%', backgroundColor:'#FFEEEE'}} />
             <HelpBlock>&#123;width:"100%", backgroundColor:"#FFEEEE"&#125;</HelpBlock>
           </FormGroup>
         </Col>
