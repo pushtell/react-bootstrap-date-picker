@@ -2,13 +2,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  Button,
-  FormControl,
-  InputGroup,
-  Overlay,
-  Popover,
-} from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import InputGroup from 'react-bootstrap/lib/InputGroup';
+import Overlay from 'react-bootstrap/lib/Overlay';
+import Popover from 'react-bootstrap/lib/Popover';
 
 let instanceCount = 0;
 
