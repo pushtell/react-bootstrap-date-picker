@@ -266,16 +266,19 @@ export default React.createClass({
       throw new Error('Conflicting DatePicker properties \'value\' and \'defaultValue\'');
     }
     const state = this.makeDateValues(this.props.value || this.props.defaultValue);
-    if (this.props.weekStartsOnMonday) {
-      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
-    } else {
-      state.dayLabels = this.props.dayLabels;
-    }
     state.focused = false;
     state.inputFocused = false;
     state.placeholder = this.props.placeholder || this.props.dateFormat;
     state.separator = this.props.dateFormat.match(/[^A-Z]/)[0];
     return state;
+  },
+
+  getDayLabels() {
+    if (this.props.weekStartsOnMonday) {
+      return this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
+    } else {
+      return this.props.dayLabels;
+    }
   },
 
   makeDateValues(isoString) {
@@ -577,7 +580,7 @@ export default React.createClass({
             selectedDate={this.state.selectedDate}
             displayDate={this.state.displayDate}
             onChange={this.onChangeDate}
-            dayLabels={this.state.dayLabels}
+            dayLabels={this.getDayLabels()}
             weekStartsOnMonday={this.props.weekStartsOnMonday}
             showTodayButton={this.props.showTodayButton}
             todayButtonLabel={this.props.todayButtonLabel}
