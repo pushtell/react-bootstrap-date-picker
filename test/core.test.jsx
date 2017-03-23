@@ -879,6 +879,35 @@ describe("Date Picker", function() {
     assert.equal(hiddenInputElement.value, justRightValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should show next and prev buttons if min and max dates are not set.", co.wrap(function *(){
+    const id = UUID.v4();
+    const displayDate = "2017-07-21T12:00:00.000Z"
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: displayDate
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const prevButton = document.querySelector(".datepicker-previous-wrapper");
+    const nextButton = document.querySelector(".datepicker-next-wrapper");
+    assert.equal(prevButton.innerHTML, '&lt;');
+    assert.equal(nextButton.innerHTML, '&gt;');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should show next and prev buttons if min and max dates are set but not displayed.", co.wrap(function *(){
     const id = UUID.v4();
     const displayDate = "2017-07-21T12:00:00.000Z"
