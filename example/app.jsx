@@ -101,7 +101,7 @@ const App = React.createClass({
         <Col sm={6}>
           <FormGroup>
             <ControlLabel>Week Starts on Monday</ControlLabel>
-            <DatePicker onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" value={this.state.date} />
+            <DatePicker onChange={this.handleChange} weekStartsOn={1} placeholder="Placeholder" value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>

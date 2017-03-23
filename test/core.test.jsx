@@ -517,7 +517,7 @@ describe("Date Picker", function() {
     const App = React.createClass({
       render: function(){
         return <div>
-          <DatePicker id={id} weekStartsOnMonday />
+          <DatePicker id={id} weekStartsOn={1} />
         </div>;
       }
     });
@@ -682,7 +682,7 @@ describe("Date Picker", function() {
       },
       render: function(){
         return <div>
-          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" weekStartsOnMonday />
+          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" weekStartsOn={1} />
         </div>;
       }
     });
