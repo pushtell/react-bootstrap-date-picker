@@ -236,7 +236,11 @@ export default React.createClass({
     todayButtonLabel: React.PropTypes.string,
     instanceCount: React.PropTypes.number,
     customControl: React.PropTypes.object,
-    roundedCorners: React.PropTypes.bool
+    roundedCorners: React.PropTypes.bool,
+    children: React.PropTypes.oneOfType([
+      React.PropTypes.arrayOf(React.PropTypes.node),
+      React.PropTypes.node
+    ])
   },
 
   getDefaultProps() {
