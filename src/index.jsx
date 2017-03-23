@@ -303,11 +303,21 @@ export default React.createClass({
   makeDateValues(isoString) {
     let displayDate;
     const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+    const minDate = this.props.minDate ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+    const maxDate = this.props.maxDate ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if (selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
-      displayDate = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
+      const today = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
+      if (minDate && Date.parse(minDate) >= Date.parse(today)){
+        displayDate = minDate;
+      } else if (maxDate && Date.parse(maxDate) <= Date.parse(today)){
+        displayDate = maxDate;
+      } else {
+        displayDate = today;
+      }
     }
 
     return {
