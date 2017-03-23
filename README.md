@@ -88,6 +88,14 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"2016-05-19T12:00:00.000Z"`
+  * `minDate` - ISO date string to set the lowest allowable date value.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"2016-05-19T12:00:00.000Z"`
+  * `maxDate` - ISO date string to set the highest allowable date value.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"2016-05-19T12:00:00.000Z"`
   * `style` - Style object passed to the `FormControl` input element.
     * **Optional**
     * **Type:** `object`
