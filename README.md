@@ -96,6 +96,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `example-class`
+  * `autoComplete` - autoComplete attribute passed to the `FormControl` input element.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `off`
   * `autoFocus` - Whether or not component starts with focus.
     * **Optional**
     * **Type:** `bool`

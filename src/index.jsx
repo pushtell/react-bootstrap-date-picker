@@ -2,13 +2,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  Button,
-  FormControl,
-  InputGroup,
-  Overlay,
-  Popover,
-} from 'react-bootstrap';
+import Button from 'react-bootstrap/lib/Button';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import InputGroup from 'react-bootstrap/lib/InputGroup';
+import Overlay from 'react-bootstrap/lib/Overlay';
+import Popover from 'react-bootstrap/lib/Popover';
 
 let instanceCount = 0;
 
@@ -31,12 +29,14 @@ const CalendarHeader = React.createClass({
 
   handleClickPrevious() {
     const newDisplayDate = new Date(this.props.displayDate);
+    newDisplayDate.setDate(1);
     newDisplayDate.setMonth(newDisplayDate.getMonth() - 1);
     this.props.onChange(newDisplayDate);
   },
 
   handleClickNext() {
     const newDisplayDate = new Date(this.props.displayDate);
+    newDisplayDate.setDate(1);
     newDisplayDate.setMonth(newDisplayDate.getMonth() + 1);
     this.props.onChange(newDisplayDate);
   },
@@ -58,6 +58,8 @@ const Calendar = React.createClass({
   propTypes: {
     selectedDate: React.PropTypes.object,
     displayDate: React.PropTypes.object.isRequired,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
     cellPadding: React.PropTypes.string.isRequired,
@@ -65,35 +67,33 @@ const Calendar = React.createClass({
     weekStartsOn: React.PropTypes.number,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
+    roundedCorners: React.PropTypes.bool
   },
 
   handleClick(day) {
-    const newSelectedDate = new Date(this.props.displayDate);
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
   },
 
   handleClickToday() {
-    const newSelectedDate = new Date();
-    newSelectedDate.setHours(12);
-    newSelectedDate.setMinutes(0);
-    newSelectedDate.setSeconds(0);
-    newSelectedDate.setMilliseconds(0);
+    const newSelectedDate = this.setTimeToNoon(new Date());
     this.props.onChange(newSelectedDate);
   },
 
+  setTimeToNoon(date) {
+    date.setHours(12);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date;
+  },
+
   render() {
-    const currentDate = new Date();
-    const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
-    const selectedDay = this.props.selectedDate ? this.props.selectedDate.getDate() : null;
-    const selectedMonth = this.props.selectedDate ? this.props.selectedDate.getMonth() : null;
-    const selectedYear = this.props.selectedDate ? this.props.selectedDate.getFullYear() : null;
+    const currentDate = this.setTimeToNoon(new Date());
+    const selectedDate = this.props.selectedDate ? this.setTimeToNoon(new Date(this.props.selectedDate)) : null;
+    const minDate = this.props.minDate ? this.setTimeToNoon(new Date(this.props.minDate)) : null;
+    const maxDate = this.props.maxDate ? this.setTimeToNoon(new Date(this.props.maxDate)) : null;
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
@@ -116,15 +116,33 @@ const Calendar = React.createClass({
       const week = [];
       for (let j = 0; j <= 6; j++) {
         if (day <= monthLength && (i > 0 || j >= startingDay)) {
-          const selected = day === selectedDay && month == selectedMonth && year === selectedYear;
-          const current = day === currentDay && month == currentMonth && year === currentYear;
-          week.push(<td
-            key={j}
-            onClick={this.handleClick.bind(this, day)}
-            style={{cursor: 'pointer', padding: this.props.cellPadding}}
-            className={selected ? 'bg-primary' : current ? 'text-muted' : null}>
-            {day}
-          </td>);
+          let className = null;
+          const date = new Date(year, month, day, 12, 0, 0, 0).toISOString();
+          const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
+          const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
+          if (beforeMinDate || afterMinDate) {
+            week.push(<td
+              key={j}
+              style={{ padding: this.props.cellPadding }}
+              className="text-muted"
+            >
+              {day}
+            </td>);
+          } else {
+            if (Date.parse(date) === Date.parse(selectedDate)) {
+              className = 'bg-primary';
+            } else if (Date.parse(date) === Date.parse(currentDate)) {
+              className = 'text-primary';
+            }
+            week.push(<td
+              key={j}
+              onClick={this.handleClick.bind(this, day)}
+              style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+              className={className}
+            >
+              {day}
+            </td>);
+          }
           day++;
         } else {
           week.push(<td key={j} />);
@@ -176,9 +194,13 @@ export default React.createClass({
   propTypes: {
     defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
+    required: React.PropTypes.bool,
     className: React.PropTypes.string,
     style: React.PropTypes.object,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     cellPadding: React.PropTypes.string,
+    autoComplete: React.PropTypes.string,
     placeholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
@@ -212,8 +234,9 @@ export default React.createClass({
     name: React.PropTypes.string,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
-    customControl: React.PropTypes.object,
     instanceCount: React.PropTypes.number,
+    customControl: React.PropTypes.object,
+    roundedCorners: React.PropTypes.bool
   },
 
   getDefaultProps() {
@@ -235,10 +258,12 @@ export default React.createClass({
       disabled: false,
       showTodayButton: false,
       todayButtonLabel: 'Today',
+      autoComplete: 'on',
       instanceCount: instanceCount++,
       style: {
         width: '100%'
-      }
+      },
+      roundedCorners: false
     };
   },
 
@@ -514,6 +539,7 @@ export default React.createClass({
       ? React.cloneElement(this.props.customControl, {
         onKeyDown: this.handleKeyDown,
         value: this.state.inputValue || '',
+        required: this.props.required,
         placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
         ref: 'input',
         disabled: this.props.disabled,
@@ -521,11 +547,13 @@ export default React.createClass({
         onBlur: this.handleBlur,
         onChange: this.handleInputChange,
         className: this.props.className,
-        style: this.props.style
+        style: this.props.style,
+        autoComplete: this.props.autoComplete,
       })
       : <FormControl
           onKeyDown={this.handleKeyDown}
           value={this.state.inputValue || ''}
+          required={this.props.required}
           ref="input"
           type="text"
           className={this.props.className}
@@ -536,6 +564,7 @@ export default React.createClass({
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
+          autoComplete={this.props.autoComplete}
           />;
 
     return <InputGroup
@@ -543,6 +572,7 @@ export default React.createClass({
       bsClass={this.props.showClearButton ? this.props.bsClass : ''}
       bsSize={this.props.bsSize}
       id={this.props.id ? `${this.props.id}_group` : null}>
+      {control}
       <Overlay
         rootClose={true}
         onHide={this.handleHide}
@@ -561,12 +591,15 @@ export default React.createClass({
             weekStartsOnMonday={this.props.weekStartsOnMonday}
             weekStartsOn={this.props.weekStartsOn}
             showTodayButton={this.props.showTodayButton}
-            todayButtonLabel={this.props.todayButtonLabel} />
+            todayButtonLabel={this.props.todayButtonLabel}
+            minDate={this.props.minDate}
+            maxDate={this.props.maxDate}
+            roundedCorners={this.props.roundedCorners}
+           />
         </Popover>
       </Overlay>
       <div ref="overlayContainer" style={{position: 'relative'}} />
       <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
-      {control}
       {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
         onClick={this.props.disabled ? null : this.clear}
         style={{cursor:(this.state.inputValue && !this.props.disabled) ? 'pointer' : 'not-allowed'}}>
@@ -574,6 +607,7 @@ export default React.createClass({
           {this.props.clearButtonElement}
         </div>
       </InputGroup.Addon>}
+      {this.props.children}
     </InputGroup>;
   }
 });
