@@ -530,7 +530,7 @@ export default React.createClass({
         onKeyDown: this.handleKeyDown,
         value: this.state.inputValue || '',
         required: this.props.required,
-        placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
+        placeholder: this.state.placeholder,
         ref: 'input',
         disabled: this.props.disabled,
         onFocus: this.handleFocus,
@@ -550,7 +550,7 @@ export default React.createClass({
           style={this.props.style}
           autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
-          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+          placeholder={this.state.placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
