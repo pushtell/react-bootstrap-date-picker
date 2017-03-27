@@ -88,6 +88,14 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `string`
     * **Example:** `"2016-05-19T12:00:00.000Z"`
+  * `minDate` - ISO date string to set the lowest allowable date value.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"2016-05-19T12:00:00.000Z"`
+  * `maxDate` - ISO date string to set the highest allowable date value.
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"2016-05-19T12:00:00.000Z"`
   * `style` - Style object passed to the `FormControl` input element.
     * **Optional**
     * **Type:** `object`
@@ -173,10 +181,11 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** A DOM element or a component
     * **Example:** `document.body`
-  * `weekStartsOnMonday` - Makes the calendar's week to start on Monday.
+  * `weekStartsOnMonday` - **OBSOLETE** use `weekStartsOn`
+  * `weekStartsOn` - Makes the calendar's week to start on a specified day. 0 = Sunday, 1 = Monday, etc.
     * **Optional**
-    * **Type:** `boolean`
-    * **Example:** `true`
+    * **Type:** `number`
+    * **Example:** `4`
   * `showTodayButton` - Toggles the visibility of the today-button.
     * **Optional**
     * **Type:** `boolean`

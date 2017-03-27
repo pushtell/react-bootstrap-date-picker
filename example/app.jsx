@@ -22,12 +22,24 @@ const App = React.createClass({
     return {
       date: new Date().toISOString(),
       previousDate: null,
+      minDate: null,
+      maxDate: null,
       focused: false
     };
   },
   handleChange(value) {
     this.setState({
       date: value
+    });
+  },
+  handleMinChange(value) {
+    this.setState({
+      minDate: value
+    });
+  },
+  handleMaxChange(value) {
+    this.setState({
+      maxDate: value
     });
   },
   render() {
@@ -101,7 +113,7 @@ const App = React.createClass({
         <Col sm={6}>
           <FormGroup>
             <ControlLabel>Week Starts on Monday</ControlLabel>
-            <DatePicker onChange={this.handleChange} weekStartsOnMonday placeholder="Placeholder" value={this.state.date} />
+            <DatePicker onChange={this.handleChange} weekStartsOn={1} placeholder="Placeholder" value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
@@ -164,6 +176,36 @@ const App = React.createClass({
       </Row>
       <Row>
         <Col xs={12}>
+          <h2>Min/Max Dates</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Example Min/Max</ControlLabel>
+            <DatePicker minDate={this.state.minDate} maxDate={this.state.maxDate} onChange={this.handleChange} value={this.state.date} />
+            <HelpBlock>Sample min/max DatePicker using configured values</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Min</ControlLabel>
+            <DatePicker onChange={this.handleMinChange} value={this.state.minDate} />
+            <HelpBlock>{`Configure Example minDate`}</HelpBlock>
+            <HelpBlock>{`value: ${this.state.minDate}`}</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Max</ControlLabel>
+            <DatePicker onChange={this.handleMaxChange} value={this.state.maxDate} />
+            <HelpBlock>{`Configure Example maxDate`}</HelpBlock>
+            <HelpBlock>{`value: ${this.state.maxDate}`}</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
           <h2>Custom</h2>
         </Col>
       </Row>
@@ -207,20 +249,28 @@ const App = React.createClass({
         </Col>
       </Row>
       <Row>
-        <Col sm={4}>
+        <Col sm={6}>
           <FormGroup>
             <ControlLabel>FormControl Style</ControlLabel>
             <DatePicker style={{width:'100%', backgroundColor:'#FFEEEE'}} />
             <HelpBlock>&#123;width:"100%", backgroundColor:"#FFEEEE"&#125;</HelpBlock>
           </FormGroup>
         </Col>
-        <Col sm={4}>
+        <Col sm={6}>
           <FormGroup>
             <ControlLabel>Today Button</ControlLabel>
             <DatePicker showTodayButton />
           </FormGroup>
         </Col>
-        <Col sm={4}>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Thursday First Day of Week</ControlLabel>
+            <DatePicker weekStartsOn={4} />
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
           <FormGroup>
             <ControlLabel>Control Element</ControlLabel>
             <DatePicker customControl={<CustomControl />} />
