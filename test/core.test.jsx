@@ -1099,7 +1099,7 @@ describe("Date Picker", function() {
     assert.equal(input.placeholder, 'DD/MM/YYYY');
     ReactDOM.unmountComponentAtNode(container);
   }));
-  it("should set a formatPlaceholder on focus.", co.wrap(function *(){
+  it("should set a focusedPlaceholder on focus.", co.wrap(function *(){
     const id = UUID.v4();
     const value = new Date().toISOString();
     const App = React.createClass({
