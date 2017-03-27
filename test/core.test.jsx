@@ -905,4 +905,62 @@ describe("Date Picker", function() {
     assert.equal(withRoundedCornersDayElement.style.borderRadius, '5px');
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should set a placeholder.", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} placeholder="Placeholder" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputGroup = document.getElementById(`${id}_group`);
+    const input = inputGroup.querySelector('input');
+    assert.equal(input.placeholder, 'Placeholder');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should set a dateFormat placeholder on focus.", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} placeholder="Placeholder" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputGroup = document.getElementById(`${id}_group`);
+    const input = inputGroup.querySelector('input');
+    assert.equal(input.placeholder, 'Placeholder');
+    TestUtils.Simulate.focus(input);
+    assert.equal(input.placeholder, 'DD/MM/YYYY');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should set a formatPlaceholder on focus.", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = new Date().toISOString();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} placeholder="Placeholder" focusedPlaceholder="focusedPlaceholder" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputGroup = document.getElementById(`${id}_group`);
+    const input = inputGroup.querySelector('input');
+    assert.equal(input.placeholder, 'Placeholder');
+    TestUtils.Simulate.focus(input);
+    assert.equal(input.placeholder, 'focusedPlaceholder');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
