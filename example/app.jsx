@@ -22,12 +22,24 @@ const App = React.createClass({
     return {
       date: new Date().toISOString(),
       previousDate: null,
+      minDate: null,
+      maxDate: null,
       focused: false
     };
   },
   handleChange(value) {
     this.setState({
       date: value
+    });
+  },
+  handleMinChange(value) {
+    this.setState({
+      minDate: value
+    });
+  },
+  handleMaxChange(value) {
+    this.setState({
+      maxDate: value
     });
   },
   render() {
@@ -159,6 +171,36 @@ const App = React.createClass({
             <ControlLabel>YYYY/MM/DD</ControlLabel>
             <DatePicker dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12}>
+          <h2>Min/Max Dates</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Example Min/Max</ControlLabel>
+            <DatePicker minDate={this.state.minDate} maxDate={this.state.maxDate} onChange={this.handleChange} value={this.state.date} />
+            <HelpBlock>Sample min/max DatePicker using configured values</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Min</ControlLabel>
+            <DatePicker onChange={this.handleMinChange} value={this.state.minDate} />
+            <HelpBlock>{`Configure Example minDate`}</HelpBlock>
+            <HelpBlock>{`value: ${this.state.minDate}`}</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Max</ControlLabel>
+            <DatePicker onChange={this.handleMaxChange} value={this.state.maxDate} />
+            <HelpBlock>{`Configure Example maxDate`}</HelpBlock>
+            <HelpBlock>{`value: ${this.state.maxDate}`}</HelpBlock>
           </FormGroup>
         </Col>
       </Row>

@@ -879,6 +879,128 @@ describe("Date Picker", function() {
     assert.equal(hiddenInputElement.value, justRightValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should show next and prev buttons if min and max dates are not set.", co.wrap(function *(){
+    const id = UUID.v4();
+    const displayDate = "2017-07-21T12:00:00.000Z"
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: displayDate
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const prevButton = document.querySelector(".datepicker-previous-wrapper");
+    const nextButton = document.querySelector(".datepicker-next-wrapper");
+    assert.equal(prevButton.innerHTML, '&lt;');
+    assert.equal(nextButton.innerHTML, '&gt;');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should show next and prev buttons if min and max dates are set but not displayed.", co.wrap(function *(){
+    const id = UUID.v4();
+    const displayDate = "2017-07-21T12:00:00.000Z"
+    const minDate = "2017-01-01T12:00:00.000Z";
+    const maxDate = "2017-12-31T12:00:00.000Z";
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: displayDate
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} minDate={minDate} maxDate={maxDate} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const prevButton = document.querySelector(".datepicker-previous-wrapper");
+    const nextButton = document.querySelector(".datepicker-next-wrapper");
+    assert.equal(prevButton.innerHTML, '&lt;');
+    assert.equal(nextButton.innerHTML, '&gt;');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should hide previousButtonElement if min date is set and being displayed.", co.wrap(function *(){
+    const id = UUID.v4();
+    const displayDate = "2017-01-15T12:00:00.000Z"
+    const minDate = "2017-01-01T12:00:00.000Z";
+    const maxDate = "2017-12-31T12:00:00.000Z";
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: displayDate
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} minDate={minDate} maxDate={maxDate} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const prevButton = document.querySelector(".datepicker-previous-wrapper");
+    const nextButton = document.querySelector(".datepicker-next-wrapper");
+    assert.equal(prevButton.innerHTML, '');
+    assert.equal(nextButton.innerHTML, '&gt;');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should hide nextButtonElement if max date is set and being displayed.", co.wrap(function *(){
+    const id = UUID.v4();
+    const displayDate = "2017-12-15T12:00:00.000Z"
+    const minDate = "2017-01-01T12:00:00.000Z";
+    const maxDate = "2017-12-31T12:00:00.000Z";
+    const App = React.createClass({
+      getInitialState: function(){
+        return {
+          value: displayDate
+        }
+      },
+      handleChange(value){
+        this.setState({value:value});
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} onChange={this.handleChange} minDate={minDate} maxDate={maxDate} value={this.state.value} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const prevButton = document.querySelector(".datepicker-previous-wrapper");
+    const nextButton = document.querySelector(".datepicker-next-wrapper");
+    assert.equal(prevButton.innerHTML, '&lt;');
+    assert.equal(nextButton.innerHTML, '');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should allow for rounded corners.", co.wrap(function *(){
     const withoutRoundedCorners = "_" + UUID.v4();
     const withRoundedCorners = "_" + UUID.v4();

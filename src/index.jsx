@@ -15,6 +15,8 @@ const CalendarHeader = React.createClass({
 
   propTypes: {
     displayDate: React.PropTypes.object.isRequired,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
     monthLabels: React.PropTypes.array.isRequired,
     previousButtonElement: React.PropTypes.oneOfType([
@@ -25,6 +27,22 @@ const CalendarHeader = React.createClass({
       React.PropTypes.string,
       React.PropTypes.object
     ]).isRequired,
+  },
+
+  displayingMinMonth() {
+    if (!this.props.minDate) return false;
+
+    const displayDate = new Date(this.props.displayDate);
+    const minDate = new Date(this.props.minDate);
+    return minDate.getFullYear() == displayDate.getFullYear() && minDate.getMonth() == displayDate.getMonth();
+  },
+
+  displayingMaxMonth() {
+    if (!this.props.maxDate) return false;
+
+    const displayDate = new Date(this.props.displayDate);
+    const maxDate = new Date(this.props.maxDate);
+    return maxDate.getFullYear() == displayDate.getFullYear() && maxDate.getMonth() == displayDate.getMonth();
   },
 
   handleClickPrevious() {
@@ -43,9 +61,13 @@ const CalendarHeader = React.createClass({
 
   render() {
     return <div className="text-center">
-      <div className="text-muted pull-left" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>{this.props.previousButtonElement}</div>
+      <div className="text-muted pull-left datepicker-previous-wrapper" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>
+        {this.displayingMinMonth() ? null : this.props.previousButtonElement}
+      </div>
       <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
-      <div className="text-muted pull-right" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>{this.props.nextButtonElement}</div>
+      <div className="text-muted pull-right datepicker-next-wrapper" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>
+        {this.displayingMaxMonth() ? null : this.props.nextButtonElement}
+      </div>
     </div>;
   }
 });
@@ -298,11 +320,21 @@ export default React.createClass({
   makeDateValues(isoString) {
     let displayDate;
     const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+    const minDate = this.props.minDate ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+    const maxDate = this.props.maxDate ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if (selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
-      displayDate = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
+      const today = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
+      if (minDate && Date.parse(minDate) >= Date.parse(today)){
+        displayDate = minDate;
+      } else if (maxDate && Date.parse(maxDate) <= Date.parse(today)){
+        displayDate = maxDate;
+      } else {
+        displayDate = today;
+      }
     }
 
     return {
@@ -538,6 +570,8 @@ export default React.createClass({
       previousButtonElement={this.props.previousButtonElement}
       nextButtonElement={this.props.nextButtonElement}
       displayDate={this.state.displayDate}
+      minDate={this.props.minDate}
+      maxDate={this.props.maxDate}
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
       dateFormat={this.props.dateFormat} />;
