@@ -63,7 +63,7 @@ const Calendar = React.createClass({
     onChange: React.PropTypes.func.isRequired,
     dayLabels: React.PropTypes.array.isRequired,
     cellPadding: React.PropTypes.string.isRequired,
-    weekStartsOnMonday: React.PropTypes.bool,
+    weekStartsOn: React.PropTypes.number,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
     roundedCorners: React.PropTypes.bool
@@ -96,7 +96,11 @@ const Calendar = React.createClass({
     const year = this.props.displayDate.getFullYear();
     const month = this.props.displayDate.getMonth();
     const firstDay = new Date(year, month, 1);
-    const startingDay = this.props.weekStartsOnMonday ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1) : firstDay.getDay();
+    const startingDay = this.props.weekStartsOn > 1
+      ? firstDay.getDay() - this.props.weekStartsOn + 7
+      : this.props.weekStartsOn === 1
+        ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)
+        : firstDay.getDay();
 
     let monthLength = daysInMonth[month];
     if (month == 1) {
@@ -205,7 +209,12 @@ export default React.createClass({
     onFocus: React.PropTypes.func,
     autoFocus: React.PropTypes.bool,
     disabled: React.PropTypes.bool,
-    weekStartsOnMonday: React.PropTypes.bool,
+    weekStartsOnMonday: (props, propName, componentName) => {
+      if (props[propName]) {
+        return new Error(`Prop '${propName}' supplied to '${componentName}' is obsolete. Use 'weekStartsOn' instead.`);
+      }
+    },
+    weekStartsOn: React.PropTypes.number,
     clearButtonElement: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.object
@@ -230,7 +239,11 @@ export default React.createClass({
     todayButtonLabel: React.PropTypes.string,
     instanceCount: React.PropTypes.number,
     customControl: React.PropTypes.object,
-    roundedCorners: React.PropTypes.bool
+    roundedCorners: React.PropTypes.bool,
+    children: React.PropTypes.oneOfType([
+      React.PropTypes.arrayOf(React.PropTypes.node),
+      React.PropTypes.node
+    ])
   },
 
   getDefaultProps() {
@@ -266,7 +279,11 @@ export default React.createClass({
       throw new Error('Conflicting DatePicker properties \'value\' and \'defaultValue\'');
     }
     const state = this.makeDateValues(this.props.value || this.props.defaultValue);
-    if (this.props.weekStartsOnMonday) {
+    if (this.props.weekStartsOn > 1) {
+      state.dayLabels = this.props.dayLabels
+        .slice(this.props.weekStartsOn)
+        .concat(this.props.dayLabels.slice(0, this.props.weekStartsOn));
+    } else if (this.props.weekStartsOn === 1) {
       state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
     } else {
       state.dayLabels = this.props.dayLabels;
@@ -578,7 +595,7 @@ export default React.createClass({
             displayDate={this.state.displayDate}
             onChange={this.onChangeDate}
             dayLabels={this.state.dayLabels}
-            weekStartsOnMonday={this.props.weekStartsOnMonday}
+            weekStartsOn={this.props.weekStartsOn}
             showTodayButton={this.props.showTodayButton}
             todayButtonLabel={this.props.todayButtonLabel}
             minDate={this.props.minDate}

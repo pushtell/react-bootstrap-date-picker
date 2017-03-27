@@ -517,7 +517,7 @@ describe("Date Picker", function() {
     const App = React.createClass({
       render: function(){
         return <div>
-          <DatePicker id={id} weekStartsOnMonday />
+          <DatePicker id={id} weekStartsOn={1} />
         </div>;
       }
     });
@@ -682,7 +682,7 @@ describe("Date Picker", function() {
       },
       render: function(){
         return <div>
-          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" weekStartsOnMonday />
+          <DatePicker id={id} onChange={this.handleChange} dateFormat="MM/DD/YYYY" weekStartsOn={1} />
         </div>;
       }
     });
@@ -759,7 +759,7 @@ describe("Date Picker", function() {
     try {
       yield new Promise(function(resolve, reject){
         ReactDOM.render(<App />, container, resolve);
-      });      
+      });
       throw new Error("Value and default value should not be set simultaneously");
     } catch (e) {
       assert(e.message.indexOf("Conflicting") !== -1)
@@ -903,6 +903,40 @@ describe("Date Picker", function() {
     const withRoundedCornersDayElement = document.querySelector("#" + withRoundedCorners + "_group table tbody tr:nth-child(2) td");
     TestUtils.Simulate.click(withRoundedCornersDayElement);
     assert.equal(withRoundedCornersDayElement.style.borderRadius, '5px');
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("week should start on Thursday.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} weekStartsOn={4} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Thu");
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("week should start on Saturday.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} weekStartsOn={6} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Sat");
     ReactDOM.unmountComponentAtNode(container);
   }));
 });
