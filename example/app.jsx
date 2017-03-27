@@ -340,6 +340,28 @@ const App = React.createClass({
           </FormGroup>
         </Col>
       </Row>
+
+      <Row>
+        <Col xs={12}>
+          <h2>Placeholder</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Custom Placeholder</ControlLabel>
+            <DatePicker placeholder="Custom Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Custom placeholder onfocus</ControlLabel>
+            <DatePicker placeholder="Placeholder" focusedPlaceholder="Custom Focused Placeholder" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
     </Grid>;
   }
 });
