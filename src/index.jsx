@@ -223,6 +223,7 @@ export default React.createClass({
     cellPadding: React.PropTypes.string,
     autoComplete: React.PropTypes.string,
     placeholder: React.PropTypes.string,
+    focusedPlaceholder: React.PropTypes.string,
     dayLabels: React.PropTypes.array,
     monthLabels: React.PropTypes.array,
     onChange: React.PropTypes.func,
@@ -313,6 +314,7 @@ export default React.createClass({
     state.focused = false;
     state.inputFocused = false;
     state.placeholder = this.props.placeholder || this.props.dateFormat;
+    state.focusedPlaceholder = this.props.focusedPlaceholder || this.props.dateFormat;
     state.separator = this.props.dateFormat.match(/[^A-Z]/)[0];
     return state;
   },
@@ -581,7 +583,7 @@ export default React.createClass({
         onKeyDown: this.handleKeyDown,
         value: this.state.inputValue || '',
         required: this.props.required,
-        placeholder: this.state.focused ? this.props.dateFormat : this.state.placeholder,
+        placeholder: this.state.focused ? this.state.focusedPlaceholder : this.props.placeholder,
         ref: 'input',
         disabled: this.props.disabled,
         onFocus: this.handleFocus,
@@ -601,7 +603,7 @@ export default React.createClass({
           style={this.props.style}
           autoFocus={this.props.autoFocus}
           disabled={this.props.disabled}
-          placeholder={this.state.focused ? this.props.dateFormat : this.state.placeholder}
+          placeholder={this.state.focused ? this.state.focusedPlaceholder : this.props.placeholder}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
