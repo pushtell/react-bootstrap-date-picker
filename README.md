@@ -198,6 +198,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `React.Component`
     * **Example:** `<CustomControl />`
+  * `tabIndex` - The tabIndex specifies the tab order of the input element. If a `customControl` is used, this property is passed down to it as well.
+    * **Optional**
+    * **Type:** `number`
+    * **Example:** `2`
 
 * **Methods:**
 
