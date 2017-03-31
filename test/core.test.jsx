@@ -54,7 +54,7 @@ describe("Date Picker", function() {
   }));
   it("should render a date picker with a value.", co.wrap(function *(){
     const id = UUID.v4();
-    const value = new Date().toISOString();
+    const value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     const App = React.createClass({
       render: function(){
         return <div>
@@ -304,7 +304,7 @@ describe("Date Picker", function() {
   it("should call focus and blur handlers.", co.wrap(function *(){
     const id = UUID.v4();
     var results = {};
-    var value = new Date().toISOString();
+    var value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     const App = React.createClass({
       getInitialState: function() {
         return {
@@ -722,7 +722,7 @@ describe("Date Picker", function() {
   }));
   it("should set a default value", co.wrap(function *(){
     const id = UUID.v4();
-    const defaultValue = new Date().toISOString();
+    const defaultValue = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     let value = null;
     let formattedValue = null;
     const App = React.createClass({
