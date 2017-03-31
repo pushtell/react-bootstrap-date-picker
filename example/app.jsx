@@ -21,6 +21,7 @@ const App = React.createClass({
   getInitialState() {
     return {
       date: new Date().toISOString(),
+      defaultDate: new Date(2011,8,20).toISOString(),
       previousDate: null,
       minDate: null,
       maxDate: null,
@@ -106,6 +107,13 @@ const App = React.createClass({
           <FormGroup controlId="required">
             <ControlLabel>Required</ControlLabel>
             <DatePicker required onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="required_example" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup controlId="required">
+            <ControlLabel>Default Value</ControlLabel>
+            <DatePicker placeholder="Placeholder" defaultValue={this.state.defaultDate} ref={(testDate) => { this.testDateInput = testDate }} id="default_value_example" />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>

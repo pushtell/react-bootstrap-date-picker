@@ -495,6 +495,11 @@ export default React.createClass({
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
 
+    if (!inputValue) {
+      this.clear();
+      return;
+    }
+
     let month, day, year;
     if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
       if (!inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
