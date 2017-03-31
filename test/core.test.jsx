@@ -1077,6 +1077,7 @@ describe("Date Picker", function() {
     TestUtils.Simulate.focus(inputElement);
     const popover = document.querySelector(".date-picker-popover.right");
     assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
   }));
   it("should allow for a function to determine calendar placement", co.wrap(function *(){
     const id = UUID.v4();
@@ -1097,5 +1098,6 @@ describe("Date Picker", function() {
     TestUtils.Simulate.focus(inputElement);
     const popover = document.querySelector(".date-picker-popover.top");
     assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
   }));
 });
