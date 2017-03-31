@@ -175,7 +175,7 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Example:** `['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']`
   * `calendarPlacement` - Overlay placement for the popover calendar.
     * **Optional**
-    * **Type:** `string`
+    * **Type:** `string` or `function`
     * **Example:** `"top"`
   * `calendarContainer` - Overlay container for the popover calendar. When placing the date-picker in a scrolling container, set this prop to some ancestor of the scrolling container.
     * **Optional**
