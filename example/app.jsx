@@ -422,6 +422,41 @@ const App = React.createClass({
           </FormGroup>
         </Col>
       </Row>
+      <Row>
+        <Col xs={12}>
+          <h2>Tab Indexes</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Third</ControlLabel>
+            <DatePicker placeholder="Placeholder" tabIndex={103} />
+            <HelpBlock>The focus will jump here after Second</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Second</ControlLabel>
+            <DatePicker placeholder="Placeholder" tabIndex={102} />
+            <HelpBlock>The focus will jump here after First.</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Fourth</ControlLabel>
+            <DatePicker placeholder="Placeholder" tabIndex={104} />
+            <HelpBlock>The focus will jump here after Third</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>First</ControlLabel>
+            <DatePicker placeholder="Placeholder" tabIndex={101} />
+            <HelpBlock>Focus on this element to start!</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
     </Grid>;
   }
 });

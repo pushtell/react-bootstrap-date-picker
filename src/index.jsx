@@ -268,7 +268,8 @@ export default React.createClass({
     children: React.PropTypes.oneOfType([
       React.PropTypes.arrayOf(React.PropTypes.node),
       React.PropTypes.node
-    ])
+    ]),
+    tabIndex: React.PropTypes.number
   },
 
   getDefaultProps() {
@@ -612,6 +613,7 @@ export default React.createClass({
         className: this.props.className,
         style: this.props.style,
         autoComplete: this.props.autoComplete,
+        tabIndex: this.props.tabIndex
       })
       : <FormControl
           onKeyDown={this.handleKeyDown}
@@ -628,6 +630,7 @@ export default React.createClass({
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
           autoComplete={this.props.autoComplete}
+          tabIndex={this.props.tabIndex}
           />;
 
     return <InputGroup

@@ -1100,4 +1100,22 @@ describe("Date Picker", function() {
     assert.notEqual(popover, null);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should set a tabindex on the input control", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+              <DatePicker id={id} tabIndex={101} />
+            </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    assert.notEqual(inputElement, null);
+    assert.equal(inputElement.getAttribute('tabindex'), 101);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
