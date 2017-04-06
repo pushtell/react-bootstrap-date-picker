@@ -1061,4 +1061,43 @@ describe("Date Picker", function() {
     assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Sat");
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should allow for a string to determine calendar placement", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarPlacement="right" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const popover = document.querySelector(".date-picker-popover.right");
+    assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should allow for a function to determine calendar placement", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      handlePlacement(){
+        return "top";
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarPlacement={this.handlePlacement} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const popover = document.querySelector(".date-picker-popover.top");
+    assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
