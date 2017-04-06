@@ -250,7 +250,10 @@ export default React.createClass({
       React.PropTypes.string,
       React.PropTypes.object
     ]),
-    calendarPlacement: React.PropTypes.string,
+    calendarPlacement: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.func
+    ]),
     dateFormat: React.PropTypes.string, // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
     bsClass: React.PropTypes.string,
     bsSize: React.PropTypes.string,
@@ -394,9 +397,12 @@ export default React.createClass({
       return;
     }
 
+    const placement = this.getCalendarPlacement();
+
     this.setState({
       inputFocused: true,
-      focused: true
+      focused: true,
+      calendarPlacement: placement
     });
 
     if (this.props.onFocus) {
@@ -423,6 +429,17 @@ export default React.createClass({
 
   getFormattedValue() {
     return this.state.displayDate ? this.state.inputValue : null;
+  },
+
+  getCalendarPlacement() {
+    const tag = Object.prototype.toString.call(this.props.calendarPlacement);
+    const isFunction = tag === '[object AsyncFunction]' || tag === '[object Function]' || tag === '[object GeneratorFunction]' || tag === '[object Proxy]';
+    if (isFunction) {
+      return this.props.calendarPlacement();
+    }
+    else {
+      return this.props.calendarPlacement;
+    }
   },
 
   makeInputValueString(date) {
@@ -478,6 +495,11 @@ export default React.createClass({
 
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
+
+    if (!inputValue) {
+      this.clear();
+      return;
+    }
 
     let month, day, year;
     if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
@@ -623,7 +645,7 @@ export default React.createClass({
         show={this.state.focused}
         container={() => this.props.calendarContainer || ReactDOM.findDOMNode(this.refs.overlayContainer)}
         target={() => ReactDOM.findDOMNode(this.refs.input)}
-        placement={this.props.calendarPlacement}
+        placement={this.state.calendarPlacement}
         delayHide={200}>
         <Popover id={`date-picker-popover-${this.props.instanceCount}`} className="date-picker-popover" title={calendarHeader}>
           <Calendar

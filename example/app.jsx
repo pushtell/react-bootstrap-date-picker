@@ -42,6 +42,22 @@ const App = React.createClass({
       maxDate: value
     });
   },
+  handlePlacement() {
+    return 'top';
+  },
+  handleRandomPlacement() {
+    const placementKey = Math.floor((Math.random()*4) + 1);
+    switch (placementKey) {
+      case 1:
+        return 'top';
+      case 2:
+        return 'left';
+      case 4:
+        return 'right';
+      default:
+        return 'bottom';
+    }
+  },
   render() {
     const LabelISOString = new Date().toISOString();
     return <Grid>
@@ -309,6 +325,22 @@ const App = React.createClass({
             <ControlLabel>Left</ControlLabel>
             <DatePicker placeholder="Placeholder" calendarPlacement="left" />
             <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Placement determined by function</ControlLabel>
+            <DatePicker placeholder="Placeholder" calendarPlacement={this.handlePlacement} />
+            <HelpBlock>Placed at top</HelpBlock>
+          </FormGroup>
+        </Col>
+        <Col sm={6}>
+          <FormGroup>
+            <ControlLabel>Random placement</ControlLabel>
+            <DatePicker placeholder="Placeholder" calendarPlacement={this.handleRandomPlacement} />
+            <HelpBlock>Placement is random in either of the four directions</HelpBlock>
           </FormGroup>
         </Col>
       </Row>

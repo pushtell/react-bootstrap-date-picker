@@ -54,7 +54,7 @@ describe("Date Picker", function() {
   }));
   it("should render a date picker with a value.", co.wrap(function *(){
     const id = UUID.v4();
-    const value = new Date().toISOString();
+    const value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     const App = React.createClass({
       render: function(){
         return <div>
@@ -304,7 +304,7 @@ describe("Date Picker", function() {
   it("should call focus and blur handlers.", co.wrap(function *(){
     const id = UUID.v4();
     var results = {};
-    var value = new Date().toISOString();
+    var value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     const App = React.createClass({
       getInitialState: function() {
         return {
@@ -722,7 +722,7 @@ describe("Date Picker", function() {
   }));
   it("should set a default value", co.wrap(function *(){
     const id = UUID.v4();
-    const defaultValue = new Date().toISOString();
+    const defaultValue = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     let value = null;
     let formattedValue = null;
     const App = React.createClass({
@@ -1061,13 +1061,52 @@ describe("Date Picker", function() {
     assert.equal(document.querySelector("table thead tr:first-child td small").innerHTML, "Sat");
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should allow for a string to determine calendar placement", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarPlacement="right" />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const popover = document.querySelector(".date-picker-popover.right");
+    assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should allow for a function to determine calendar placement", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = React.createClass({
+      handlePlacement(){
+        return "top";
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarPlacement={this.handlePlacement} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const popover = document.querySelector(".date-picker-popover.top");
+    assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should set a tabindex on the input control", co.wrap(function *(){
     const id = UUID.v4();
     const App = React.createClass({
       render: function(){
         return <div>
-          <DatePicker id={id} tabIndex={101} />
-        </div>;
+              <DatePicker id={id} tabIndex={101} />
+            </div>;
       }
     });
     yield new Promise(function(resolve, reject){
