@@ -24,7 +24,8 @@ const App = React.createClass({
       previousDate: null,
       minDate: null,
       maxDate: null,
-      focused: false
+      focused: false,
+      todayDate: new Date('2017', '0', '1').toISOString()
     };
   },
   handleChange(value) {
@@ -59,7 +60,6 @@ const App = React.createClass({
     }
   },
   render() {
-    const LabelISOString = new Date().toISOString();
     return <Grid>
       <Row>
         <Col xs={12}>
@@ -207,7 +207,7 @@ const App = React.createClass({
           <FormGroup>
             <ControlLabel>Min</ControlLabel>
             <DatePicker onChange={this.handleMinChange} value={this.state.minDate} />
-            <HelpBlock>{`Configure Example minDate`}</HelpBlock>
+            <HelpBlock>Configure Example minDate</HelpBlock>
             <HelpBlock>{`value: ${this.state.minDate}`}</HelpBlock>
           </FormGroup>
         </Col>
@@ -215,7 +215,7 @@ const App = React.createClass({
           <FormGroup>
             <ControlLabel>Max</ControlLabel>
             <DatePicker onChange={this.handleMaxChange} value={this.state.maxDate} />
-            <HelpBlock>{`Configure Example maxDate`}</HelpBlock>
+            <HelpBlock>Configure Example maxDate</HelpBlock>
             <HelpBlock>{`value: ${this.state.maxDate}`}</HelpBlock>
           </FormGroup>
         </Col>
@@ -286,10 +286,17 @@ const App = React.createClass({
             <DatePicker weekStartsOn={4} />
           </FormGroup>
         </Col>
-        <Col sm={6}>
+        <Col sm={3}>
           <FormGroup>
             <ControlLabel>Control Element</ControlLabel>
             <DatePicker customControl={<CustomControl />} />
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Today Date</ControlLabel>
+            <DatePicker showTodayButton todayDate={this.state.todayDate} />
+            <HelpBlock>Today's date is set to 01/01/2017</HelpBlock>
           </FormGroup>
         </Col>
       </Row>
@@ -428,7 +435,10 @@ const App = React.createClass({
 
 const CustomControl = React.createClass({
   displayName: 'CustomControl',
-
+  propTypes: {
+    value: React.PropTypes.string,
+    placeholder: React.PropTypes.string
+  },
   render() {
     const {
       value,

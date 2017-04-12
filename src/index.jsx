@@ -88,7 +88,8 @@ const Calendar = React.createClass({
     weekStartsOn: React.PropTypes.number,
     showTodayButton: React.PropTypes.bool,
     todayButtonLabel: React.PropTypes.string,
-    roundedCorners: React.PropTypes.bool
+    roundedCorners: React.PropTypes.bool,
+    todayDate: React.PropTypes.string
   },
 
   handleClick(day) {
@@ -98,7 +99,7 @@ const Calendar = React.createClass({
   },
 
   handleClickToday() {
-    const newSelectedDate = this.setTimeToNoon(new Date());
+    const newSelectedDate = this.setTimeToNoon(this.props.todayDate ? new Date(this.props.todayDate) : new Date());
     this.props.onChange(newSelectedDate);
   },
 
@@ -268,7 +269,8 @@ export default React.createClass({
     children: React.PropTypes.oneOfType([
       React.PropTypes.arrayOf(React.PropTypes.node),
       React.PropTypes.node
-    ])
+    ]),
+    todayDate: React.PropTypes.string
   },
 
   getDefaultProps() {
@@ -330,7 +332,8 @@ export default React.createClass({
     if (selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
-      const today = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
+      const today = this.props.todayDate ? new Date(`${this.props.todayDate.slice(0,10)}T12:00:00.000Z`)
+      : new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
       if (minDate && Date.parse(minDate) >= Date.parse(today)){
         displayDate = minDate;
       } else if (maxDate && Date.parse(maxDate) <= Date.parse(today)){
@@ -657,6 +660,7 @@ export default React.createClass({
             minDate={this.props.minDate}
             maxDate={this.props.maxDate}
             roundedCorners={this.props.roundedCorners}
+            todayDate={this.props.todayDate}
            />
         </Popover>
       </Overlay>
