@@ -11,13 +11,14 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
+import createReactClass from 'create-react-class';
 
 const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 const wapperDivStyle = { border: '1px solid #ccc' };
 const scrollingDivStyle = { padding: '10px', height: '70px', overflow: 'auto' };
 
-const App = React.createClass({
+const App = createReactClass({
   getInitialState() {
     return {
       date: new Date().toISOString(),
@@ -426,7 +427,7 @@ const App = React.createClass({
   }
 });
 
-const CustomControl = React.createClass({
+const CustomControl = createReactClass({
   displayName: 'CustomControl',
 
   render() {
