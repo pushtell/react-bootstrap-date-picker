@@ -80,17 +80,18 @@ const Calendar = createReactClass({
   displayName: 'DatePickerCalendar',
 
   propTypes: {
-    selectedDate: PropTypes.object,
-    displayDate: PropTypes.object.isRequired,
-    minDate: PropTypes.string,
-    maxDate: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
-    dayLabels: PropTypes.array.isRequired,
-    cellPadding: PropTypes.string.isRequired,
-    weekStartsOn: PropTypes.number,
-    showTodayButton: PropTypes.bool,
-    todayButtonLabel: PropTypes.string,
-    roundedCorners: PropTypes.bool
+    selectedDate: React.PropTypes.object,
+    displayDate: React.PropTypes.object.isRequired,
+    minDate: React.PropTypes.string,
+    maxDate: React.PropTypes.string,
+    onChange: React.PropTypes.func.isRequired,
+    dayLabels: React.PropTypes.array.isRequired,
+    cellPadding: React.PropTypes.string.isRequired,
+    weekStartsOn: React.PropTypes.number,
+    showTodayButton: React.PropTypes.bool,
+    todayButtonLabel: React.PropTypes.string,
+    roundedCorners: React.PropTypes.bool,
+    showWeeks: React.PropTypes.bool
   },
 
   handleClick(day) {
@@ -112,6 +113,18 @@ const Calendar = createReactClass({
     return date;
   },
 
+  getWeekNumber(date){
+    const target  = new Date(date.valueOf());
+    const dayNr   = (date.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    if (target.getDay() !== 4) {
+      target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+    }
+    return 1 + Math.ceil((firstThursday - target) / 604800000);
+  },
+
   render() {
     const currentDate = this.setTimeToNoon(new Date());
     const selectedDate = this.props.selectedDate ? this.setTimeToNoon(new Date(this.props.selectedDate)) : null;
@@ -125,6 +138,7 @@ const Calendar = createReactClass({
       : this.props.weekStartsOn === 1
         ? (firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1)
         : firstDay.getDay();
+    const showWeeks = this.props.showWeeks;
 
     let monthLength = daysInMonth[month];
     if (month == 1) {
@@ -151,25 +165,36 @@ const Calendar = createReactClass({
             >
               {day}
             </td>);
-          } else {
-            if (Date.parse(date) === Date.parse(selectedDate)) {
-              className = 'bg-primary';
-            } else if (Date.parse(date) === Date.parse(currentDate)) {
-              className = 'text-primary';
-            }
-            week.push(<td
-              key={j}
-              onClick={this.handleClick.bind(this, day)}
-              style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
-              className={className}
-            >
-              {day}
-            </td>);
+          } else if (Date.parse(date) === Date.parse(selectedDate)) {
+            className = 'bg-primary';
+          } else if (Date.parse(date) === Date.parse(currentDate)) {
+            className = 'text-primary';
           }
+          week.push(<td
+            key={j}
+            onClick={this.handleClick.bind(this, day)}
+            style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+            className={className}
+          >
+            {day}
+          </td>);
           day++;
         } else {
           week.push(<td key={j} />);
         }
+      }
+
+
+      if (showWeeks){
+        const weekNum = this.getWeekNumber(new Date(year, month,  day - 1, 12, 0, 0, 0));
+        week.unshift(<td
+            key={7}
+            style={{padding: this.props.cellPadding, fontSize: '0.8em', color: "darkgrey"}}
+            className="text-muted"
+        >
+          {weekNum}
+        </td>);
+
       }
 
       weeks.push(<tr key={i}>{week}</tr>);
@@ -178,9 +203,16 @@ const Calendar = createReactClass({
       }
     }
 
+    const weekColumn = showWeeks ?
+        <td
+        className="text-muted current-week"
+        style={{padding: this.props.cellPadding}} /> :
+        null;
+
     return <table className="text-center">
       <thead>
         <tr>
+          {weekColumn}
           {this.props.dayLabels.map((label, index)=>{
             return <td
               key={index}
@@ -267,9 +299,11 @@ export default createReactClass({
     instanceCount: PropTypes.number,
     customControl: PropTypes.object,
     roundedCorners: PropTypes.bool,
+    showWeeks: PropTypes.bool,
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.node),
       PropTypes.node
+
     ])
   },
 
@@ -293,6 +327,7 @@ export default createReactClass({
       showTodayButton: false,
       todayButtonLabel: 'Today',
       autoComplete: 'on',
+      showWeeks: false,
       instanceCount: instanceCount++,
       style: {
         width: '100%'
@@ -659,6 +694,7 @@ export default createReactClass({
             minDate={this.props.minDate}
             maxDate={this.props.maxDate}
             roundedCorners={this.props.roundedCorners}
+            showWeeks={this.props.showWeeks}
            />
         </Popover>
       </Overlay>

@@ -222,6 +222,20 @@ const App = createReactClass({
         </Col>
       </Row>
       <Row>
+        <Col xs={6}>
+          <h2>Show Week Numbers</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6}>
+          <FormGroup controlId="show_weeks">
+            <ControlLabel>Show Weeks</ControlLabel>
+            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="show_dates_example" showWeeks={true} />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
         <Col xs={12}>
           <h2>Custom</h2>
         </Col>
