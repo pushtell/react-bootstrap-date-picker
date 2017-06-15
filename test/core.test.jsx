@@ -5,7 +5,8 @@ import assert from "assert";
 import co from "co";
 import ES6Promise from 'es6-promise';
 import UUID from "node-uuid";
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
+import createReactClass from 'create-react-class';
 
 ES6Promise.polyfill();
 
@@ -37,7 +38,7 @@ describe("Date Picker", function() {
   });
   it("should render an empty date picker.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} />
@@ -55,7 +56,7 @@ describe("Date Picker", function() {
   it("should render a date picker with a value.", co.wrap(function *(){
     const id = UUID.v4();
     const value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} value={value} />
@@ -72,7 +73,7 @@ describe("Date Picker", function() {
   }));
   it("should open the calendar and select a date.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} />
@@ -97,7 +98,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     let value = null;
     let formattedValue = null;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue, newFormattedValue){
         value = newValue;
         formattedValue = newFormattedValue;
@@ -124,7 +125,7 @@ describe("Date Picker", function() {
   it("should open the calendar and render 29 days on a leap year.", co.wrap(function *(){
     const id = UUID.v4();
     let value = "2016-02-15T00:00:00.000Z";
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} value={value} />
@@ -145,7 +146,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     let value = null;
     let formattedValue = null;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue, newFormattedValue){
         value = newValue;
         formattedValue = newFormattedValue;
@@ -174,7 +175,7 @@ describe("Date Picker", function() {
     const clearButtonElement = <div id="clear-button-element"></div>;
     const previousButtonElement = <div id="previous-button-element"></div>;
     const nextButtonElement = <div id="next-button-element"></div>;
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker
@@ -206,7 +207,7 @@ describe("Date Picker", function() {
   it("should render without clear button element", co.wrap(function *(){
     const id = UUID.v4();
     const clearButtonElement = <div id="clear-button-element"></div>;
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker
@@ -225,7 +226,7 @@ describe("Date Picker", function() {
   }));
   it("should go to the previous and next month.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} />
@@ -253,7 +254,7 @@ describe("Date Picker", function() {
   }));
   it("should cycle through every month in the year.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} />
@@ -275,7 +276,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     let value = null;
     let formattedValue = null;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue, newFormattedValue){
         value = newValue;
         formattedValue = newFormattedValue;
@@ -305,7 +306,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     var results = {};
     var value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function() {
         return {
           focused: false
@@ -348,7 +349,7 @@ describe("Date Picker", function() {
   }));
   it('should trim extra characters.', co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} />
@@ -366,7 +367,7 @@ describe("Date Picker", function() {
   }));
   it("should automatically insert slashes.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} />
@@ -389,7 +390,7 @@ describe("Date Picker", function() {
   }));
   it("should automatically insert in YYYY/MM/DD format.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} dateFormat="YYYY/MM/DD" />
@@ -418,7 +419,7 @@ describe("Date Picker", function() {
     const formattedValues = {};
     const getValues = {};
     const getFormattedValues = {};
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function(){
         return {
           value: null
@@ -514,7 +515,7 @@ describe("Date Picker", function() {
   }));
   it("week should start on Monday.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} weekStartsOn={1} />
@@ -531,7 +532,7 @@ describe("Date Picker", function() {
   }));
   it("should allow placing the popover calendar in a container specified in the props.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} calendarContainer={calendarContainer} />
@@ -549,7 +550,7 @@ describe("Date Picker", function() {
   it("should have no focus with autoFocus false.", co.wrap(function *(){
     const id = UUID.v4();
     const value = new Date().toISOString();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} value={value} autoFocus={false}/>
@@ -566,7 +567,7 @@ describe("Date Picker", function() {
   it("should have focus with autoFocus true.", co.wrap(function *(){
     const id = UUID.v4();
     const value = new Date().toISOString();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} value={value} autoFocus={true}/>
@@ -583,7 +584,7 @@ describe("Date Picker", function() {
   it("should disable the input.", co.wrap(function *(){
     const id = UUID.v4();
     const value = new Date().toISOString();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} value={value} disabled={true}/>
@@ -602,7 +603,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     let value = new Date().toISOString();
     let originalValue = value;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue){
         value = newValue;
       },
@@ -626,7 +627,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     let value = null;
     let formattedValue = null;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue, newFormattedValue){
         value = newValue;
         formattedValue = newFormattedValue;
@@ -675,7 +676,7 @@ describe("Date Picker", function() {
     const id = UUID.v4();
     let value = null;
     let formattedValue = null;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue, newFormattedValue){
         value = newValue;
         formattedValue = newFormattedValue;
@@ -725,7 +726,7 @@ describe("Date Picker", function() {
     const defaultValue = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
     let value = null;
     let formattedValue = null;
-    const App = React.createClass({
+    const App = createReactClass({
       handleChange: function(newValue, newFormattedValue){
         value = newValue;
         formattedValue = newFormattedValue;
@@ -749,7 +750,7 @@ describe("Date Picker", function() {
   }));
   it("should error if value and default value are both set.", co.wrap(function *(){
     const value = new Date().toISOString();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker value={value} defaultValue={value} />
@@ -768,7 +769,7 @@ describe("Date Picker", function() {
   }));
   it('should render with today button element', co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker
@@ -790,7 +791,7 @@ describe("Date Picker", function() {
   }));
   it('should render a custom button element', co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker
@@ -810,7 +811,7 @@ describe("Date Picker", function() {
   it("should set the FormControl className.", co.wrap(function *(){
     const id = UUID.v4();
     const className = `_${UUID.v4()}`;
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} className={className} />
@@ -826,7 +827,7 @@ describe("Date Picker", function() {
   }));
   it("should set the FormControl style.", co.wrap(function *(){
     const backgroundColor = `rgb(${Math.round(Math.random() * 255, 0)}, ${Math.round(Math.random() * 255, 0)}, ${Math.round(Math.random() * 255, 0)})`;
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker style={{backgroundColor: backgroundColor}}/>
@@ -846,7 +847,7 @@ describe("Date Picker", function() {
     const minDate = "2016-09-11T00:00:00.000Z";
     const maxDate = "2016-09-17T00:00:00.000Z";
     const justRightValue = "2016-09-11T12:00:00.000Z"
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function(){
         return {
           value: originalValue
@@ -882,7 +883,7 @@ describe("Date Picker", function() {
   it("should show next and prev buttons if min and max dates are not set.", co.wrap(function *(){
     const id = UUID.v4();
     const displayDate = "2017-07-21T12:00:00.000Z"
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function(){
         return {
           value: displayDate
@@ -913,7 +914,7 @@ describe("Date Picker", function() {
     const displayDate = "2017-07-21T12:00:00.000Z"
     const minDate = "2017-01-01T12:00:00.000Z";
     const maxDate = "2017-12-31T12:00:00.000Z";
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function(){
         return {
           value: displayDate
@@ -944,7 +945,7 @@ describe("Date Picker", function() {
     const displayDate = "2017-01-15T12:00:00.000Z"
     const minDate = "2017-01-01T12:00:00.000Z";
     const maxDate = "2017-12-31T12:00:00.000Z";
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function(){
         return {
           value: displayDate
@@ -975,7 +976,7 @@ describe("Date Picker", function() {
     const displayDate = "2017-12-15T12:00:00.000Z"
     const minDate = "2017-01-01T12:00:00.000Z";
     const maxDate = "2017-12-31T12:00:00.000Z";
-    const App = React.createClass({
+    const App = createReactClass({
       getInitialState: function(){
         return {
           value: displayDate
@@ -1004,7 +1005,7 @@ describe("Date Picker", function() {
   it("should allow for rounded corners.", co.wrap(function *(){
     const withoutRoundedCorners = "_" + UUID.v4();
     const withRoundedCorners = "_" + UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={withoutRoundedCorners} />
@@ -1029,7 +1030,7 @@ describe("Date Picker", function() {
   }));
   it("week should start on Thursday.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} weekStartsOn={4} />
@@ -1046,7 +1047,7 @@ describe("Date Picker", function() {
   }));
   it("week should start on Saturday.", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} weekStartsOn={6} />
@@ -1063,7 +1064,7 @@ describe("Date Picker", function() {
   }));
   it("should allow for a string to determine calendar placement", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       render: function(){
         return <div>
           <DatePicker id={id} calendarPlacement="right" />
@@ -1081,7 +1082,7 @@ describe("Date Picker", function() {
   }));
   it("should allow for a function to determine calendar placement", co.wrap(function *(){
     const id = UUID.v4();
-    const App = React.createClass({
+    const App = createReactClass({
       handlePlacement(){
         return "top";
       },

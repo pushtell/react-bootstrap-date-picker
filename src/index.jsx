@@ -7,25 +7,27 @@ import FormControl from 'react-bootstrap/lib/FormControl';
 import InputGroup from 'react-bootstrap/lib/InputGroup';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import Popover from 'react-bootstrap/lib/Popover';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 let instanceCount = 0;
 
-const CalendarHeader = React.createClass({
+const CalendarHeader = createReactClass({
   displayName: 'DatePickerHeader',
 
   propTypes: {
-    displayDate: React.PropTypes.object.isRequired,
-    minDate: React.PropTypes.string,
-    maxDate: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    monthLabels: React.PropTypes.array.isRequired,
-    previousButtonElement: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.object
+    displayDate: PropTypes.object.isRequired,
+    minDate: PropTypes.string,
+    maxDate: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    monthLabels: PropTypes.array.isRequired,
+    previousButtonElement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
     ]).isRequired,
-    nextButtonElement: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.object
+    nextButtonElement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
     ]).isRequired,
   },
 
@@ -74,21 +76,21 @@ const CalendarHeader = React.createClass({
 
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-const Calendar = React.createClass({
+const Calendar = createReactClass({
   displayName: 'DatePickerCalendar',
 
   propTypes: {
-    selectedDate: React.PropTypes.object,
-    displayDate: React.PropTypes.object.isRequired,
-    minDate: React.PropTypes.string,
-    maxDate: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    dayLabels: React.PropTypes.array.isRequired,
-    cellPadding: React.PropTypes.string.isRequired,
-    weekStartsOn: React.PropTypes.number,
-    showTodayButton: React.PropTypes.bool,
-    todayButtonLabel: React.PropTypes.string,
-    roundedCorners: React.PropTypes.bool
+    selectedDate: PropTypes.object,
+    displayDate: PropTypes.object.isRequired,
+    minDate: PropTypes.string,
+    maxDate: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    dayLabels: PropTypes.array.isRequired,
+    cellPadding: PropTypes.string.isRequired,
+    weekStartsOn: PropTypes.number,
+    showTodayButton: PropTypes.bool,
+    todayButtonLabel: PropTypes.string,
+    roundedCorners: PropTypes.bool
   },
 
   handleClick(day) {
@@ -209,65 +211,65 @@ const Calendar = React.createClass({
   }
 });
 
-export default React.createClass({
+export default createReactClass({
   displayName: 'DatePicker',
 
   propTypes: {
-    defaultValue: React.PropTypes.string,
-    value: React.PropTypes.string,
-    required: React.PropTypes.bool,
-    className: React.PropTypes.string,
-    style: React.PropTypes.object,
-    minDate: React.PropTypes.string,
-    maxDate: React.PropTypes.string,
-    cellPadding: React.PropTypes.string,
-    autoComplete: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    dayLabels: React.PropTypes.array,
-    monthLabels: React.PropTypes.array,
-    onChange: React.PropTypes.func,
-    onClear: React.PropTypes.func,
-    onBlur: React.PropTypes.func,
-    onFocus: React.PropTypes.func,
-    autoFocus: React.PropTypes.bool,
-    disabled: React.PropTypes.bool,
+    defaultValue: PropTypes.string,
+    value: PropTypes.string,
+    required: PropTypes.bool,
+    className: PropTypes.string,
+    style: PropTypes.object,
+    minDate: PropTypes.string,
+    maxDate: PropTypes.string,
+    cellPadding: PropTypes.string,
+    autoComplete: PropTypes.string,
+    placeholder: PropTypes.string,
+    dayLabels: PropTypes.array,
+    monthLabels: PropTypes.array,
+    onChange: PropTypes.func,
+    onClear: PropTypes.func,
+    onBlur: PropTypes.func,
+    onFocus: PropTypes.func,
+    autoFocus: PropTypes.bool,
+    disabled: PropTypes.bool,
     weekStartsOnMonday: (props, propName, componentName) => {
       if (props[propName]) {
         return new Error(`Prop '${propName}' supplied to '${componentName}' is obsolete. Use 'weekStartsOn' instead.`);
       }
     },
-    weekStartsOn: React.PropTypes.number,
-    clearButtonElement: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.object
+    weekStartsOn: PropTypes.number,
+    clearButtonElement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
     ]),
-    showClearButton: React.PropTypes.bool,
-    previousButtonElement: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.object
+    showClearButton: PropTypes.bool,
+    previousButtonElement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
     ]),
-    nextButtonElement: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.object
+    nextButtonElement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object
     ]),
-    calendarPlacement: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.func
+    calendarPlacement: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func
     ]),
-    dateFormat: React.PropTypes.string, // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
-    bsClass: React.PropTypes.string,
-    bsSize: React.PropTypes.string,
-    calendarContainer: React.PropTypes.object,
-    id: React.PropTypes.string,
-    name: React.PropTypes.string,
-    showTodayButton: React.PropTypes.bool,
-    todayButtonLabel: React.PropTypes.string,
-    instanceCount: React.PropTypes.number,
-    customControl: React.PropTypes.object,
-    roundedCorners: React.PropTypes.bool,
-    children: React.PropTypes.oneOfType([
-      React.PropTypes.arrayOf(React.PropTypes.node),
-      React.PropTypes.node
+    dateFormat: PropTypes.string, // 'MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'
+    bsClass: PropTypes.string,
+    bsSize: PropTypes.string,
+    calendarContainer: PropTypes.object,
+    id: PropTypes.string,
+    name: PropTypes.string,
+    showTodayButton: PropTypes.bool,
+    todayButtonLabel: PropTypes.string,
+    instanceCount: PropTypes.number,
+    customControl: PropTypes.object,
+    roundedCorners: PropTypes.bool,
+    children: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.node),
+      PropTypes.node
     ])
   },
 
