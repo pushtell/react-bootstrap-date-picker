@@ -1,3 +1,7 @@
+<!--- Thank you for your pull request! This is a community supported 
+project initially released by https://github.com/wehriam for your use
+and enjoyment. -->
+
 <!--- Provide a general summary of your changes in the Title above -->
 
 ## Description

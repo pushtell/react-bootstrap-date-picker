@@ -1,3 +1,7 @@
+<!--- Thank you for your issue report! This is a community supported 
+project initially released by https://github.com/wehriam for your use
+and enjoyment. -->
+
 <!--- Provide a general summary of the issue in the Title above -->
 
 ## Expected Behavior
