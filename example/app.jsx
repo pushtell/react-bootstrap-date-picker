@@ -11,13 +11,14 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import HelpBlock from 'react-bootstrap/lib/HelpBlock';
+import createReactClass from 'create-react-class';
 
 const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 const wapperDivStyle = { border: '1px solid #ccc' };
 const scrollingDivStyle = { padding: '10px', height: '70px', overflow: 'auto' };
 
-const App = React.createClass({
+const App = createReactClass({
   getInitialState() {
     return {
       date: new Date().toISOString(),
@@ -217,6 +218,20 @@ const App = React.createClass({
             <DatePicker onChange={this.handleMaxChange} value={this.state.maxDate} />
             <HelpBlock>Configure Example maxDate</HelpBlock>
             <HelpBlock>{`value: ${this.state.maxDate}`}</HelpBlock>
+          </FormGroup>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6}>
+          <h2>Show Week Numbers</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={6}>
+          <FormGroup controlId="show_weeks">
+            <ControlLabel>Show Weeks</ControlLabel>
+            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="show_dates_example" showWeeks={true} />
+            <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
       </Row>
@@ -433,7 +448,7 @@ const App = React.createClass({
   }
 });
 
-const CustomControl = React.createClass({
+const CustomControl = createReactClass({
   displayName: 'CustomControl',
   propTypes: {
     value: React.PropTypes.string,
