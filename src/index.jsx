@@ -61,12 +61,13 @@ const CalendarHeader = createReactClass({
     this.props.onChange(newDisplayDate);
   },
 
+  // 選框的年份
   render() {
     return <div className="text-center">
       <div className="text-muted pull-left datepicker-previous-wrapper" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>
         {this.displayingMinMonth() ? null : this.props.previousButtonElement}
       </div>
-      <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+      <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {(this.props.displayDate.getFullYear() - (this.props.taiwanFormat ? 1911 : 0))}</span>
       <div className="text-muted pull-right datepicker-next-wrapper" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>
         {this.displayingMaxMonth() ? null : this.props.nextButtonElement}
       </div>
@@ -247,6 +248,7 @@ export default createReactClass({
   displayName: 'DatePicker',
 
   propTypes: {
+    taiwanFormat: PropTypes.bool,
     defaultValue: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,
@@ -335,7 +337,8 @@ export default createReactClass({
         width: '100%'
       },
       roundedCorners: false,
-      noValidate: false
+      noValidate: false,
+      taiwanFormat: false
     };
   },
 
@@ -488,13 +491,13 @@ export default createReactClass({
     //this method is executed during intialState setup... handle a missing state properly
     const separator = (this.state ? this.state.separator : this.props.dateFormat.match(/[^A-Z]/)[0]);
     if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      return (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`) + separator + date.getFullYear();
+      return (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`) + separator + (date.getFullYear() - (this.props.taiwanFormat ? 1911 : 0));
     }
     else if (this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      return (day > 9 ? day : `0${day}`) + separator + (month > 9 ? month : `0${month}`) + separator + date.getFullYear();
+      return (day > 9 ? day : `0${day}`) + separator + (month > 9 ? month : `0${month}`) + separator + (date.getFullYear() - (this.props.taiwanFormat ? 1911 : 0));
     }
     else {
-      return date.getFullYear() + separator + (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`);
+      return (date.getFullYear() - (this.props.taiwanFormat ? 1911 : 0)) + separator + (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`);
     }
   },
 
@@ -531,10 +534,8 @@ export default createReactClass({
   },
 
   handleInputChange() {
-
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
-
     if (!inputValue) {
       this.clear();
       return;
@@ -542,34 +543,59 @@ export default createReactClass({
 
     let month, day, year;
     if (this.props.dateFormat.match(/MM.DD.YYYY/)) {
-      if (!inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
+      if (!this.props.taiwanFormat && !inputValue.match(/[0-1][0-9].[0-3][0-9].[1-2][0-9][0-9][0-9]/)) {
+        return this.handleBadInput(originalValue);
+      } else if (this.props.taiwanFormat && !inputValue.match(/[0-1][0-9].[0-3][0-9].[0-1][0-9][0-9]/)){
         return this.handleBadInput(originalValue);
       }
 
       month = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       day = inputValue.slice(3,5).replace(/[^0-9]/g, '');
-      year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+      year = '';
+      if (this.props.taiwanFormat){
+        year =  inputValue.slice(6,9).replace(/[^0-9]/g, '');
+      } else {
+        year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+      }
     } else if (this.props.dateFormat.match(/DD.MM.YYYY/)) {
-      if (!inputValue.match(/[0-3][0-9].[0-1][0-9].[1-2][0-9][0-9][0-9]/)) {
+      if (!this.props.taiwanFormat && !inputValue.match(/[0-3][0-9].[0-1][0-9].[1-2][0-9][0-9][0-9]/)) {
+        return this.handleBadInput(originalValue);
+      } else if (this.props.taiwanFormat && !inputValue.match(/[0-3][0-9].[0-1][0-9].[0-1][0-9][0-9]/)){
         return this.handleBadInput(originalValue);
       }
 
       day = inputValue.slice(0,2).replace(/[^0-9]/g, '');
       month = inputValue.slice(3,5).replace(/[^0-9]/g, '');
-      year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+      year = '';
+      if (this.props.taiwanFormat){
+        year = inputValue.slice(6,9).replace(/[^0-9]/g, '');
+      } else {
+        year = inputValue.slice(6,10).replace(/[^0-9]/g, '');
+      }
     } else {
-      if (!inputValue.match(/[1-2][0-9][0-9][0-9].[0-1][0-9].[0-3][0-9]/)) {
+      if (!this.props.taiwanFormat && !inputValue.match(/[1-2][0-9][0-9][0-9].[0-1][0-9].[0-3][0-9]/)) {
+        return this.handleBadInput(originalValue);
+      } else if (this.props.taiwanFormat && !inputValue.match(/[0-1][0-9][0-9].[0-1][0-9].[0-3][0-9]/)){
         return this.handleBadInput(originalValue);
       }
 
-      year = inputValue.slice(0,4).replace(/[^0-9]/g, '');
-      month = inputValue.slice(5,7).replace(/[^0-9]/g, '');
-      day = inputValue.slice(8,10).replace(/[^0-9]/g, '');
+      year = '';
+      month = '';
+      day = '';
+      if (this.props.taiwanFormat){
+        year =  inputValue.slice(0,3).replace(/[^0-9]/g, '');
+        month = inputValue.slice(4,6).replace(/[^0-9]/g, '');
+        day = inputValue.slice(7,9).replace(/[^0-9]/g, '');
+      } else {
+        year = inputValue.slice(0,4).replace(/[^0-9]/g, '');
+        month = inputValue.slice(5,7).replace(/[^0-9]/g, '');
+        inputValue.slice(8,10).replace(/[^0-9]/g, '');
+      }
     }
 
     const monthInteger = parseInt(month, 10);
     const dayInteger = parseInt(day, 10);
-    const yearInteger = parseInt(year, 10);
+    const yearInteger = parseInt(year, 10) + (this.props.taiwanFormat ? 1911 : 0);
     if (monthInteger > 12 || dayInteger > 31) {
       return this.handleBadInput(originalValue);
     }
@@ -636,7 +662,8 @@ export default createReactClass({
       maxDate={this.props.maxDate}
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
-      dateFormat={this.props.dateFormat} />;
+      dateFormat={this.props.dateFormat}
+      taiwanFormat={this.props.taiwanFormat} />;
 
     const control = this.props.customControl
       ? React.cloneElement(this.props.customControl, {

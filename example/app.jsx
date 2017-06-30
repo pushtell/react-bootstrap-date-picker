@@ -109,7 +109,7 @@ const App = createReactClass({
         <Col sm={6}>
           <FormGroup controlId="change_handler">
             <ControlLabel>Change Handler</ControlLabel>
-            <DatePicker onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="change_handler_example" />
+            <DatePicker taiwanFormat onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="change_handler_example" />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
@@ -191,7 +191,7 @@ const App = createReactClass({
         <Col sm={4}>
           <FormGroup>
             <ControlLabel>MM/DD/YYYY</ControlLabel>
-            <DatePicker dateFormat="MM/DD/YYYY" onChange={this.handleChange} value={this.state.date} />
+            <DatePicker taiwanFormat dateFormat="YYYY/MM/DD" onChange={this.handleChange} value={this.state.date} />
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>

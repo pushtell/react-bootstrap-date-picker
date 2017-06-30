@@ -64,10 +64,11 @@
     "webpack-dev-server": "^2.4.2"
   },
   "scripts": {
-    "example": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base example/ --config ./example/webpack.example.config.js",
+    "example": "webpack-dev-server --content-base example/ --config ./example/webpack.example.config.js",
     "gh-pages": "./node_modules/webpack/bin/webpack.js --config ./example/webpack.example.config.js; cp ./example/index.html /tmp/index.html; cp ./example/bundle.js /tmp/bundle.js; git checkout gh-pages; cp /tmp/index.html ./index.html; cp /tmp/bundle.js ./bundle.js; chmod -x .git/hooks/pre-commit .git/hooks/post-commit; git commit -a -m 'Automatic Example Update'; git push origin gh-pages; chmod +x .git/hooks/pre-commit .git/hooks/post-commit; git checkout master;",
-    "test": "./node_modules/karma/bin/karma start test/karma.conf.js",
+    "test": "karma start test/karma.conf.js",
     "build": "doctoc . --github --title '<h1>Table of Contents</h1>'; ./node_modules/babel-cli/bin/babel.js ./src --plugins add-module-exports --out-dir ./lib;",
+    "only-build": "babel ./src --plugins add-module-exports --out-dir ./lib",
     "lint": "./node_modules/.bin/eslint --fix ./src/**"
   },
   "repository": {
