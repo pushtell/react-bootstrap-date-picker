@@ -157,31 +157,33 @@ const Calendar = createReactClass({
           let className = null;
           const date = new Date(year, month, day, 12, 0, 0, 0).toISOString();
           const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
-          const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
-          if (beforeMinDate || afterMinDate) {
+          const afterMaxDate = maxDate && Date.parse(date) > Date.parse(maxDate);
+          if (beforeMinDate || afterMaxDate) {
             week.push(<td
-              key={`${j}${Math.random()}`}
+              key={j}
               style={{ padding: this.props.cellPadding }}
               className="text-muted"
             >
               {day}
             </td>);
-          } else if (Date.parse(date) === Date.parse(selectedDate)) {
-            className = 'bg-primary';
-          } else if (Date.parse(date) === Date.parse(currentDate)) {
-            className = 'text-primary';
+          } else {
+            if (Date.parse(date) === Date.parse(selectedDate)) {
+              className = 'bg-primary';
+            } else if (Date.parse(date) === Date.parse(currentDate)) {
+              className = 'text-primary';
+            }
+            week.push(<td
+              key={j}
+              onClick={this.handleClick.bind(this, day)}
+              style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+              className={className}
+            >
+              {day}
+            </td>);
           }
-          week.push(<td
-            key={`${j}${Math.random()}`}
-            onClick={this.handleClick.bind(this, day)}
-            style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
-            className={className}
-          >
-            {day}
-          </td>);
           day++;
         } else {
-          week.push(<td key={`${j}${Math.random()}`} />);
+          week.push(<td key={j} />);
         }
       }
 
