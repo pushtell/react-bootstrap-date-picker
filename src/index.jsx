@@ -160,7 +160,7 @@ const Calendar = createReactClass({
           const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
           if (beforeMinDate || afterMinDate) {
             week.push(<td
-              key={j}
+              key={`${j}${Math.random()}`}
               style={{ padding: this.props.cellPadding }}
               className="text-muted"
             >
@@ -172,7 +172,7 @@ const Calendar = createReactClass({
             className = 'text-primary';
           }
           week.push(<td
-            key={j}
+            key={`${j}${Math.random()}`}
             onClick={this.handleClick.bind(this, day)}
             style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
             className={className}
@@ -181,7 +181,7 @@ const Calendar = createReactClass({
           </td>);
           day++;
         } else {
-          week.push(<td key={j} />);
+          week.push(<td key={`${j}${Math.random()}`} />);
         }
       }
 
