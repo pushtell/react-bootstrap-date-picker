@@ -80,18 +80,18 @@ const Calendar = createReactClass({
   displayName: 'DatePickerCalendar',
 
   propTypes: {
-    selectedDate: React.PropTypes.object,
-    displayDate: React.PropTypes.object.isRequired,
-    minDate: React.PropTypes.string,
-    maxDate: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    dayLabels: React.PropTypes.array.isRequired,
-    cellPadding: React.PropTypes.string.isRequired,
-    weekStartsOn: React.PropTypes.number,
-    showTodayButton: React.PropTypes.bool,
-    todayButtonLabel: React.PropTypes.string,
-    roundedCorners: React.PropTypes.bool,
-    showWeeks: React.PropTypes.bool
+    selectedDate: PropTypes.object,
+    displayDate: PropTypes.object.isRequired,
+    minDate: PropTypes.string,
+    maxDate: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    dayLabels: PropTypes.array.isRequired,
+    cellPadding: PropTypes.string.isRequired,
+    weekStartsOn: PropTypes.number,
+    showTodayButton: PropTypes.bool,
+    todayButtonLabel: PropTypes.string,
+    roundedCorners: PropTypes.bool,
+    showWeeks: PropTypes.bool
   },
 
   handleClick(day) {
