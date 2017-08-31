@@ -21,6 +21,7 @@ const CalendarHeader = createReactClass({
     maxDate: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     monthLabels: PropTypes.array.isRequired,
+    getYearLabel: PropTypes.func,
     previousButtonElement: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object
@@ -47,6 +48,11 @@ const CalendarHeader = createReactClass({
     return maxDate.getFullYear() == displayDate.getFullYear() && maxDate.getMonth() == displayDate.getMonth();
   },
 
+  displayYearLabel() {
+    const getYearLabel = this.props.getYearLabel || (date => date.getFullYear());
+    return getYearLabel(this.props.displayDate);
+  },
+
   handleClickPrevious() {
     const newDisplayDate = new Date(this.props.displayDate);
     newDisplayDate.setDate(1);
@@ -66,7 +72,7 @@ const CalendarHeader = createReactClass({
       <div className="text-muted pull-left datepicker-previous-wrapper" onClick={this.handleClickPrevious} style={{cursor: 'pointer'}}>
         {this.displayingMinMonth() ? null : this.props.previousButtonElement}
       </div>
-      <span>{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.props.displayDate.getFullYear()}</span>
+      <span className="datepicker-header-label">{this.props.monthLabels[this.props.displayDate.getMonth()]} {this.displayYearLabel()}</span>
       <div className="text-muted pull-right datepicker-next-wrapper" onClick={this.handleClickNext} style={{cursor: 'pointer'}}>
         {this.displayingMaxMonth() ? null : this.props.nextButtonElement}
       </div>
@@ -259,6 +265,7 @@ export default createReactClass({
     placeholder: PropTypes.string,
     dayLabels: PropTypes.array,
     monthLabels: PropTypes.array,
+    getYearLabel: PropTypes.func,
     onChange: PropTypes.func,
     onClear: PropTypes.func,
     onBlur: PropTypes.func,
@@ -636,6 +643,7 @@ export default createReactClass({
       maxDate={this.props.maxDate}
       onChange={this.onChangeMonth}
       monthLabels={this.props.monthLabels}
+      getYearLabel={this.props.getYearLabel}
       dateFormat={this.props.dateFormat} />;
 
     const control = this.props.customControl
