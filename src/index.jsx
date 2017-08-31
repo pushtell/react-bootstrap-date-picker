@@ -94,12 +94,12 @@ const Calendar = createReactClass({
     showWeeks: React.PropTypes.bool
   },
 
-	handleClick(e) {
-		const day = e.currentTarget.getAttribute('data-day');
-		const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
-		newSelectedDate.setDate(day);
-		this.props.onChange(newSelectedDate);
-	},
+  handleClick(e) {
+    const day = e.currentTarget.getAttribute('data-day');
+    const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
+    newSelectedDate.setDate(day);
+    this.props.onChange(newSelectedDate);
+  },
 
   handleClickToday() {
     const newSelectedDate = this.setTimeToNoon(new Date());
@@ -158,28 +158,28 @@ const Calendar = createReactClass({
           const date = new Date(year, month, day, 12, 0, 0, 0).toISOString();
           const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
           const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
-					let clickHandler = this.handleClick;
-					const style = { cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 };
+          let clickHandler = this.handleClick;
+          const style = { cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 };
 
-					if (beforeMinDate || afterMinDate) {
-						className = 'text-muted';
-						clickHandler = null;
-						style.cursor = 'default';
-					} else if (Date.parse(date) === Date.parse(selectedDate)) {
-						className = 'bg-primary';
-					} else if (Date.parse(date) === Date.parse(currentDate)) {
-						className = 'text-primary';
-					}
+          if (beforeMinDate || afterMinDate) {
+            className = 'text-muted';
+            clickHandler = null;
+            style.cursor = 'default';
+          } else if (Date.parse(date) === Date.parse(selectedDate)) {
+            className = 'bg-primary';
+          } else if (Date.parse(date) === Date.parse(currentDate)) {
+            className = 'text-primary';
+          }
 
-					week.push(<td
-						key={j}
-						data-day={day}
-						onClick={clickHandler}
-						style={style}
-						className={className}
-					>
-						{day}
-					</td>);
+          week.push(<td
+            key={j}
+            data-day={day}
+            onClick={clickHandler}
+            style={style}
+            className={className}
+          >
+            {day}
+          </td>);
           day++;
         } else {
           week.push(<td key={j} />);
