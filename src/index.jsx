@@ -94,7 +94,8 @@ const Calendar = createReactClass({
     showWeeks: PropTypes.bool
   },
 
-  handleClick(day) {
+  handleClick(e) {
+    const day = e.currentTarget.getAttribute('data-day');
     const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
@@ -157,23 +158,24 @@ const Calendar = createReactClass({
           const date = new Date(year, month, day, 12, 0, 0, 0).toISOString();
           const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
           const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
+          let clickHandler = this.handleClick;
+          const style = { cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 };
+
           if (beforeMinDate || afterMinDate) {
-            week.push(<td
-              key={j}
-              style={{ padding: this.props.cellPadding }}
-              className="text-muted"
-            >
-              {day}
-            </td>);
+            className = 'text-muted';
+            clickHandler = null;
+            style.cursor = 'default';
           } else if (Date.parse(date) === Date.parse(selectedDate)) {
             className = 'bg-primary';
           } else if (Date.parse(date) === Date.parse(currentDate)) {
             className = 'text-primary';
           }
+
           week.push(<td
             key={j}
-            onClick={this.handleClick.bind(this, day)}
-            style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+            data-day={day}
+            onClick={clickHandler}
+            style={style}
             className={className}
           >
             {day}
