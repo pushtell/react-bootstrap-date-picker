@@ -14,6 +14,8 @@ const spanishDayLabels = ['Dom', 'Lu', 'Ma', 'Mx', 'Ju', 'Vi', 'Sab'];
 const spanishMonthLabels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
 const assertIsoStringsHaveSameDate = (IsoStringA, IsoStringB) => {
+  console.log(IsoStringA);
+  console.log(IsoStringB);
   const dateA = new Date(IsoStringA);
   const dateB = new Date(IsoStringB);
   assert.equal(dateA.getMonth(), dateB.getMonth());
@@ -461,11 +463,17 @@ describe("Date Picker", function() {
     assert.equal(mm_dd_yyyy_inputElement.value, "05/31/1980");
     assert.equal(dd_mm_yyyy_inputElement.value, "31/05/1980");
     assert.equal(yyyy_mm_dd_inputElement.value, "1980/05/31");
+    console.log(values["MM/DD/YYYY"]);
     assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", values["MM/DD/YYYY"]);
+    console.log(values["DD/MM/YYYY"]);
     assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", values["DD/MM/YYYY"]);
+    console.log(values["YYYY/MM/DD"]);
     assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", values["YYYY/MM/DD"]);
+    console.log(getValues["MM/DD/YYYY"]);
     assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", getValues["MM/DD/YYYY"]);
+    console.log(getValues["DD/MM/YYYY"]);
     assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", getValues["DD/MM/YYYY"]);
+    console.log(getValues["DD/MM/YYYY"]);
     assertIsoStringsHaveSameDate("1980-05-31T12:00:00.000Z", getValues["YYYY/MM/DD"]);
     assert.equal(formattedValues["MM/DD/YYYY"], "05/31/1980");
     assert.equal(formattedValues["DD/MM/YYYY"], "31/05/1980");
