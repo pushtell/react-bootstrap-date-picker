@@ -1101,4 +1101,24 @@ describe("Date Picker", function() {
     assert.notEqual(popover, null);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should allow customizing year label of calendar header", co.wrap(function *(){
+    const id = UUID.v4();
+    const value = "2017-01-01T12:00:00.000Z";
+    const decorate = (date) => `[ ${date.getFullYear()} ]`;
+    const App = createReactClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} value={value} getYearLabel={decorate} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const headerLabel = document.querySelector(".datepicker-header-label");
+    assert.ok(headerLabel.innerHTML.match(/\[ 2017 \]/));
+    ReactDOM.unmountComponentAtNode(container);
+  }));
 });
