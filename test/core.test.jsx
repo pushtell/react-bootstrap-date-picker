@@ -623,6 +623,24 @@ describe("Date Picker", function() {
     assertIsoStringsHaveSameDate(value, originalValue);
     ReactDOM.unmountComponentAtNode(container);
   }));
+  it("should disable the calendar.", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = createReactClass({
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarDisabled={true} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const popover = document.querySelector(".date-picker-popover");
+    assert.equal(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
   it("should display the correct day of the week in the calendar.", co.wrap(function *(){
     const id = UUID.v4();
     let value = null;
