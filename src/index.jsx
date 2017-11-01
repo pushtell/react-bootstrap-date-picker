@@ -267,6 +267,7 @@ export default createReactClass({
     onFocus: PropTypes.func,
     autoFocus: PropTypes.bool,
     disabled: PropTypes.bool,
+    calendarDisabled: PropTypes.bool,
     weekStartsOnMonday: (props, propName, componentName) => {
       if (props[propName]) {
         return new Error(`Prop '${propName}' supplied to '${componentName}' is obsolete. Use 'weekStartsOn' instead.`);
@@ -328,6 +329,7 @@ export default createReactClass({
       showClearButton: true,
       autoFocus: false,
       disabled: false,
+      calendarDisabled: false,
       showTodayButton: false,
       todayButtonLabel: 'Today',
       autoComplete: 'on',
@@ -676,13 +678,8 @@ export default createReactClass({
           noValidate={this.props.noValidate}
           />;
 
-    return <InputGroup
-      ref="inputGroup"
-      bsClass={this.props.showClearButton ? this.props.bsClass : ''}
-      bsSize={this.props.bsSize}
-      id={this.props.id ? `${this.props.id}_group` : null}>
-      {control}
-      <Overlay
+    const overlay = !this.props.calendarDisabled
+      && <Overlay
         rootClose={true}
         onHide={this.handleHide}
         show={this.state.focused}
@@ -704,10 +701,18 @@ export default createReactClass({
             maxDate={this.props.maxDate}
             roundedCorners={this.props.roundedCorners}
             showWeeks={this.props.showWeeks}
-           />
+          />
         </Popover>
-      </Overlay>
-      <div ref="overlayContainer" style={{position: 'relative'}} />
+      </Overlay>;
+
+    return <InputGroup
+      ref="inputGroup"
+      bsClass={this.props.showClearButton ? this.props.bsClass : ''}
+      bsSize={this.props.bsSize}
+      id={this.props.id ? `${this.props.id}_group` : null}>
+      {control}
+      {overlay}
+      {!this.props.calendarDisabled && <div ref="overlayContainer" style={{position: 'relative'}} />}
       <input ref="hiddenInput" type="hidden" id={this.props.id} name={this.props.name} value={this.state.value || ''} data-formattedvalue={this.state.value ? this.state.inputValue : ''} />
       {this.props.showClearButton && !this.props.customControl && <InputGroup.Addon
         onClick={this.props.disabled ? null : this.clear}

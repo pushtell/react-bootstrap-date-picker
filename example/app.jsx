@@ -129,6 +129,13 @@ const App = createReactClass({
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
+        <Col sm={6}>
+          <FormGroup controlId="calendar_disabled">
+            <ControlLabel>Calendar Disabled</ControlLabel>
+            <DatePicker calendarDisabled={true} onChange={this.handleChange} placeholder="Placeholder" value={this.state.date} id="calendar_disabled_example" />
+            <HelpBlock>Help</HelpBlock>
+          </FormGroup>
+        </Col>
       </Row>
       <Row>
         <Col xs={6}>
