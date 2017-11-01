@@ -116,6 +116,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `bool`
     * **Example:** `false`
+  * `calendarDisabled` - Whether or not the calendar popover will be disabled.
+    * **Optional**
+    * **Type:** `bool`
+    * **Example:** `false`
   * `onChange` - Focus callback function.
     * **Optional**
     * **Type:** `function`
