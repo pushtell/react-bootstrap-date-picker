@@ -80,22 +80,23 @@ const Calendar = createReactClass({
   displayName: 'DatePickerCalendar',
 
   propTypes: {
-    selectedDate: React.PropTypes.object,
-    displayDate: React.PropTypes.object.isRequired,
-    minDate: React.PropTypes.string,
-    maxDate: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    dayLabels: React.PropTypes.array.isRequired,
-    cellPadding: React.PropTypes.string.isRequired,
-    weekStartsOn: React.PropTypes.number,
-    showTodayButton: React.PropTypes.bool,
-    todayButtonLabel: React.PropTypes.string,
-    roundedCorners: React.PropTypes.bool,
-    todayDate: React.PropTypes.string,
-    showWeeks: React.PropTypes.bool
+    selectedDate: PropTypes.object,
+    displayDate: PropTypes.object.isRequired,
+    minDate: PropTypes.string,
+    maxDate: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    dayLabels: PropTypes.array.isRequired,
+    cellPadding: PropTypes.string.isRequired,
+    weekStartsOn: PropTypes.number,
+    showTodayButton: PropTypes.bool,
+    todayButtonLabel: PropTypes.string,
+    roundedCorners: PropTypes.bool,
+    todayDate: PropTypes.string,
+    showWeeks: PropTypes.bool
   },
 
-  handleClick(day) {
+  handleClick(e) {
+    const day = e.currentTarget.getAttribute('data-day');
     const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
@@ -158,23 +159,24 @@ const Calendar = createReactClass({
           const date = new Date(year, month, day, 12, 0, 0, 0).toISOString();
           const beforeMinDate = minDate && Date.parse(date) < Date.parse(minDate);
           const afterMinDate = maxDate && Date.parse(date) > Date.parse(maxDate);
+          let clickHandler = this.handleClick;
+          const style = { cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 };
+
           if (beforeMinDate || afterMinDate) {
-            week.push(<td
-              key={j}
-              style={{ padding: this.props.cellPadding }}
-              className="text-muted"
-            >
-              {day}
-            </td>);
+            className = 'text-muted';
+            clickHandler = null;
+            style.cursor = 'default';
           } else if (Date.parse(date) === Date.parse(selectedDate)) {
             className = 'bg-primary';
           } else if (Date.parse(date) === Date.parse(currentDate)) {
             className = 'text-primary';
           }
+
           week.push(<td
             key={j}
-            onClick={this.handleClick.bind(this, day)}
-            style={{ cursor: 'pointer', padding: this.props.cellPadding, borderRadius: this.props.roundedCorners ? 5 : 0 }}
+            data-day={day}
+            onClick={clickHandler}
+            style={style}
             className={className}
           >
             {day}
@@ -365,8 +367,8 @@ export default createReactClass({
   makeDateValues(isoString) {
     let displayDate;
     const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
-    const minDate = this.props.minDate ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
-    const maxDate = this.props.maxDate ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
+    const minDate = this.props.minDate ? new Date(`${this.props.minDate.slice(0,10)}T12:00:00.000Z`) : null;
+    const maxDate = this.props.maxDate ? new Date(`${this.props.maxDate.slice(0,10)}T12:00:00.000Z`) : null;
 
     const inputValue = isoString ? this.makeInputValueString(selectedDate) : null;
     if (selectedDate) {
