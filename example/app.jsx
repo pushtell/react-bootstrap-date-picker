@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-import { Navbar, Button } from 'react-bootstrap';
+import { Form, Navbar, Button } from 'react-bootstrap';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import DatePicker from '../src/index.jsx';
@@ -26,7 +26,8 @@ const App = createReactClass({
       minDate: null,
       maxDate: null,
       focused: false,
-      todayDate: new Date('2017', '0', '1').toISOString()
+      todayDate: new Date('2017', '0', '1').toISOString(),
+      invalid: false
     };
   },
   handleChange(value) {
@@ -59,6 +60,24 @@ const App = createReactClass({
       default:
         return 'bottom';
     }
+  },
+  handleValidationCheck(e) {
+    e.preventDefault();
+    this.setState(() => ({
+      invalid: false
+    }));
+  },
+  handleInvalidDate(e) {
+    e.preventDefault();
+    this.setState(() => ({
+      invalid: true
+    }));
+  },
+  handleResetValidation(e) {
+    e.preventDefault();
+    this.setState(() => ({
+      invalid: false
+    }));
   },
   render() {
     return <Grid>
@@ -234,6 +253,42 @@ const App = createReactClass({
             <HelpBlock>Help</HelpBlock>
           </FormGroup>
         </Col>
+      </Row>
+      <Row>
+        <Col xs={6}>
+          <h2>Validation</h2>
+        </Col>
+      </Row>
+      <Row>
+        <Form onSubmit={this.handleValidationCheck}>
+          <Col xs={6}>
+              <FormGroup controlId="custom_validation_example_default" validationState={this.state.invalid ? 'error' : null}>
+                <ControlLabel>Default</ControlLabel>
+                <DatePicker
+                  onChange={this.handleChange}
+                  placeholder="Placeholder"
+                  required
+                />
+            </FormGroup>
+          </Col>
+          <Col xs={6}>
+              <FormGroup controlId="custom_validation_example_oninvalid" validationState={this.state.invalid ? 'error' : null}>
+                <ControlLabel>onInvalid override</ControlLabel>
+                <DatePicker
+                  onChange={this.handleChange}
+                  placeholder="Placeholder"
+                  onInvalid={this.handleInvalidDate}
+                  required
+                />
+                {this.state.invalid
+                  && <HelpBlock>You must pick a date.</HelpBlock>}
+            </FormGroup>
+          </Col>
+          <Col xs={6}>
+            <Button type="submit">Validate</Button>
+            <Button type="button" onClick={this.handleResetValidation}>Reset</Button>
+          </Col>
+        </Form>
       </Row>
       <Row>
         <Col xs={12}>

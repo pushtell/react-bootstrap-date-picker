@@ -306,7 +306,9 @@ export default createReactClass({
       PropTypes.node
 
     ]),
-    todayDate: React.PropTypes.string
+    todayDate: React.PropTypes.string,
+    onInvalid: PropTypes.func,
+    noValidate: PropTypes.bool
   },
 
   getDefaultProps() {
@@ -334,7 +336,8 @@ export default createReactClass({
       style: {
         width: '100%'
       },
-      roundedCorners: false
+      roundedCorners: false,
+      noValidate: false
     };
   },
 
@@ -652,6 +655,8 @@ export default createReactClass({
         className: this.props.className,
         style: this.props.style,
         autoComplete: this.props.autoComplete,
+        onInvalid: this.props.onInvalid,
+        noValidate: this.props.noValidate,
       })
       : <FormControl
           onKeyDown={this.handleKeyDown}
@@ -668,6 +673,8 @@ export default createReactClass({
           onBlur={this.handleBlur}
           onChange={this.handleInputChange}
           autoComplete={this.props.autoComplete}
+          onInvalid={this.props.onInvalid}
+          noValidate={this.props.noValidate}
           />;
 
     return <InputGroup
