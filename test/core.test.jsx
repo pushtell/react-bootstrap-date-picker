@@ -56,10 +56,11 @@ describe("Date Picker", function() {
   it("should render a date picker with a value.", co.wrap(function *(){
     const id = UUID.v4();
     const value = `${new Date().toISOString().slice(0,10)}T12:00:00.000Z`;
+    console.log(value)
     const App = createReactClass({
       render: function(){
         return <div>
-          <DatePicker id={id} value={value} />
+          <DatePicker id={id} value={value} dateFormat="MM/DD/YYYY" />
         </div>;
       }
     });
@@ -67,6 +68,7 @@ describe("Date Picker", function() {
       ReactDOM.render(<App />, container, resolve);
     });
     const hiddenInputElement = document.getElementById(id);
+    console.log(hiddenInputElement.value)
     assertIsoStringsHaveSameDate(hiddenInputElement.value, value);
     assert.equal(hiddenInputElement.getAttribute('data-formattedvalue'), `${value.slice(5,7)}/${value.slice(8,10)}/${value.slice(0,4)}`);
     ReactDOM.unmountComponentAtNode(container);
@@ -1077,6 +1079,27 @@ describe("Date Picker", function() {
     const inputElement = document.querySelector("input.form-control");
     TestUtils.Simulate.focus(inputElement);
     const popover = document.querySelector(".date-picker-popover.right");
+    assert.notEqual(popover, null);
+    ReactDOM.unmountComponentAtNode(container);
+  }));
+  it("should allow for a function to determine calendar placement", co.wrap(function *(){
+    const id = UUID.v4();
+    const App = createReactClass({
+      handlePlacement(){
+        return "top";
+      },
+      render: function(){
+        return <div>
+          <DatePicker id={id} calendarPlacement={this.handlePlacement} />
+        </div>;
+      }
+    });
+    yield new Promise(function(resolve, reject){
+      ReactDOM.render(<App />, container, resolve);
+    });
+    const inputElement = document.querySelector("input.form-control");
+    TestUtils.Simulate.focus(inputElement);
+    const popover = document.querySelector(".date-picker-popover.top");
     assert.notEqual(popover, null);
     ReactDOM.unmountComponentAtNode(container);
   }));

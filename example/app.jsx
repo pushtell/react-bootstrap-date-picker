@@ -26,6 +26,7 @@ const App = createReactClass({
       minDate: null,
       maxDate: null,
       focused: false,
+      todayDate: new Date('2017', '0', '1').toISOString(),
       invalid: false
     };
   },
@@ -79,7 +80,6 @@ const App = createReactClass({
     }));
   },
   render() {
-    const LabelISOString = new Date().toISOString();
     return <Grid>
       <Row>
         <Col xs={12}>
@@ -227,7 +227,7 @@ const App = createReactClass({
           <FormGroup>
             <ControlLabel>Min</ControlLabel>
             <DatePicker onChange={this.handleMinChange} value={this.state.minDate} />
-            <HelpBlock>{`Configure Example minDate`}</HelpBlock>
+            <HelpBlock>Configure Example minDate</HelpBlock>
             <HelpBlock>{`value: ${this.state.minDate}`}</HelpBlock>
           </FormGroup>
         </Col>
@@ -235,7 +235,7 @@ const App = createReactClass({
           <FormGroup>
             <ControlLabel>Max</ControlLabel>
             <DatePicker onChange={this.handleMaxChange} value={this.state.maxDate} />
-            <HelpBlock>{`Configure Example maxDate`}</HelpBlock>
+            <HelpBlock>Configure Example maxDate</HelpBlock>
             <HelpBlock>{`value: ${this.state.maxDate}`}</HelpBlock>
           </FormGroup>
         </Col>
@@ -356,10 +356,17 @@ const App = createReactClass({
             <DatePicker weekStartsOn={4} />
           </FormGroup>
         </Col>
-        <Col sm={6}>
+        <Col sm={3}>
           <FormGroup>
             <ControlLabel>Control Element</ControlLabel>
             <DatePicker customControl={<CustomControl />} />
+          </FormGroup>
+        </Col>
+        <Col sm={3}>
+          <FormGroup>
+            <ControlLabel>Today Date</ControlLabel>
+            <DatePicker showTodayButton todayDate={this.state.todayDate} />
+            <HelpBlock>Today's date is set to 01/01/2017</HelpBlock>
           </FormGroup>
         </Col>
       </Row>
@@ -498,7 +505,10 @@ const App = createReactClass({
 
 const CustomControl = createReactClass({
   displayName: 'CustomControl',
-
+  propTypes: {
+    value: React.PropTypes.string,
+    placeholder: React.PropTypes.string
+  },
   render() {
     const {
       value,

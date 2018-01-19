@@ -198,6 +198,10 @@ DatePicker component. Renders as a [React-Bootstrap InputGroup](https://react-bo
     * **Optional**
     * **Type:** `React.Component`
     * **Example:** `<CustomControl />`
+  * `todayDate` - Change today's date to a past or future date
+    * **Optional**
+    * **Type:** `string`
+    * **Example:** `"MM/DD/YYYY"`, `"YYYY/MM/DD"`, `"MM-DD-YYYY"`, or `"DD MM YYYY"`
 
 * **Methods:**
 

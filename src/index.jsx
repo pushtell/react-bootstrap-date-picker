@@ -91,6 +91,7 @@ const Calendar = createReactClass({
     showTodayButton: PropTypes.bool,
     todayButtonLabel: PropTypes.string,
     roundedCorners: PropTypes.bool,
+    todayDate: PropTypes.string,
     showWeeks: PropTypes.bool
   },
 
@@ -102,7 +103,7 @@ const Calendar = createReactClass({
   },
 
   handleClickToday() {
-    const newSelectedDate = this.setTimeToNoon(new Date());
+    const newSelectedDate = this.setTimeToNoon(this.props.todayDate ? new Date(this.props.todayDate) : new Date());
     this.props.onChange(newSelectedDate);
   },
 
@@ -307,6 +308,7 @@ export default createReactClass({
       PropTypes.node
 
     ]),
+    todayDate: React.PropTypes.string,
     onInvalid: PropTypes.func,
     noValidate: PropTypes.bool
   },
@@ -372,7 +374,8 @@ export default createReactClass({
     if (selectedDate) {
       displayDate = new Date(selectedDate);
     } else {
-      const today = new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
+      const today = this.props.todayDate ? new Date(`${this.props.todayDate.slice(0,10)}T12:00:00.000Z`)
+      : new Date(`${(new Date().toISOString().slice(0,10))}T12:00:00.000Z`);
       if (minDate && Date.parse(minDate) >= Date.parse(today)){
         displayDate = minDate;
       } else if (maxDate && Date.parse(maxDate) <= Date.parse(today)){
@@ -703,6 +706,7 @@ export default createReactClass({
             minDate={this.props.minDate}
             maxDate={this.props.maxDate}
             roundedCorners={this.props.roundedCorners}
+            todayDate={this.props.todayDate}
             showWeeks={this.props.showWeeks}
            />
         </Popover>
