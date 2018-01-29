@@ -8,14 +8,13 @@ import InputGroup from 'react-bootstrap/lib/InputGroup';
 import Overlay from 'react-bootstrap/lib/Overlay';
 import Popover from 'react-bootstrap/lib/Popover';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
 
 let instanceCount = 0;
 
-const CalendarHeader = createReactClass({
-  displayName: 'DatePickerHeader',
+class CalendarHeader extends React.Component {
+  static displayName = 'DatePickerHeader';
 
-  propTypes: {
+  static propTypes = {
     displayDate: PropTypes.object.isRequired,
     minDate: PropTypes.string,
     maxDate: PropTypes.string,
@@ -29,37 +28,37 @@ const CalendarHeader = createReactClass({
       PropTypes.string,
       PropTypes.object
     ]).isRequired,
-  },
+  };
 
-  displayingMinMonth() {
+  displayingMinMonth = () => {
     if (!this.props.minDate) return false;
 
     const displayDate = new Date(this.props.displayDate);
     const minDate = new Date(this.props.minDate);
     return minDate.getFullYear() == displayDate.getFullYear() && minDate.getMonth() == displayDate.getMonth();
-  },
+  };
 
-  displayingMaxMonth() {
+  displayingMaxMonth = () => {
     if (!this.props.maxDate) return false;
 
     const displayDate = new Date(this.props.displayDate);
     const maxDate = new Date(this.props.maxDate);
     return maxDate.getFullYear() == displayDate.getFullYear() && maxDate.getMonth() == displayDate.getMonth();
-  },
+  };
 
-  handleClickPrevious() {
+  handleClickPrevious = () => {
     const newDisplayDate = new Date(this.props.displayDate);
     newDisplayDate.setDate(1);
     newDisplayDate.setMonth(newDisplayDate.getMonth() - 1);
     this.props.onChange(newDisplayDate);
-  },
+  };
 
-  handleClickNext() {
+  handleClickNext = () => {
     const newDisplayDate = new Date(this.props.displayDate);
     newDisplayDate.setDate(1);
     newDisplayDate.setMonth(newDisplayDate.getMonth() + 1);
     this.props.onChange(newDisplayDate);
-  },
+  };
 
   render() {
     return <div className="text-center">
@@ -72,14 +71,14 @@ const CalendarHeader = createReactClass({
       </div>
     </div>;
   }
-});
+}
 
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-const Calendar = createReactClass({
-  displayName: 'DatePickerCalendar',
+class Calendar extends React.Component {
+  static displayName = 'DatePickerCalendar';
 
-  propTypes: {
+  static propTypes = {
     selectedDate: PropTypes.object,
     displayDate: PropTypes.object.isRequired,
     minDate: PropTypes.string,
@@ -92,29 +91,29 @@ const Calendar = createReactClass({
     todayButtonLabel: PropTypes.string,
     roundedCorners: PropTypes.bool,
     showWeeks: PropTypes.bool
-  },
+  };
 
-  handleClick(e) {
+  handleClick = (e) => {
     const day = e.currentTarget.getAttribute('data-day');
     const newSelectedDate = this.setTimeToNoon(new Date(this.props.displayDate));
     newSelectedDate.setDate(day);
     this.props.onChange(newSelectedDate);
-  },
+  };
 
-  handleClickToday() {
+  handleClickToday = () => {
     const newSelectedDate = this.setTimeToNoon(new Date());
     this.props.onChange(newSelectedDate);
-  },
+  };
 
-  setTimeToNoon(date) {
+  setTimeToNoon = (date) => {
     date.setHours(12);
     date.setMinutes(0);
     date.setSeconds(0);
     date.setMilliseconds(0);
     return date;
-  },
+  };
 
-  getWeekNumber(date){
+  getWeekNumber = (date) => {
     const target  = new Date(date.valueOf());
     const dayNr   = (date.getDay() + 6) % 7;
     target.setDate(target.getDate() - dayNr + 3);
@@ -124,7 +123,7 @@ const Calendar = createReactClass({
       target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
     }
     return 1 + Math.ceil((firstThursday - target) / 604800000);
-  },
+  };
 
   render() {
     const currentDate = this.setTimeToNoon(new Date());
@@ -243,12 +242,12 @@ const Calendar = createReactClass({
       </tfoot>}
     </table>;
   }
-});
+}
 
-export default createReactClass({
-  displayName: 'DatePicker',
+export default class extends React.Component {
+  static displayName = 'DatePicker';
 
-  propTypes: {
+  static propTypes = {
     defaultValue: PropTypes.string,
     value: PropTypes.string,
     required: PropTypes.bool,
@@ -309,9 +308,9 @@ export default createReactClass({
     ]),
     onInvalid: PropTypes.func,
     noValidate: PropTypes.bool
-  },
+  };
 
-  getDefaultProps() {
+  static defaultProps = function() {
     const language = typeof window !== 'undefined' && window.navigator ? (window.navigator.userLanguage || window.navigator.language || '').toLowerCase() : '';
     const dateFormat = !language || language === 'en-us' ? 'MM/DD/YYYY' : 'DD/MM/YYYY';
     return {
@@ -339,30 +338,31 @@ export default createReactClass({
       roundedCorners: false,
       noValidate: false
     };
-  },
+  }();
 
-  getInitialState() {
-    if (this.props.value && this.props.defaultValue) {
+  constructor(props, context) {
+    super(props, context);
+    if (props.value && props.defaultValue) {
       throw new Error('Conflicting DatePicker properties \'value\' and \'defaultValue\'');
     }
-    const state = this.makeDateValues(this.props.value || this.props.defaultValue);
-    if (this.props.weekStartsOn > 1) {
-      state.dayLabels = this.props.dayLabels
-        .slice(this.props.weekStartsOn)
-        .concat(this.props.dayLabels.slice(0, this.props.weekStartsOn));
-    } else if (this.props.weekStartsOn === 1) {
-      state.dayLabels = this.props.dayLabels.slice(1).concat(this.props.dayLabels.slice(0,1));
+    const state = this.makeDateValues(props.value || props.defaultValue);
+    if (props.weekStartsOn > 1) {
+      state.dayLabels = props.dayLabels
+        .slice(props.weekStartsOn)
+        .concat(props.dayLabels.slice(0, props.weekStartsOn));
+    } else if (props.weekStartsOn === 1) {
+      state.dayLabels = props.dayLabels.slice(1).concat(props.dayLabels.slice(0,1));
     } else {
-      state.dayLabels = this.props.dayLabels;
+      state.dayLabels = props.dayLabels;
     }
     state.focused = false;
     state.inputFocused = false;
-    state.placeholder = this.props.placeholder || this.props.dateFormat;
-    state.separator = this.props.dateFormat.match(/[^A-Z]/)[0];
-    return state;
-  },
+    state.placeholder = props.placeholder || props.dateFormat;
+    state.separator = props.dateFormat.match(/[^A-Z]/)[0];
+    this.state = state;
+  }
 
-  makeDateValues(isoString) {
+  makeDateValues = (isoString) => {
     let displayDate;
     const selectedDate = isoString ? new Date(`${isoString.slice(0,10)}T12:00:00.000Z`) : null;
     const minDate = this.props.minDate ? new Date(`${this.props.minDate.slice(0,10)}T12:00:00.000Z`) : null;
@@ -388,9 +388,9 @@ export default createReactClass({
       selectedDate: selectedDate,
       inputValue: inputValue
     };
-  },
+  };
 
-  clear() {
+  clear = () => {
     if (this.props.onClear) {
       this.props.onClear();
     }
@@ -401,9 +401,9 @@ export default createReactClass({
     if (this.props.onChange) {
       this.props.onChange(null, null);
     }
-  },
+  };
 
-  handleHide() {
+  handleHide = () => {
     if (this.state.inputFocused) {
       return;
     }
@@ -416,9 +416,9 @@ export default createReactClass({
       ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
       this.props.onBlur(event);
     }
-  },
+  };
 
-  handleKeyDown(e) {
+  handleKeyDown = (e) => {
     if (e.which === 9 && this.state.inputFocused) {
       this.setState({
         focused: false
@@ -431,9 +431,9 @@ export default createReactClass({
         this.props.onBlur(event);
       }
     }
-  },
+  };
 
-  handleFocus() {
+  handleFocus = () => {
     if (this.state.focused === true) {
       return;
     }
@@ -452,27 +452,27 @@ export default createReactClass({
       ReactDOM.findDOMNode(this.refs.hiddenInput).dispatchEvent(event);
       this.props.onFocus(event);
     }
-  },
+  };
 
-  handleBlur() {
+  handleBlur = () => {
     this.setState({
       inputFocused: false
     });
-  },
+  };
 
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate(nextProps, nextState) {
     return !(this.state.inputFocused === true && nextState.inputFocused === false);
-  },
+  }
 
-  getValue() {
+  getValue = () => {
     return this.state.selectedDate ? this.state.selectedDate.toISOString() : null;
-  },
+  };
 
-  getFormattedValue() {
+  getFormattedValue = () => {
     return this.state.displayDate ? this.state.inputValue : null;
-  },
+  };
 
-  getCalendarPlacement() {
+  getCalendarPlacement = () => {
     const tag = Object.prototype.toString.call(this.props.calendarPlacement);
     const isFunction = tag === '[object AsyncFunction]' || tag === '[object Function]' || tag === '[object GeneratorFunction]' || tag === '[object Proxy]';
     if (isFunction) {
@@ -481,9 +481,9 @@ export default createReactClass({
     else {
       return this.props.calendarPlacement;
     }
-  },
+  };
 
-  makeInputValueString(date) {
+  makeInputValueString = (date) => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
 
@@ -498,9 +498,9 @@ export default createReactClass({
     else {
       return date.getFullYear() + separator + (month > 9 ? month : `0${month}`) + separator + (day > 9 ? day : `0${day}`);
     }
-  },
+  };
 
-  handleBadInput(originalValue) {
+  handleBadInput = (originalValue) => {
     const parts = originalValue.replace(new RegExp(`[^0-9${this.state.separator}]`), '').split(this.state.separator);
     if (this.props.dateFormat.match(/MM.DD.YYYY/) || this.props.dateFormat.match(/DD.MM.YYYY/)) {
       if (parts[0] && parts[0].length > 2) {
@@ -530,9 +530,9 @@ export default createReactClass({
     this.setState({
       inputValue: parts.join(this.state.separator)
     });
-  },
+  };
 
-  handleInputChange() {
+  handleInputChange = () => {
 
     const originalValue = ReactDOM.findDOMNode(this.refs.input).value;
     const inputValue = originalValue.replace(/(-|\/\/)/g, this.state.separator).slice(0,10);
@@ -592,15 +592,15 @@ export default createReactClass({
     this.setState({
       inputValue: inputValue
     });
-  },
+  };
 
-  onChangeMonth(newDisplayDate) {
+  onChangeMonth = (newDisplayDate) => {
     this.setState({
       displayDate: newDisplayDate
     });
-  },
+  };
 
-  onChangeDate(newSelectedDate) {
+  onChangeDate = (newSelectedDate) => {
     const inputValue = this.makeInputValueString(newSelectedDate);
     this.setState({
       inputValue: inputValue,
@@ -620,14 +620,14 @@ export default createReactClass({
     if (this.props.onChange) {
       this.props.onChange(newSelectedDate.toISOString(), inputValue);
     }
-  },
+  };
 
   componentWillReceiveProps(newProps) {
     const value = newProps.value;
     if (this.getValue() !== value) {
       this.setState(this.makeDateValues(value));
     }
-  },
+  }
 
   render() {
     const calendarHeader = <CalendarHeader
@@ -719,4 +719,4 @@ export default createReactClass({
       {this.props.children}
     </InputGroup>;
   }
-});
+}
