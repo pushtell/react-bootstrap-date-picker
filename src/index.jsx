@@ -656,6 +656,7 @@ export default createReactClass({
         autoComplete: this.props.autoComplete,
         onInvalid: this.props.onInvalid,
         noValidate: this.props.noValidate,
+        handleHide: this.handleHide,
       })
       : <FormControl
           onKeyDown={this.handleKeyDown}
