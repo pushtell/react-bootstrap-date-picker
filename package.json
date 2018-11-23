@@ -11,14 +11,14 @@
     "picker"
   ],
   "main": "lib/index.js",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "React-Bootstrap based date picker.",
   "directories": {
     "test": "test"
   },
   "peerDependencies": {
     "react": ">=0.14.0",
-    "react-bootstrap": "^0.31.0"
+    "react-bootstrap": ">=0.31.0"
   },
   "devDependencies": {
     "assert": "^1.4.1",
@@ -54,11 +54,12 @@
     "mocha-babel": "^3.0.3",
     "node-uuid": "^1.4.7",
     "prop-types": "^15.5.8",
-    "react": "^15.5.4",
-    "react-bootstrap": "^0.31.0",
-    "react-dom": "^15.5.4",
+    "react": "^16.6.3",
+    "react-bootstrap": "^0.32.4",
+    "react-dom": "^16.6.3",
     "regenerator": "^0.8.46",
     "regenerator-loader": "^3.1.0",
+    "regenerator-runtime": "^0.10.5",
     "transform-loader": "^0.2.4",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"
@@ -79,5 +80,6 @@
   "bugs": {
     "url": "https://github.com/pushtell/react-bootstrap-date-picker/issues"
   },
-  "homepage": "https://github.com/pushtell/react-bootstrap-date-picker#readme"
+  "homepage": "https://github.com/pushtell/react-bootstrap-date-picker#readme",
+  "dependencies": {}
 }
